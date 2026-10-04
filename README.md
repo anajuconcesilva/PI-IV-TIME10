@@ -1,4 +1,4 @@
-# 🌾 AgroSafe: Sistema de Gestão Agrícola e Rastreabilidade de Carência
+# 🌾 MinnhaColheita: Sistema de Gestão Agrícola e Rastreabilidade de Carência
 
 > **Plataforma web para controle de aplicação de agrotóxicos, monitoramento do período de carência (intervalo de segurança) e geração automatizada de cadernos de campo para conformidade agrícola.**
 
