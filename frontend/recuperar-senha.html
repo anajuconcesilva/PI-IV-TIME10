@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!-- Aluna: Eduarda Prado Deiró | RA: 25004440 -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar senha | Minha Colheita</title>
+
+  <link rel="icon" href="img/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="tela-dividida">
+
+    <!-- Lado da foto -->
+    <section class="painel-foto">
+
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="chamada-titulo">
+          Colheita<br>
+          <span>no prazo.</span><br>
+          Conformidade<br>
+          garantida.
+        </h2>
+        <p class="chamada-texto">
+          Controle o período de carência de agrotóxicos e garanta colheitas
+          seguras de acordo com a base Agrofit/MAPA.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- Lado do formulário -->
+    <main class="painel-formulario">
+      <div class="caixa-formulario">
+
+        <!-- Passo 1: pedir o código -->
+        <section class="etapa-recuperar">
+          <h1 class="com-subtitulo">Recuperar senha</h1>
+          <p class="subtitulo">
+            Informe o e-mail cadastrado para enviarmos o código de recuperação.
+          </p>
+
+          <form id="form-email">
+            <div class="campo">
+              <label for="email">E-mail <span class="obrigatorio">*</span></label>
+              <input type="email" id="email" name="email"
+                     placeholder="seu@email.com" autocomplete="email" required>
+            </div>
+
+            <button type="submit" class="botao botao-primario">Enviar código de recuperação</button>
+          </form>
+        </section>
+
+        <!-- Passo 2: digitar o código -->
+        <section class="etapa-recuperar" hidden>
+          <h1 class="com-subtitulo">Redefinir nova senha</h1>
+          <p class="subtitulo">
+            Digite o código de 6 dígitos que enviamos para o seu e-mail.
+          </p>
+
+          <form id="form-codigo">
+            <div class="campo">
+              <p class="rotulo">Código de verificação (6 dígitos)</p>
+
+              <div class="codigo">
+                <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Dígito 1" required>
+                <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Dígito 2" required>
+                <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Dígito 3" required>
+                <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Dígito 4" required>
+                <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Dígito 5" required>
+                <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Dígito 6" required>
+              </div>
+            </div>
+
+            <button type="submit" class="botao botao-primario">Confirmar código</button>
+          </form>
+
+          <!-- O reenvio ainda não faz nada -->
+          <p class="texto-centro espaco-acima">
+            Não recebeu o código?
+            <button type="button" class="botao-link" id="botao-reenviar">Reenviar</button>
+          </p>
+        </section>
+
+        <!-- Passo 3: escolher a senha nova -->
+        <section class="etapa-recuperar" hidden>
+          <h1 class="com-subtitulo">Redefinir nova senha</h1>
+          <p class="subtitulo">Escolha uma nova senha segura.</p>
+
+          <form id="form-senha">
+            <div class="campo">
+              <label for="senha">Nova senha <span class="obrigatorio">*</span></label>
+              <div class="campo-com-botao">
+                <input type="password" id="senha" name="senha"
+                       placeholder="Mínimo de 6 caracteres"
+                       autocomplete="new-password" minlength="6" required>
+
+                <button type="button" class="botao-olho" aria-label="Mostrar senha">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <line class="risco" x1="4" y1="4" x2="20" y2="20"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="confirmar-senha">Confirmar nova senha <span class="obrigatorio">*</span></label>
+              <div class="campo-com-botao">
+                <input type="password" id="confirmar-senha" name="confirmar-senha"
+                       placeholder="Repita a senha"
+                       autocomplete="new-password" required>
+
+                <button type="button" class="botao-olho" aria-label="Mostrar senha">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <line class="risco" x1="4" y1="4" x2="20" y2="20"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="botao botao-primario">Salvar nova senha</button>
+          </form>
+        </section>
+
+        <p class="texto-centro espaco-acima">
+          <a href="login.html">Voltar para o login</a>
+        </p>
+
+        <p class="rodape-formulario">
+          Dados conforme base Agrofit - Ministério da Agricultura, Pecuária e Abastecimento
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="js/olho-senha.js"></script>
+  <script src="js/recuperar-senha.js"></script>
+</body>
+</html>
