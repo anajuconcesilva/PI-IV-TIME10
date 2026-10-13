@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!-- Aluna: Eduarda Prado Deiró | RA: 25004440 -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Minha Colheita</title>
+
+  <link rel="icon" href="img/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/painel.css">
+</head>
+<body>
+
+  <div class="painel">
+
+    <!-- Menu lateral. Os links com # são de telas que ainda não existem. -->
+    <aside class="menu-lateral">
+
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <p class="menu-titulo">MENU</p>
+
+      <nav class="menu-links">
+        <a class="menu-link ativo" href="dashboard.html">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          Dashboard
+        </a>
+        <a class="menu-link" href="#">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12c0-4-3-6-7-6 0 4 3 6 7 6z"/><path d="M12 15c0-3 2.5-5 6-5 0 3-2.5 5-6 5z"/></svg>
+          Talhões
+        </a>
+        <a class="menu-link" href="#">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>
+          Nova aplicação
+        </a>
+        <a class="menu-link" href="#">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Consulta de produtos
+        </a>
+        <a class="menu-link" href="#">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+          Avisos
+        </a>
+        <a class="menu-link" href="#">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h6"/></svg>
+          Relatórios
+        </a>
+      </nav>
+
+      <div class="menu-rodape">
+        <div class="menu-usuario">
+          <span class="menu-iniciais" id="usuario-iniciais"></span>
+          <div>
+            <strong id="usuario-nome"></strong>
+            <span id="usuario-propriedade"></span>
+          </div>
+        </div>
+
+        <a class="menu-link menu-sair" href="login.html">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5"/><path d="M14 8l4 4-4 4"/><path d="M18 12H9"/></svg>
+          Sair da conta
+        </a>
+      </div>
+
+    </aside>
+
+    <!-- Os textos e listas vazios daqui são preenchidos pelo dashboard.js -->
+    <main class="conteudo">
+
+      <section class="destaque">
+        <span class="etiqueta">Monitoramento ativo</span>
+
+        <div class="destaque-topo">
+          <div>
+            <h1 id="saudacao"></h1>
+            <p class="destaque-data" id="data-hoje"></p>
+          </div>
+
+          <a class="botao-acao" href="#">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Novo talhão
+          </a>
+        </div>
+
+        <div class="resumo" id="resumo"></div>
+      </section>
+
+      <div class="colunas">
+
+        <section>
+          <div class="secao-topo">
+            <h2>Seus talhões</h2>
+            <a class="ver-todos" href="#">
+              Ver todos
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div id="lista-talhoes"></div>
+        </section>
+
+        <div>
+
+          <section class="cartao">
+            <div class="secao-topo">
+              <h2>Alertas recentes</h2>
+              <a class="ver-todos" href="#">
+                Ver todos
+                <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+
+            <ul class="lista-alertas" id="lista-alertas"></ul>
+          </section>
+
+          <section class="cartao">
+            <p class="cartao-rotulo">Próxima liberação</p>
+            <div id="proxima-liberacao"></div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
