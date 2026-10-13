@@ -1,0 +1,522 @@
+/* Aluna: Eduarda Prado Deiró | RA: 25004440 */
+
+/* Estilo base do Minha Colheita: cores, fontes e as telas de acesso
+   (login, cadastro e recuperação de senha).
+   A área logada (dashboard) fica no painel.css. */
+
+/* ===== Cores e fontes ===== */
+:root {
+  --cor-marinho: #0B2540;
+  --cor-marinho-claro: #14365C;
+  --cor-acao: #1F6F9E;
+  --cor-destaque: #DCE54B;
+  --cor-logo: #0B6B47;
+
+  /* Status do talhão */
+  --cor-liberado: #2F8F4E;
+  --cor-carencia: #D9A62B;
+  --cor-bloqueado: #C0392B;
+  --cor-aguardando: #2F5FA8;
+
+  --cor-erro: #C0392B;
+
+  --cor-fundo: #F5F5EC;
+  --cor-branco: #FFFFFF;
+  --cor-texto: #2A2E2B;
+  --cor-texto-suave: #6B716D;
+  --cor-borda: #DFE1D8;
+
+  --fonte-titulo: "Outfit", sans-serif;
+  --fonte-texto: "Inter", sans-serif;
+
+  --raio: 8px;
+}
+
+/* ===== Base ===== */
+
+/* Sem isso campo com width: 100% passa da largura da tela */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fonte-texto);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+}
+
+h1,
+h2 {
+  font-family: var(--fonte-titulo);
+  margin: 0;
+}
+
+a {
+  color: var(--cor-acao);
+}
+
+/* Tela dividida: foto à esquerda, formulário à direita */
+.tela-dividida {
+  display: flex;
+  min-height: 100vh;
+}
+
+.painel-foto {
+  width: 52%;
+  padding: 40px;
+  color: var(--cor-branco);
+
+  /* Camada azul por cima da foto, para o texto branco ficar legível */
+  background-image:
+    linear-gradient(rgba(8, 38, 72, 0.78), rgba(6, 28, 56, 0.90)),
+    url("../img/fundo-campo.jpg");
+  background-size: cover;
+  background-position: center;
+
+  /* Marca no topo, frase embaixo */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Fundo branco porque a logo verde some em cima do azul */
+.marca-logo {
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  background-color: var(--cor-branco);
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.marca-nome {
+  display: block;
+  font-family: var(--fonte-titulo);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.marca-subtitulo {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--cor-destaque);
+}
+
+.chamada-titulo {
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.chamada-titulo span {
+  color: var(--cor-destaque);
+}
+
+.chamada-texto {
+  max-width: 360px;
+  margin: 16px 0 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.80);
+}
+
+.painel-formulario {
+  width: 48%;
+  padding: 40px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.caixa-formulario {
+  width: 100%;
+  max-width: 420px;
+}
+
+.caixa-formulario h1 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--cor-marinho);
+}
+
+.caixa-formulario h1.com-subtitulo {
+  margin-bottom: 6px;
+}
+
+.subtitulo {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: var(--cor-texto-suave);
+}
+
+/* ===== Formulário ===== */
+.campo {
+  margin-bottom: 18px;
+}
+
+.campo label,
+.rotulo {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rotulo {
+  margin-top: 0;
+}
+
+.obrigatorio {
+  color: var(--cor-erro);
+}
+
+.campo input,
+.campo select {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  font-family: var(--fonte-texto);
+  font-size: 15px;
+  color: var(--cor-texto);
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+}
+
+.campo input::placeholder {
+  color: #9A9F9B;
+}
+
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: var(--cor-acao);
+  box-shadow: 0 0 0 3px rgba(31, 111, 158, 0.18);
+}
+
+/* Campo de senha com o botão do olho dentro */
+.campo-com-botao {
+  position: relative;
+}
+
+.campo-com-botao input {
+  padding-right: 48px;
+}
+
+.botao-olho {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cor-texto-suave);
+  background: none;
+  border: none;
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+
+.botao-olho:hover {
+  color: var(--cor-marinho);
+}
+
+/* Olho riscado = senha escondida. O risco some quando a senha aparece. */
+.botao-olho.senha-visivel .risco {
+  display: none;
+}
+
+.link-pequeno {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-pequeno:hover {
+  text-decoration: underline;
+}
+
+.botao {
+  width: 100%;
+  height: 48px;
+  font-family: var(--fonte-texto);
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+
+.botao-primario {
+  color: var(--cor-branco);
+  background-color: var(--cor-marinho);
+}
+
+.botao-primario:hover {
+  background-color: var(--cor-marinho-claro);
+}
+
+.botao-secundario {
+  color: var(--cor-marinho);
+  background-color: var(--cor-branco);
+  border-color: var(--cor-borda);
+}
+
+.botao-secundario:hover {
+  border-color: var(--cor-marinho);
+}
+
+.botao-destaque {
+  color: var(--cor-marinho);
+  background-color: var(--cor-destaque);
+}
+
+.botao-destaque:hover {
+  background-color: #CFD93A;
+}
+
+.botao-pequeno {
+  width: auto;
+  height: 46px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+/* Botões lado a lado (Voltar e Próximo) */
+.linha-botoes {
+  display: flex;
+  gap: 12px;
+}
+
+.mensagem-erro {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--cor-erro);
+}
+
+/* Linha com "ou" no meio */
+.divisor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+}
+
+.divisor::before,
+.divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--cor-borda);
+}
+
+.texto-centro {
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+.texto-centro a {
+  font-weight: 600;
+  color: var(--cor-marinho);
+  text-decoration: none;
+}
+
+.texto-centro a:hover {
+  text-decoration: underline;
+}
+
+.espaco-acima {
+  margin-top: 24px;
+}
+
+/* Botão com cara de link */
+.botao-link {
+  padding: 0;
+  font-family: var(--fonte-texto);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-acao);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.botao-link:hover {
+  text-decoration: underline;
+}
+
+.rodape-formulario {
+  margin: 32px 0 0;
+  font-size: 12px;
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+/* ===== Cadastro em passos ===== */
+.passos {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.passo-bolinha {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: 50%;
+}
+
+.passo-linha {
+  flex: 1;
+  height: 2px;
+  background-color: var(--cor-borda);
+}
+
+/* Passo atual e os que já passaram */
+.passo-bolinha.ativo {
+  color: var(--cor-branco);
+  background-color: var(--cor-marinho);
+  border-color: var(--cor-marinho);
+}
+
+.passo-linha.ativo {
+  background-color: var(--cor-marinho);
+}
+
+.etapa {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.etapa-titulo {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* Dois campos na mesma linha (Município e UF) */
+.linha-campos {
+  display: flex;
+  gap: 12px;
+}
+
+.campo-grande {
+  flex: 1;
+}
+
+.campo-pequeno {
+  width: 110px;
+}
+
+.lista-culturas {
+  max-height: 176px;
+  padding: 8px 14px;
+  overflow-y: auto;
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+}
+
+/* ".campo" na frente para valer mais que o estilo geral de label e input */
+.campo .cultura {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 6px 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.campo .cultura input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--cor-marinho);
+}
+
+.linha-outro {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ===== Recuperação de senha: quadradinhos do código ===== */
+.codigo {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.campo .codigo input {
+  flex: 1;
+  min-width: 0;
+  max-width: 52px;
+  height: 56px;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ===== Celular: a foto vira uma faixa no topo ===== */
+@media (max-width: 860px) {
+  .tela-dividida {
+    flex-direction: column;
+  }
+
+  .painel-foto,
+  .painel-formulario {
+    width: 100%;
+  }
+
+  .painel-foto {
+    padding: 24px 16px;
+    gap: 32px;
+  }
+
+  .chamada-titulo {
+    font-size: 32px;
+  }
+
+  .chamada-texto {
+    display: none;
+  }
+
+  .painel-formulario {
+    padding: 32px 16px;
+  }
+}
