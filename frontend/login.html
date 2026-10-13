@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!-- Aluna: Eduarda Prado Deiró | RA: 25004440 -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar | Minha Colheita</title>
+
+  <link rel="icon" href="img/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="tela-dividida">
+
+    <!-- Lado da foto -->
+    <section class="painel-foto">
+
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="chamada-titulo">
+          Colheita<br>
+          <span>no prazo.</span><br>
+          Conformidade<br>
+          garantida.
+        </h2>
+        <p class="chamada-texto">
+          Controle o período de carência de agrotóxicos e garanta colheitas
+          seguras de acordo com a base Agrofit/MAPA.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- Lado do formulário -->
+    <main class="painel-formulario">
+      <div class="caixa-formulario">
+
+        <h1>Acesse sua propriedade</h1>
+
+        <form id="form-login">
+
+          <div class="campo">
+            <label for="email">E-mail <span class="obrigatorio">*</span></label>
+            <input type="email" id="email" name="email"
+                   placeholder="seu@email.com"
+                   autocomplete="email" required>
+          </div>
+
+          <div class="campo">
+            <label for="senha">Senha <span class="obrigatorio">*</span></label>
+            <div class="campo-com-botao">
+              <input type="password" id="senha" name="senha"
+                     placeholder="Mínimo de 6 caracteres"
+                     autocomplete="current-password" minlength="6" required>
+
+              <button type="button" class="botao-olho" id="botao-olho" aria-label="Mostrar senha">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                  <line class="risco" x1="4" y1="4" x2="20" y2="20"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <a class="link-pequeno" href="recuperar-senha.html">Esqueci minha senha</a>
+
+          <button type="submit" class="botao botao-primario">Entrar</button>
+
+        </form>
+
+        <div class="divisor">ou</div>
+
+        <p class="texto-centro">
+          É produtor novo? <a href="cadastro.html">Cadastre sua propriedade</a>
+        </p>
+
+        <p class="rodape-formulario">
+          Dados conforme base Agrofit - Ministério da Agricultura, Pecuária e Abastecimento
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="js/olho-senha.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
