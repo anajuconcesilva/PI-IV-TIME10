@@ -1,0 +1,133 @@
+<!--feito pela aluna marília santos-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Produtos | Minha Colheita</title>
+  <link rel="icon" href="img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/painel.css">
+  <link rel="stylesheet" href="css/novas-telas.css"> <!-- CARREGA OS ESTILOS NOVOS -->
+</head>
+<body>
+  <div class="painel">
+    <nav class="menu-lateral">
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="Logo">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+      <p class="menu-titulo">MENU</p>
+      <div class="menu-links">
+        <a href="dashboard.html" class="menu-link">Dashboard</a>
+        <a href="#" class="menu-link">Talhões</a>
+        <a href="#" class="menu-link">Nova Aplicação</a>
+        <a href="consulta.html" class="menu-link ativo">Consulta Produtos</a>
+        <a href="#" class="menu-link">Avisos</a>
+        <a href="relatorios.html" class="menu-link">Relatórios</a>
+      </div>
+      <div class="menu-rodape">
+        <div class="menu-usuario">
+          <div class="menu-iniciais">JC</div>
+          <div>
+            <strong>João Carlos</strong>
+            <span>Fazenda São Luís</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="conteudo">
+      <h1 class="chamada-titulo" style="font-size: 32px; color: var(--cor-marinho); margin-bottom: 4px;">Consulta de produtos</h1>
+      <p class="subtitulo" style="margin-bottom: 24px;">Base Agrofit/MAPA — verifique se um produto é registrado para sua cultura</p>
+
+      <div class="banner-info">
+        <div class="icone-info">i</div>
+        <span>Dados sincronizados com a base <strong>Agrofit</strong> do Ministério da Agricultura, Pecuária e Abastecimento (MAPA).</span>
+      </div>
+
+      <div class="barra-pesquisa">
+        <svg class="icone" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="input-busca" placeholder="Buscar por nome, ingrediente ativo ou nº de registro...">
+      </div>
+
+      <div class="linha-filtros">
+        <div class="grupo-filtro">
+          <h4>Cultura</h4>
+          <div class="filtros-pills" id="filtros-cultura">
+            <button class="pill ativo" data-filter="todas">Todas</button>
+            <button class="pill" data-filter="soja">Soja</button>
+            <button class="pill" data-filter="milho">Milho</button>
+            <button class="pill" data-filter="tomate">Tomate</button>
+            <button class="pill" data-filter="cafe">Café</button>
+            <button class="pill" data-filter="feijao">Feijão</button>
+            <button class="pill" data-filter="algodao">Algodão</button>
+            <button class="pill" data-filter="trigo">Trigo</button>
+          </div>
+        </div>
+        <div class="grupo-filtro">
+          <h4>Classe</h4>
+          <div class="filtros-pills" id="filtros-classe">
+            <button class="pill ativo" data-filter="todas">Todas</button>
+            <button class="pill" data-filter="herbicida">Herbicida</button>
+            <button class="pill" data-filter="inseticida">Inseticida</button>
+            <button class="pill" data-filter="fungicida">Fungicida</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="contador-resultados" id="contador-texto">8 produtos encontrados</div>
+
+      <div class="lista-produtos" id="lista-produtos">
+        <div class="card-produto" data-cultura="soja milho cafe cana-de-açucar" data-classe="herbicida">
+          <div class="produto-info">
+            <h3>Roundup Original <span class="badge">Herbicida</span></h3>
+            <p class="produto-sub">Glifosato · Reg. BR-0101283</p>
+            <div class="tags-cultura">
+              <span class="tag">Soja</span><span class="tag">Milho</span><span class="tag">Cana-de-açúcar</span><span class="tag">Café</span>
+            </div>
+          </div>
+          <div class="produto-carencia">
+            <span>14</span>
+            <small>dias carência</small>
+          </div>
+        </div>
+
+        <div class="card-produto" data-cultura="milho soja feijao algodao" data-classe="inseticida">
+          <div class="produto-info">
+            <h3>Imidacloprid 700 WG <span class="badge">Inseticida</span></h3>
+            <p class="produto-sub">Imidacloprido · Reg. BR-0093012</p>
+            <div class="tags-cultura">
+              <span class="tag">Milho</span><span class="tag">Soja</span><span class="tag">Feijão</span><span class="tag">Algodão</span>
+            </div>
+          </div>
+          <div class="produto-carencia">
+            <span>21</span>
+            <small>dias carência</small>
+          </div>
+        </div>
+        
+        <div class="card-produto" data-cultura="feijao milho tomate batata" data-classe="fungicida">
+          <div class="produto-info">
+            <h3>Dithane NT <span class="badge">Fungicida</span></h3>
+            <p class="produto-sub">Mancozebe · Reg. BR-0047291</p>
+            <div class="tags-cultura">
+              <span class="tag">Feijão</span><span class="tag">Milho</span><span class="tag">Tomate</span><span class="tag">Batata</span>
+            </div>
+          </div>
+          <div class="produto-carencia">
+            <span>10</span>
+            <small>dias carência</small>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/consulta.js"></script>
+</body>
+</html>

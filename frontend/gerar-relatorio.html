@@ -1,0 +1,110 @@
+<!--feito pela aluna marília santos-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar de Conformidade | Minha Colheita</title>
+  <link rel="icon" href="img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/painel.css">
+  <link rel="stylesheet" href="css/novas-telas.css"> <!-- CARREGA OS ESTILOS NOVOS -->
+</head>
+<body>
+  <div class="painel">
+    <nav class="menu-lateral">
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="Logo">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+      <p class="menu-titulo">MENU</p>
+      <div class="menu-links">
+        <a href="dashboard.html" class="menu-link">Dashboard</a>
+        <a href="#" class="menu-link">Talhões</a>
+        <a href="#" class="menu-link">Nova Aplicação</a>
+        <a href="consulta.html" class="menu-link">Consulta Produtos</a>
+        <a href="#" class="menu-link">Avisos</a>
+        <a href="relatorios.html" class="menu-link ativo">Relatórios</a>
+      </div>
+      <div class="menu-rodape">
+        <div class="menu-usuario">
+          <div class="menu-iniciais">JC</div>
+          <div>
+            <strong>João Carlos</strong>
+            <span>Fazenda São Luís</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="conteudo">
+      <a href="relatorios.html" class="voltar-link">
+        <svg class="icone" viewBox="0 0 24 24" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Voltar
+      </a>
+      <h1 class="chamada-titulo" style="font-size: 32px; color: var(--cor-marinho); margin-bottom: 4px;">Registrar de Conformidade</h1>
+      <p class="subtitulo">Adicione as informações e gere seu relatório:</p>
+
+      <form id="form-relatorio" class="caixa-branca">
+        <div class="grid-3">
+          <div class="campo">
+            <label>Fazenda <span class="obrigatorio">*</span></label>
+            <select required>
+              <option value="">Selecione a fazenda</option>
+              <option>Fazenda São Luís</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Talhão <span class="obrigatorio">*</span></label>
+            <select required>
+              <option value="">Selecione o talhão</option>
+              <option>Todos os talhões</option>
+              <option>Talhão A1</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Tipo de Documento <span class="obrigatorio">*</span></label>
+            <select required>
+              <option value="">Selecione o tipo</option>
+              <option>Relatório de Conformidade</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Período de Início e Fim <span class="obrigatorio">*</span></label>
+        </div>
+        <div class="grid-2">
+          <div class="campo">
+            <label>Início</label>
+            <input type="date" required>
+          </div>
+          <div class="campo">
+            <label>Fim</label>
+            <input type="date" required>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Configurações de Inclusão</label>
+          <!-- Aqui está a correção estrutural dos checkboxes -->
+          <div class="checkbox-grupo">
+            <label class="checkbox-item"><input type="checkbox"> Incluir QR Code de Validação</label>
+            <label class="checkbox-item"><input type="checkbox"> Assinatura do Responsável Técnico</label>
+          </div>
+        </div>
+
+        <div class="acoes-footer">
+          <button type="button" class="botao botao-secundario" onclick="window.location.href='relatorios.html'">Cancelar</button>
+          <button type="submit" class="botao botao-destaque">Gerar Relatório (PDF)</button>
+        </div>
+      </form>
+    </main>
+  </div>
+  <script src="js/gerar-relatorio.js"></script>
+</body>
+</html>
