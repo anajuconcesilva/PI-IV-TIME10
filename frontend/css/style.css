@@ -235,9 +235,14 @@ a {
   color: var(--cor-marinho);
 }
 
-/* Olho riscado = senha escondida. O risco some quando a senha aparece. */
-.botao-olho.senha-visivel .risco {
+/* Olho riscado = senha escondida, olho aberto = senha visível */
+.botao-olho .olho-aberto,
+.botao-olho.senha-visivel .olho-fechado {
   display: none;
+}
+
+.botao-olho.senha-visivel .olho-aberto {
+  display: block;
 }
 
 .link-pequeno {

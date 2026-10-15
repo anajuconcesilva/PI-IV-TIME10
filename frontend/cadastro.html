@@ -74,13 +74,13 @@
             <div class="campo">
               <label for="documento">CPF ou CNPJ <span class="obrigatorio">*</span></label>
               <input type="text" id="documento" name="documento"
-                     placeholder="000.000.000-00" inputmode="numeric" required>
+                     placeholder="000.000.000-00" inputmode="numeric" maxlength="18" required>
             </div>
 
             <div class="campo">
               <label for="celular">Celular <span class="obrigatorio">*</span></label>
               <input type="tel" id="celular" name="celular"
-                     placeholder="(11) 9 9999-9999" autocomplete="tel" required>
+                     placeholder="(11) 9 9999-9999" autocomplete="tel" maxlength="16" required>
             </div>
 
             <button type="submit" class="botao botao-primario">Próximo</button>
@@ -113,12 +113,15 @@
                        placeholder="Mínimo de 6 caracteres"
                        autocomplete="new-password" minlength="6" required>
 
+                <!-- Ícones: Lucide (lucide.dev), licença ISC -->
                 <button type="button" class="botao-olho" aria-label="Mostrar senha">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  <svg class="olho-fechado" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                    <line class="risco" x1="4" y1="4" x2="20" y2="20"/>
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>
+                  </svg>
+                  <svg class="olho-aberto" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>
                   </svg>
                 </button>
               </div>
@@ -132,11 +135,13 @@
                        autocomplete="new-password" required>
 
                 <button type="button" class="botao-olho" aria-label="Mostrar senha">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  <svg class="olho-fechado" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                    <line class="risco" x1="4" y1="4" x2="20" y2="20"/>
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>
+                  </svg>
+                  <svg class="olho-aberto" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>
                   </svg>
                 </button>
               </div>

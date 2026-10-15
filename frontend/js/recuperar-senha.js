@@ -27,8 +27,10 @@ formCodigo.addEventListener("submit", function (evento) {
   mostrarEtapa(2);
 });
 
+// Ainda não salva no servidor: só volta para o login
 formSenha.addEventListener("submit", function (evento) {
   evento.preventDefault();
+  window.location.href = "login.html";
 });
 
 // Quadradinhos do código: pula para o próximo ao digitar
