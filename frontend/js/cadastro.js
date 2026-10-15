@@ -7,6 +7,7 @@ const linhas = document.querySelectorAll(".passo-linha");
 const botoesVoltar = document.querySelectorAll(".botao-voltar");
 
 const campoDocumento = document.getElementById("documento");
+const campoCelular = document.getElementById("celular");
 const campoSenha = document.getElementById("senha");
 const campoConfirmar = document.getElementById("confirmar-senha");
 
@@ -47,14 +48,49 @@ function temCulturaMarcada() {
   return listaCulturas.querySelectorAll("input:checked").length > 0;
 }
 
+// Encaixa os números no molde: cada "0" recebe um número,
+// o resto (pontos, traços, parênteses) entra como está
+function aplicarMascara(numeros, molde) {
+  let resultado = "";
+  let posicao = 0;
+
+  for (let i = 0; i < molde.length && posicao < numeros.length; i++) {
+    if (molde[i] === "0") {
+      resultado += numeros[posicao];
+      posicao++;
+    } else {
+      resultado += molde[i];
+    }
+  }
+  return resultado;
+}
+
 // CPF tem 11 números e CNPJ tem 14
 campoDocumento.addEventListener("input", function () {
-  const numeros = campoDocumento.value.replace(/\D/g, "");
+  const numeros = campoDocumento.value.replace(/\D/g, "").slice(0, 14);
+
+  if (numeros.length <= 11) {
+    campoDocumento.value = aplicarMascara(numeros, "000.000.000-00");
+  } else {
+    campoDocumento.value = aplicarMascara(numeros, "00.000.000/0000-00");
+  }
 
   if (numeros.length === 11 || numeros.length === 14) {
     campoDocumento.setCustomValidity("");
   } else {
     campoDocumento.setCustomValidity("Digite um CPF (11 números) ou um CNPJ (14 números).");
+  }
+});
+
+// Celular: DDD + 9 números
+campoCelular.addEventListener("input", function () {
+  const numeros = campoCelular.value.replace(/\D/g, "").slice(0, 11);
+  campoCelular.value = aplicarMascara(numeros, "(00) 0 0000-0000");
+
+  if (numeros.length === 11) {
+    campoCelular.setCustomValidity("");
+  } else {
+    campoCelular.setCustomValidity("Digite o DDD e os 9 números do celular.");
   }
 });
 
