@@ -38,6 +38,11 @@
   font-size: 15px;
   background-color: var(--cor-branco);
 }
+.barra-pesquisa input:focus {
+  outline: none;
+  border-color: var(--cor-acao);
+  box-shadow: 0 0 0 3px rgba(31, 111, 158, 0.18);
+}
 .barra-pesquisa .icone {
   position: absolute;
   left: 16px;
