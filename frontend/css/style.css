@@ -206,6 +206,14 @@ a {
   box-shadow: 0 0 0 3px rgba(31, 111, 158, 0.18);
 }
 
+/* Sem isso, a regra de cima deixa a caixinha de marcar do tamanho de um campo */
+.campo input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  accent-color: var(--cor-marinho);
+}
+
 /* Campo de senha com o botão do olho dentro */
 .campo-com-botao {
   position: relative;
