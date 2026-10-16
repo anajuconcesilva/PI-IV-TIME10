@@ -1,0 +1,190 @@
+<!--Beatriz Naomi Ferreira Sasaki - RA: 25016735-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Talhão</title>
+    <link rel="icon" href="/frontend/img/logo.png">
+    <!--Fonte Inter -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+    <!-- Link para CSS -->
+    <link rel="stylesheet" href="../css/comumTalhao.css">
+    <link rel="stylesheet" href="../css/cadastroTalhao.css">
+    <!-- Link para Javascript-->
+    <script src="../js/comumTalhao.js" defer></script>
+    <script src="../js/cadastroTalhao.js" defer></script>
+</head>
+<body>
+    <!-- Espaço do menu lateral-->
+       <!--Menu lateral-->
+    <aside class="menu-lateral" aria-label="Menu lateral">
+
+      <div class="marca">
+        <img class="marca-logo" src="/frontend/img/logo.png" alt="">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <p class="menu-titulo">MENU</p>
+      <!-- Ícones: Lucide (lucide.dev), licença ISC -->
+      <nav class="menu-links">
+        <a class="menu-link" href="/frontend/dashboard.html" aria-disabled="true">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Dashboard
+        </a>
+        <a class="menu-link ativo" href="/frontend/pages/listagemTalhao.html" aria-current="page">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg>
+          Talhões
+        </a>
+        <span class="menu-link" aria-disabled="true" title="Tela ainda não implementada nesta pasta">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h.01"/><path d="M7 5h.01"/><path d="M11 7h.01"/><path d="M3 7h.01"/><path d="M7 9h.01"/><path d="M3 11h.01"/><rect width="4" height="4" x="15" y="5"/><path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1V11l2-2"/><path d="m13 14 8-2"/><path d="m13 19 8-2"/></svg>
+          Nova aplicação
+        </span>
+        <a class="menu-link" href="/frontend/consulta.html" aria-disabled="true">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          Consulta de produtos
+        </a>
+        <span class="menu-link" aria-disabled="true" title="Tela ainda não implementada nesta pasta">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+          Avisos
+        </span>
+        <span class="menu-link" aria-disabled="true" title="Tela ainda não implementada nesta pasta">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+          Relatórios
+        </span>
+      </nav>
+
+      <div class="menu-rodape">
+        <div class="menu-usuario">
+          <span class="menu-iniciais" id="usuario-iniciais">JC</span>
+          <div>
+            <strong id="usuario-nome">João Carlos</strong>
+            <span id="usuario-propriedade" class="propriedade">Fazenda São Luís</span>
+          </div>
+        </div>
+
+        <a class="menu-link menu-sair" href= '/frontend/login.html' aria-disabled="true" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+          Sair da conta
+        </a>
+      </div>
+    </aside>
+    <main class="cadastro">
+        <a class="voltar" href="/frontend/pages/listagemTalhao.html">
+        <svg class="icone-lucide " aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M5 12h14"/></svg>
+            <span class="text-voltar">Voltar</span>
+        </a>
+        <!--Organiza o formulário -->
+        <div class="layout-cadastro">
+            <section> 
+                <header class="header-cadastro">
+                    <h1 id="Titulo-formulario"> Novo talhão</h1>
+                    <p> Cadastre um talhão para organizar e monitorar sua produção</p>
+                </header>
+                <!--campos do formulário de cadastro de talhão-->
+                <form class="painel campo-cadastro" id="formulario">
+                    <!--Nome do talhão-->
+                    <label class="campo">
+                        Nome do talhão
+                        <span class="obrigatorio">*</span>
+                        <input name ="nome" required placeholder="Ex: Talhão A1, Gleba Norte">
+                    </label>
+                    <!--Cultura-->
+                    <label class="campo">
+                        Cultura
+                        <span class="obrigatorio">*</span>
+                        <input name ="cultura" required placeholder="Ex: Milho, Soja, Algodão">
+                    </label>
+                    <!--Área do talhão-->
+                    <label class="campo">
+                        Área (hectares)
+                        <span class="obrigatorio">*</span>
+                        <input name="area" type="number" min="0.0" step="1" required placeholder="Ex: 10, 50, 100">
+                        <span id="area-texto" class="area-texto">Área total do talhão em hectares.</span>
+                    </label>
+                
+                    <div class="linhas-form">
+                        <!--Safra-->
+                        <label class="campo">
+                            Safra
+                            <span class="obrigatorio">*</span>
+                            <input name ="safra" required placeholder="Ex: 2023/2024, 2024/2025">
+                        </label>
+                        <!--Data de início do cultivo-->
+                        <label class="campo">
+                            Data de início de cultivo
+                            <span class="obrigatorio">*</span>
+                            <input name="dataInicio" type="date" required placeholder=" Ex:MM/DD/AAAA">
+                        </label>
+                    </div>
+                    <!--Observações-->
+                   <label class="campo">
+                        Observações (opcional)
+                    <textarea name="observacoes" maxlength="2000" placeholder="Informações adicionais sobre localização, histórico...">
+                    </textarea>
+                    </label>
+                    <!-- botões do formulário -->
+                    <div class="acoes-formulario">
+                        <a class="botao" href="/frontend/pages/listagemTalhao.html">
+                            Cancelar
+                        </a>
+                        <button class="botao salvar" id="enviar-formulario" type="submit">
+                            Cadastrar talhão
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <!-- Resumo sobre área da propriedade -->
+            <aside class="resumo">
+                    <h1 id="nome-propriedade">Fazenda São Luís</h1>
+                    <section class="painel">
+                    <h2 class="titulo-painel">Área utilizada</h2>
+                    <div class="medida-area"  aria-label="Proporção da área utilizada">
+                        <!--Barra de progresso-->
+                        <span id="total-usado">
+                        </span>
+                    </div>
+                    <!-- Informações sobre área utilizada e disponível -->
+                    <div class="informacoes-area">
+                        <span>
+                            <span id="area-usada">0,0</span> ha usados
+                        </span>
+                        <span>
+                            <span id="area-disponivel">0,0</span> ha restantes
+                        </span>
+                    </div>
+                    <hr>
+                    <h2 class="titulo-painel-secundario">Talhões cadastrados</h2>
+                    <div class="resumo-tabela">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th scope="col">TALHÃO</th>
+                                <th scope="col">ÁREA</th>
+                                <th scope="col">STATUS</th>
+                            </tr>
+                            </thead>
+                            <!-- As linhas são preenchidas pela função compartilhada renderRows. -->
+                            <tbody id="talhoes-resumo">
+                            </tbody>
+                        </table>
+                    </div>
+                    </section>
+            </aside>
+        </div>
+    </main>
+    <!-- alerta de sucesso-->
+    <dialog class="alerta-modal" id="alerta-sucesso" aria-labelledby="titulo-alerta-sucesso">
+      <svg class="icone-lucide alerta-icone sucesso" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      <h2 id="titulo-alerta-sucesso">Operação realizada com sucesso!</h2>
+      <div class="alerta-acoes">
+        <button class="botao salvar" id="fechar-alerta-sucesso" type="button" autofocus>Continuar</button>
+      </div>
+    </dialog>
+</body>
+</html>
