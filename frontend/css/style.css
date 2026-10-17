@@ -533,3 +533,25 @@ a {
     padding: 32px 16px;
   }
 }
+
+
+/* Ajustes da marca no menu lateral */
+.menu-lateral .marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-lateral .marca-logo {
+  display: block;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  padding: 6px;
+  object-fit: contain;
+  background-color: var(--cor-branco);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+

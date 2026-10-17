@@ -1,0 +1,246 @@
+/* Aluna: Ana Júlia Conceição da Silva | RA: 25002592 */
+/* Estilos exclusivos da página Registrar Aplicação */
+
+/* ===== Conteúdo principal ===== */
+
+.aplicacao-conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aplicacao-voltar,
+.aplicacao-cabecalho,
+.aplicacao-formulario {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* ===== Link voltar ===== */
+
+.aplicacao-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-acao);
+  text-decoration: none;
+}
+
+.aplicacao-voltar:hover {
+  text-decoration: underline;
+}
+
+.aplicacao-voltar .icone {
+  width: 14px;
+  height: 14px;
+}
+
+/* ===== Título e subtítulo ===== */
+
+.aplicacao-cabecalho {
+  margin-bottom: 14px;
+}
+
+.aplicacao-cabecalho h1 {
+  margin: 0 0 3px;
+  font-family: var(--fonte-titulo);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--cor-marinho);
+}
+
+.aplicacao-cabecalho p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--cor-texto-suave);
+}
+
+/* ===== Caixa do formulário ===== */
+
+.aplicacao-formulario {
+  width: 100%;
+  max-width: 560px;
+  padding: 18px 20px 16px;
+
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+}
+
+/* ===== Campos ===== */
+
+.aplicacao-campo {
+  min-width: 0;
+  margin-bottom: 12px;
+}
+
+.aplicacao-campo label {
+  display: block;
+  margin-bottom: 4px;
+
+  font-family: var(--fonte-texto);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--cor-texto);
+}
+
+.aplicacao-campo .obrigatorio {
+  color: var(--cor-erro);
+}
+
+/* Inputs e seletores */
+
+.aplicacao-campo input,
+.aplicacao-campo select {
+  display: block;
+  width: 100%;
+  height: 35px;
+  min-width: 0;
+  padding: 0 10px;
+
+  font-family: var(--fonte-texto);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--cor-texto);
+
+  background-color: var(--cor-branco);
+  border: 1px solid #E7E9E2;
+  border-radius: 5px;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.aplicacao-campo input::placeholder {
+  color: #A0A59F;
+  opacity: 1;
+}
+
+.aplicacao-campo input:focus,
+.aplicacao-campo select:focus {
+  outline: none;
+  border-color: var(--cor-acao);
+  box-shadow: 0 0 0 2px rgba(31, 111, 158, 0.12);
+}
+
+/* ===== Dose e unidade na mesma linha ===== */
+
+.aplicacao-linha {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(90px, 1fr);
+  gap: 10px;
+}
+
+.aplicacao-linha .aplicacao-campo {
+  min-width: 0;
+}
+
+.aplicacao-unidade {
+  width: 100%;
+}
+
+/* ===== Campo de observações ===== */
+
+.aplicacao-campo-observacoes {
+  margin-bottom: 14px;
+}
+
+/* ===== Botões ===== */
+
+.aplicacao-acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.aplicacao-acoes .botao {
+  width: 100%;
+  height: 36px;
+  padding: 0 8px;
+
+  font-family: var(--fonte-texto);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  border-radius: 5px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.aplicacao-acoes .botao-secundario {
+  color: var(--cor-texto);
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+}
+
+.aplicacao-acoes .botao-secundario:hover {
+  border-color: var(--cor-marinho);
+}
+
+.aplicacao-acoes .botao-destaque {
+  color: var(--cor-marinho);
+  background-color: var(--cor-destaque);
+  border: 1px solid var(--cor-destaque);
+}
+
+.aplicacao-acoes .botao-destaque:hover {
+  background-color: #CFD93A;
+  border-color: #CFD93A;
+}
+
+/* Indicação visual ao passar o mouse */
+
+.aplicacao-acoes .botao:focus-visible {
+  outline: 2px solid var(--cor-acao);
+  outline-offset: 2px;
+}
+
+/* ===== Responsividade ===== */
+
+@media (max-width: 860px) {
+  .aplicacao-conteudo {
+    padding: 20px 16px;
+  }
+
+  .aplicacao-cabecalho h1 {
+    font-size: 24px;
+  }
+
+  .aplicacao-formulario {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .aplicacao-conteudo {
+    padding: 16px 12px;
+  }
+
+  .aplicacao-cabecalho h1 {
+    font-size: 22px;
+  }
+
+  .aplicacao-formulario {
+    padding: 16px 12px;
+  }
+
+  .aplicacao-linha {
+    grid-template-columns: minmax(0, 1fr) minmax(90px, 0.8fr);
+    gap: 8px;
+  }
+
+  .aplicacao-acoes {
+    grid-template-columns: 1fr;
+  }
+
+  .aplicacao-acoes .botao {
+    height: 40px;
+  }
+}

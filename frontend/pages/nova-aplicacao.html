@@ -1,0 +1,274 @@
+<!-- Aluna: Ana Júlia Conceição da Silva | RA: 25002592 -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Registrar Aplicação | Minha Colheita</title>
+
+  <link rel="icon" href="../img/logo.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+
+  <!-- CSS compartilhados -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/painel.css">
+
+  <!-- CSS exclusivo desta página -->
+  <link rel="stylesheet" href="../css/registrar-aplicacao.css">
+</head>
+
+<body>
+  <div class="painel">
+
+    <!-- MENU LATERAL -->
+    <nav class="menu-lateral">
+
+      <div class="marca">
+        <img class="marca-logo" src="../img/logo.png" alt="Logo Minha Colheita">
+
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <p class="menu-titulo">MENU</p>
+
+      <div class="menu-links">
+
+        <!-- Dashboard: arquivo na raiz de frontend -->
+        <a href="../dashboard.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Talhões: arquivo dentro de pages -->
+        <a href="listagemTalhao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/>
+            <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/>
+            <path d="M5 21h14"/>
+          </svg>
+          Talhões
+        </a>
+
+        <!-- Página atual -->
+        <a href="nova-aplicacao.html" class="menu-link ativo" aria-current="page">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 3h.01"/>
+            <path d="M7 5h.01"/>
+            <path d="M11 7h.01"/>
+            <path d="M3 7h.01"/>
+            <path d="M7 9h.01"/>
+            <path d="M3 11h.01"/>
+            <rect width="4" height="4" x="15" y="5"/>
+            <path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1V11l2-2"/>
+            <path d="m13 14 8-2"/>
+            <path d="m13 19 8-2"/>
+          </svg>
+          Nova Aplicação
+        </a>
+
+        <!-- Consulta: arquivo na raiz de frontend -->
+        <a href="../consulta.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m21 21-4.34-4.34"/>
+            <circle cx="11" cy="11" r="8"/>
+          </svg>
+          Consulta Produtos
+        </a>
+
+        <!-- Avisos: ajuste se criar uma página própria -->
+        <a href="../dashboard.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.268 21a2 2 0 0 0 3.464 0"/>
+            <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>
+          </svg>
+          Avisos
+        </a>
+
+        <!-- Relatórios: arquivo na raiz de frontend -->
+        <a href="../relatorios.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+            <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+            <path d="M10 9H8"/>
+            <path d="M16 13H8"/>
+            <path d="M16 17H8"/>
+          </svg>
+          Relatórios
+        </a>
+
+      </div>
+
+      <!-- RODAPÉ DO MENU -->
+      <div class="menu-rodape">
+
+        <div class="menu-usuario">
+          <div class="menu-iniciais">JC</div>
+
+          <div>
+            <strong>João Carlos</strong>
+            <span>Fazenda São Luís</span>
+          </div>
+        </div>
+
+        <a href="../login.html" class="menu-link menu-sair">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m16 17 5-5-5-5"/>
+            <path d="M21 12H9"/>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          </svg>
+          Sair da conta
+        </a>
+
+      </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="conteudo aplicacao-conteudo">
+
+      <!-- VOLTAR PARA O DASHBOARD -->
+      <a href="../dashboard.html" class="aplicacao-voltar">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19 12H5"/>
+          <path d="m12 19-7-7 7-7"/>
+        </svg>
+        Voltar
+      </a>
+
+      <!-- CABEÇALHO -->
+      <header class="aplicacao-cabecalho">
+        <h1>Registrar aplicação</h1>
+
+        <p>
+          Registre uma aplicação de agrotóxico para controlar
+          o período de carência
+        </p>
+      </header>
+
+      <!-- FORMULÁRIO -->
+      <form id="form-aplicacao" class="aplicacao-formulario">
+
+        <div class="aplicacao-campo">
+          <label for="talhao">
+            Talhão <span class="obrigatorio">*</span>
+          </label>
+
+          <select id="talhao" name="talhao" required>
+            <option value="">Selecione o talhão</option>
+            <option value="A1">Talhão A1</option>
+          </select>
+        </div>
+
+        <div class="aplicacao-campo">
+          <label for="produto">
+            Produto aplicado <span class="obrigatorio">*</span>
+          </label>
+
+          <input
+            type="text"
+            id="produto"
+            name="produto"
+            placeholder="Buscar pelo nome do produto ou ingrediente ativo..."
+            required
+          >
+        </div>
+
+        <div class="aplicacao-linha">
+
+          <div class="aplicacao-campo">
+            <label for="dose">
+              Dose aplicada <span class="obrigatorio">*</span>
+            </label>
+
+            <input
+              type="number"
+              id="dose"
+              name="dose"
+              min="0.01"
+              step="any"
+              placeholder="Ex.: 1,5"
+              required
+            >
+          </div>
+
+          <div class="aplicacao-campo aplicacao-unidade">
+            <label for="unidade">Unidade</label>
+
+            <select id="unidade" name="unidade" required>
+              <option value="L/ha">L/ha</option>
+              <option value="mL/ha">mL/ha</option>
+              <option value="kg/ha">kg/ha</option>
+              <option value="g/ha">g/ha</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="aplicacao-campo">
+          <label for="data-aplicacao">
+            Data de aplicação <span class="obrigatorio">*</span>
+          </label>
+
+          <input
+            type="date"
+            id="data-aplicacao"
+            name="data_aplicacao"
+            required
+          >
+        </div>
+
+        <div class="aplicacao-campo">
+          <label for="responsavel">
+            Responsável técnico (opcional)
+          </label>
+
+          <input
+            type="text"
+            id="responsavel"
+            name="responsavel"
+            placeholder="Nome do Eng. Agrônomo ou responsável"
+          >
+        </div>
+
+        <div class="aplicacao-campo aplicacao-campo-observacoes">
+          <label for="observacoes">
+            Observações (opcional)
+          </label>
+
+          <input
+            type="text"
+            id="observacoes"
+            name="observacoes"
+            placeholder="Condições climáticas, equipamento utilizado..."
+          >
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="aplicacao-acoes">
+
+          <button
+            type="button"
+            class="botao botao-secundario"
+            onclick="window.location.href='../dashboard.html'"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="botao botao-destaque">
+            Registrar aplicação
+          </button>
+
+        </div>
+
+      </form>
+    </main>
+  </div>
+</body>
+</html>
