@@ -1,0 +1,343 @@
+<!-- Aluna: Ana Júlia Conceição da Silva | RA: 25002592 -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Central de Avisos | Minha Colheita</title>
+
+  <link rel="icon" href="../img/logo.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/painel.css">
+  <link rel="stylesheet" href="../css/avisos.css">
+</head>
+
+<body>
+  <div class="painel">
+
+    <!-- MENU LATERAL -->
+    <nav class="menu-lateral">
+
+      <div class="marca">
+        <img class="marca-logo" src="../img/logo.png" alt="Logo Minha Colheita">
+
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <p class="menu-titulo">MENU</p>
+
+      <div class="menu-links">
+
+        <a href="../dashboard.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M9 21v-8h6v8"/>
+          </svg>
+          Dashboard
+        </a>
+
+        <a href="listagemTalhao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/>
+            <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/>
+            <path d="M5 21h14"/>
+          </svg>
+          Talhões
+        </a>
+
+        <a href="nova-aplicacao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 3h.01"/>
+            <path d="M7 5h.01"/>
+            <path d="M11 7h.01"/>
+            <path d="M3 7h.01"/>
+            <path d="M7 9h.01"/>
+            <path d="M3 11h.01"/>
+            <rect width="4" height="4" x="15" y="5"/>
+            <path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-1-1-1V11l2-2"/>
+            <path d="m13 14 8-2"/>
+            <path d="m13 19 8-2"/>
+          </svg>
+          Nova aplicação
+        </a>
+
+        <a href="../consulta.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.34-4.34"/>
+          </svg>
+          Consulta de produtos
+        </a>
+
+        <a href="avisos.html" class="menu-link ativo" aria-current="page">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+            <path d="M10 21h4"/>
+          </svg>
+          Avisos
+          <span class="menu-aviso-contador" id="contador-menu">3</span>
+        </a>
+
+        <a href="../relatorios.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8l6 6v12a2 2 0 0 1-2 2z"/>
+            <path d="M14 2v6h6"/>
+            <path d="M8 13h8"/>
+            <path d="M8 17h8"/>
+          </svg>
+          Relatórios
+        </a>
+
+      </div>
+
+      <!-- RODAPÉ DO MENU -->
+      <div class="menu-rodape">
+
+        <div class="menu-usuario">
+          <div class="menu-iniciais">JC</div>
+
+          <div>
+            <strong>João Carlos</strong>
+            <span>Fazenda São Luís</span>
+          </div>
+        </div>
+
+        <a href="../login.html" class="menu-link menu-sair">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m16 17 5-5-5-5"/>
+            <path d="M21 12H9"/>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          </svg>
+          Sair da conta
+        </a>
+
+      </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="conteudo avisos-conteudo">
+
+      <!-- CABEÇALHO -->
+      <header class="avisos-cabecalho">
+
+        <div class="avisos-titulo-grupo">
+          <h1>Central de avisos</h1>
+
+          <span class="avisos-nao-lidos" id="contador-nao-lidos">
+            3 não lidos
+          </span>
+        </div>
+
+        <p>Acompanhe alertas e notificações dos seus talhões</p>
+
+        <button
+          type="button"
+          class="avisos-marcar-todos"
+          id="marcar-todos"
+        >
+          Marcar todos como lidos
+        </button>
+
+      </header>
+
+      <!-- FILTROS -->
+      <nav class="avisos-filtros" aria-label="Filtrar avisos">
+
+        <button
+          type="button"
+          class="aviso-filtro ativo"
+          data-filtro="todos"
+          aria-pressed="true"
+        >
+          Todos (<span id="quantidade-todos">5</span>)
+        </button>
+
+        <button
+          type="button"
+          class="aviso-filtro"
+          data-filtro="nao-lidos"
+          aria-pressed="false"
+        >
+          Não lidos (<span id="quantidade-nao-lidos">3</span>)
+        </button>
+
+        <button
+          type="button"
+          class="aviso-filtro"
+          data-filtro="urgentes"
+          aria-pressed="false"
+        >
+          Urgentes
+        </button>
+
+      </nav>
+
+      <!-- LISTA DE AVISOS -->
+      <section class="avisos-lista" id="lista-avisos" aria-label="Lista de avisos">
+
+        <!-- AVISO 1 -->
+        <article class="aviso-card aviso-bloqueado nao-lido" data-urgente="true">
+
+          <div class="aviso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M10.3 3.9 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
+              <path d="M12 9v4"/>
+              <path d="M12 17h.01"/>
+            </svg>
+          </div>
+
+          <div class="aviso-corpo">
+            <h2>Colheita bloqueada — Talhão C3</h2>
+
+            <p>O produto Acephate 750 BR não possui registro MAPA para a cultura Tomate. A colheita do Talhão C3 está bloqueada até regularização.</p>
+
+            <div class="aviso-informacoes">
+              <span class="aviso-status">Bloqueado</span>
+              <time datetime="2024-09-24T08:15">Hoje, 08:15</time>
+            </div>
+          </div>
+
+          <div class="aviso-acoes">
+            <button type="button" class="aviso-marcar-lido">Marcar como lido</button>
+            <a href="listagemTalhao.html" class="aviso-link">Ver talhão <span>›</span></a>
+          </div>
+
+          <span class="aviso-indicador" aria-label="Não lido"></span>
+        </article>
+
+        <!-- AVISO 2 -->
+        <article class="aviso-card aviso-carencia nao-lido" data-urgente="true">
+
+          <div class="aviso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M10.3 3.9 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
+              <path d="M12 9v4"/>
+              <path d="M12 17h.01"/>
+            </svg>
+          </div>
+
+          <div class="aviso-corpo">
+            <h2>Carência encerrando em 5 dias — Talhão B2</h2>
+
+            <p>O período de carência do Imidacloprid 700 WG no Talhão B2 (Milho) encerra em 24 de setembro de 2024.</p>
+
+            <div class="aviso-informacoes">
+              <span class="aviso-status">Em carência</span>
+              <time datetime="2024-09-24T06:00">Hoje, 06:00</time>
+            </div>
+          </div>
+
+          <div class="aviso-acoes">
+            <button type="button" class="aviso-marcar-lido">Marcar como lido</button>
+            <a href="listagemTalhao.html" class="aviso-link">Ver talhão <span>›</span></a>
+          </div>
+
+          <span class="aviso-indicador" aria-label="Não lido"></span>
+        </article>
+
+        <!-- AVISO 3 -->
+        <article class="aviso-card aviso-liberado nao-lido" data-urgente="false">
+
+          <div class="aviso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m5 12 4 4L19 6"/>
+            </svg>
+          </div>
+
+          <div class="aviso-corpo">
+            <h2>Talhão A1 — liberado para colheita</h2>
+
+            <p>O período de carência do Roundup Original no Talhão A1 (Soja) foi concluído. Colheita e comercialização autorizadas.</p>
+
+            <div class="aviso-informacoes">
+              <span class="aviso-status">Liberado</span>
+              <time datetime="2024-09-17">17 set. 2024</time>
+            </div>
+          </div>
+
+          <div class="aviso-acoes">
+            <button type="button" class="aviso-marcar-lido">Marcar como lido</button>
+            <a href="nova-aplicacao.html" class="aviso-link">Registrar colheita <span>›</span></a>
+          </div>
+
+          <span class="aviso-indicador" aria-label="Não lido"></span>
+        </article>
+
+        <!-- AVISO 4 -->
+        <article class="aviso-card aviso-aguardando lido" data-urgente="false">
+
+          <div class="aviso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+              <path d="M10 21h4"/>
+            </svg>
+          </div>
+
+          <div class="aviso-corpo">
+            <h2>Talhão D4 sem aplicações registradas</h2>
+
+            <p>O Talhão D4 (Café) não possui nenhuma aplicação de agrotóxico registrada. Mantenha os registros atualizados para conformidade.</p>
+
+            <div class="aviso-informacoes">
+              <span class="aviso-status">Aguardando aplicação</span>
+              <time datetime="2024-09-15">15 set. 2024</time>
+            </div>
+          </div>
+
+          <div class="aviso-acoes">
+            <a href="nova-aplicacao.html" class="aviso-link">Registrar aplicação <span>›</span></a>
+          </div>
+
+          <span class="aviso-indicador" aria-label="Não lido"></span>
+        </article>
+
+        <!-- AVISO 5 -->
+        <article class="aviso-card aviso-carencia lido" data-urgente="false">
+
+          <div class="aviso-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M10.3 3.9 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
+              <path d="M12 9v4"/>
+              <path d="M12 17h.01"/>
+            </svg>
+          </div>
+
+          <div class="aviso-corpo">
+            <h2>Carência iniciada — Talhão B2</h2>
+
+            <p>Aplicação de Imidacloprid 700 WG registrada no Talhão B2. Período de carência de 21 dias iniciado em 05/09/2024.</p>
+
+            <div class="aviso-informacoes">
+              <span class="aviso-status">Em carência</span>
+              <time datetime="2024-09-05">05 set. 2024</time>
+            </div>
+          </div>
+
+          <div class="aviso-acoes">
+            <a href="nova-aplicacao.html" class="aviso-link">Ver detalhes <span>›</span></a>
+          </div>
+
+          <span class="aviso-indicador" aria-label="Não lido"></span>
+        </article>
+
+      </section>
+
+      <!-- MENSAGEM QUANDO NÃO EXISTIREM AVISOS -->
+      <div class="avisos-vazio" id="avisos-vazio" hidden>
+        <h2>Nenhum aviso encontrado</h2>
+        <p>Não há avisos para o filtro selecionado.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/avisos.js"></script>
+</body>
+</html>

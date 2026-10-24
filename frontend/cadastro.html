@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!-- Aluna: Eduarda Prado Deiró | RA: 25004440 -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro | Minha Colheita</title>
+
+  <link rel="icon" href="img/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="tela-dividida">
+
+    <!-- Lado da foto -->
+    <section class="painel-foto">
+
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="chamada-titulo">
+          Colheita<br>
+          <span>no prazo.</span><br>
+          Conformidade<br>
+          garantida.
+        </h2>
+        <p class="chamada-texto">
+          Controle o período de carência de agrotóxicos e garanta colheitas
+          seguras de acordo com a base Agrofit/MAPA.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- Lado do formulário -->
+    <main class="painel-formulario">
+      <div class="caixa-formulario">
+
+        <h1>Cadastre sua propriedade</h1>
+
+        <div class="passos">
+          <span class="passo-bolinha ativo">1</span>
+          <span class="passo-linha"></span>
+          <span class="passo-bolinha">2</span>
+          <span class="passo-linha"></span>
+          <span class="passo-bolinha">3</span>
+        </div>
+
+        <!-- novalidate: quem confere os campos é o cadastro.js, um passo por vez -->
+        <form id="form-cadastro" novalidate>
+
+          <!-- Passo 1 -->
+          <fieldset class="etapa">
+            <p class="etapa-titulo">Passo 1 — Dados pessoais</p>
+
+            <div class="campo">
+              <label for="nome">Nome completo <span class="obrigatorio">*</span></label>
+              <input type="text" id="nome" name="nome"
+                     placeholder="João Carlos Silva" autocomplete="name" required>
+            </div>
+
+            <div class="campo">
+              <label for="documento">CPF ou CNPJ <span class="obrigatorio">*</span></label>
+              <input type="text" id="documento" name="documento"
+                     placeholder="000.000.000-00" inputmode="numeric" maxlength="18" required>
+            </div>
+
+            <div class="campo">
+              <label for="celular">Celular <span class="obrigatorio">*</span></label>
+              <input type="tel" id="celular" name="celular"
+                     placeholder="(11) 9 9999-9999" autocomplete="tel" maxlength="16" required>
+            </div>
+
+            <button type="submit" class="botao botao-primario">Próximo</button>
+          </fieldset>
+
+          <!-- Passo 2 -->
+          <fieldset class="etapa" hidden>
+            <p class="etapa-titulo">Passo 2 — Credenciais de acesso</p>
+
+            <div class="campo">
+              <label for="email">E-mail <span class="obrigatorio">*</span></label>
+              <input type="email" id="email" name="email"
+                     placeholder="joao@email.com" autocomplete="email" required>
+            </div>
+
+            <div class="campo">
+              <label for="perfil">Perfil de acesso <span class="obrigatorio">*</span></label>
+              <select id="perfil" name="perfil" required>
+                <option value="">Selecione</option>
+                <option value="produtor">Produtor rural</option>
+                <option value="agronomo">Agrônomo</option>
+                <option value="operador">Operador</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="senha">Senha <span class="obrigatorio">*</span></label>
+              <div class="campo-com-botao">
+                <input type="password" id="senha" name="senha"
+                       placeholder="Mínimo de 6 caracteres"
+                       autocomplete="new-password" minlength="6" required>
+
+                <!-- Ícones: Lucide (lucide.dev), licença ISC -->
+                <button type="button" class="botao-olho" aria-label="Mostrar senha">
+                  <svg class="olho-fechado" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>
+                  </svg>
+                  <svg class="olho-aberto" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="confirmar-senha">Confirmar senha <span class="obrigatorio">*</span></label>
+              <div class="campo-com-botao">
+                <input type="password" id="confirmar-senha" name="confirmar-senha"
+                       placeholder="Repita a senha"
+                       autocomplete="new-password" required>
+
+                <button type="button" class="botao-olho" aria-label="Mostrar senha">
+                  <svg class="olho-fechado" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>
+                  </svg>
+                  <svg class="olho-aberto" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="linha-botoes">
+              <button type="button" class="botao botao-secundario botao-voltar">← Voltar</button>
+              <button type="submit" class="botao botao-primario">Próximo</button>
+            </div>
+          </fieldset>
+
+          <!-- Passo 3 -->
+          <fieldset class="etapa" hidden>
+            <p class="etapa-titulo">Passo 3 — Dados da propriedade</p>
+
+            <div class="campo">
+              <label for="propriedade">Nome da propriedade <span class="obrigatorio">*</span></label>
+              <input type="text" id="propriedade" name="propriedade"
+                     placeholder="Fazenda São Luís" required>
+            </div>
+
+            <div class="linha-campos">
+              <div class="campo campo-grande">
+                <label for="municipio">Município <span class="obrigatorio">*</span></label>
+                <input type="text" id="municipio" name="municipio"
+                       placeholder="Ribeirão Preto" required>
+              </div>
+
+              <div class="campo campo-pequeno">
+                <label for="uf">UF <span class="obrigatorio">*</span></label>
+                <select id="uf" name="uf" required>
+                  <option value="">UF</option>
+                  <option>AC</option>
+                  <option>AL</option>
+                  <option>AP</option>
+                  <option>AM</option>
+                  <option>BA</option>
+                  <option>CE</option>
+                  <option>DF</option>
+                  <option>ES</option>
+                  <option>GO</option>
+                  <option>MA</option>
+                  <option>MT</option>
+                  <option>MS</option>
+                  <option>MG</option>
+                  <option>PA</option>
+                  <option>PB</option>
+                  <option>PR</option>
+                  <option>PE</option>
+                  <option>PI</option>
+                  <option>RJ</option>
+                  <option>RN</option>
+                  <option>RS</option>
+                  <option>RO</option>
+                  <option>RR</option>
+                  <option>SC</option>
+                  <option>SP</option>
+                  <option>SE</option>
+                  <option>TO</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="area">Área total (hectares) <span class="obrigatorio">*</span></label>
+              <input type="number" id="area" name="area"
+                     placeholder="85,5" min="0" step="0.01" required>
+            </div>
+
+            <div class="campo">
+              <label for="registro">Registro rural (opcional: CAR, DAP ou CAF)</label>
+              <input type="text" id="registro" name="registro"
+                     placeholder="BR-SP-0000000-0000000000000">
+            </div>
+
+            <div class="campo">
+              <p class="rotulo">Principais culturas que você planta <span class="obrigatorio">*</span></p>
+
+              <div class="lista-culturas" id="lista-culturas">
+                <label class="cultura"><input type="checkbox" name="culturas" value="Tomate"> Tomate</label>
+                <label class="cultura"><input type="checkbox" name="culturas" value="Milho"> Milho</label>
+                <label class="cultura"><input type="checkbox" name="culturas" value="Café"> Café</label>
+                <label class="cultura"><input type="checkbox" name="culturas" value="Hortaliças"> Hortaliças</label>
+                <label class="cultura"><input type="checkbox" name="culturas" value="Soja"> Soja</label>
+              </div>
+
+              <div class="linha-outro">
+                <input type="text" id="outra-cultura" placeholder="Outra cultura" aria-label="Outra cultura">
+                <button type="button" class="botao botao-secundario botao-pequeno" id="botao-adicionar">Adicionar</button>
+              </div>
+
+              <p class="mensagem-erro" id="erro-culturas" hidden>Marque pelo menos uma cultura.</p>
+            </div>
+
+            <div class="linha-botoes">
+              <button type="button" class="botao botao-secundario botao-voltar">← Voltar</button>
+              <button type="submit" class="botao botao-destaque">Criar conta</button>
+            </div>
+          </fieldset>
+
+        </form>
+
+        <div class="divisor">ou</div>
+
+        <p class="texto-centro">
+          Já tem uma conta? <a href="login.html">Fazer login</a>
+        </p>
+
+        <p class="rodape-formulario">
+          Dados conforme base Agrofit - Ministério da Agricultura, Pecuária e Abastecimento
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="js/olho-senha.js"></script>
+  <script src="js/cadastro.js"></script>
+</body>
+</html>

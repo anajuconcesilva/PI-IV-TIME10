@@ -1,0 +1,85 @@
+/* Beatriz Naomi Ferreira Sasaki - RA: 25016735*/
+/* Título e botão de novo talhão */
+.cabecalho-listagem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* Três cartões de status */
+.contadores {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  max-width: 846px;
+  margin-bottom: 24px;
+}
+
+.contador {
+  background: white;
+  border: 1px solid #e4e7da;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.contador strong {
+  display: block;
+  font-size: 24px;
+}
+
+.contador span {
+  font-size: 12px;
+  color: #64706c;
+}
+
+/* Busca de talhões */
+.barra-ferramentas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.barra-ferramentas input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Ações de cada linha */
+.acoes {
+  white-space: nowrap;
+}
+
+/* Botões de editar e excluir */
+.botao-icone {
+  border: 0;
+  background: none;
+  color: #64706c;
+  padding: 8px;
+  font-size: 20px;
+}
+
+.sem-resultados {
+  padding: 30px;
+  text-align: center;
+}
+
+/* Ajustes para telas menores */
+@media (max-width:800px) {
+
+  .contadores {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .barra-ferramentas {
+    margin-bottom: 0;
+  }
+
+  .cabecalho-listagem {
+    gap: 16px;
+  }
+
+  .cabecalho-listagem .botao {
+    padding: 12px;
+  }
+}

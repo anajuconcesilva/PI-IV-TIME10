@@ -1,0 +1,545 @@
+/* Aluna: Eduarda Prado Deiró | RA: 25004440 */
+
+/* Estilo da área logada: menu lateral, cards e selos de status.
+   Usa as cores definidas no style.css, então carregue os dois. */
+
+/* ===== Cores de cada status =====
+   Quem recebe uma dessas classes passa a usar a cor do status
+   na borda, no selo e nos ícones. */
+.status-liberado {
+  --cor-status: var(--cor-liberado);
+  --cor-status-escura: #1F6B38;
+  --cor-status-fundo: #E3F2E8;
+}
+
+.status-carencia {
+  --cor-status: var(--cor-carencia);
+  --cor-status-escura: #8A6410;
+  --cor-status-fundo: #FBF1D6;
+}
+
+.status-bloqueado {
+  --cor-status: var(--cor-bloqueado);
+  --cor-status-escura: #8B2A20;
+  --cor-status-fundo: #FBE4E1;
+}
+
+.status-aguardando {
+  --cor-status: var(--cor-aguardando);
+  --cor-status-escura: #24508F;
+  --cor-status-fundo: #E3EBF8;
+}
+
+/* ===== Estrutura: menu à esquerda, conteúdo à direita ===== */
+.painel {
+  display: flex;
+  min-height: 100vh;
+}
+
+.conteudo {
+  flex: 1;
+  min-width: 0;
+  padding: 32px;
+}
+
+.icone {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===== Menu lateral ===== */
+.menu-lateral {
+  width: 240px;
+  height: 100vh;
+  padding: 24px 12px 16px;
+  color: var(--cor-branco);
+  background-color: var(--cor-marinho);
+
+  /* Fica parado enquanto o conteúdo rola */
+  position: sticky;
+  top: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-lateral .marca {
+  padding: 0 8px;
+}
+
+/* No menu o espaço é menor: sem isso o subtítulo quebra em duas linhas */
+.menu-lateral .marca-subtitulo {
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.menu-titulo {
+  margin: 28px 8px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  border-radius: var(--raio);
+}
+
+.menu-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Página em que a pessoa está */
+.menu-link.ativo {
+  font-weight: 600;
+  color: var(--cor-marinho);
+  background-color: var(--cor-destaque);
+}
+
+/* margin-top: auto empurra o rodapé para o fim do menu */
+.menu-rodape {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.menu-usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 8px;
+}
+
+.menu-iniciais {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: var(--cor-liberado);
+  border-radius: 50%;
+}
+
+.menu-usuario strong {
+  display: block;
+  font-size: 14px;
+}
+
+.menu-usuario span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.menu-sair {
+  color: rgba(255, 255, 255, 0.60);
+}
+
+/* ===== Bloco de boas-vindas com o resumo ===== */
+.destaque {
+  margin-bottom: 32px;
+  padding: 32px;
+  color: var(--cor-branco);
+  background-color: var(--cor-marinho);
+  border-radius: 16px;
+}
+
+.etiqueta {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+  background-color: rgba(220, 229, 75, 0.12);
+  border: 1px solid rgba(220, 229, 75, 0.35);
+  border-radius: 20px;
+}
+
+.destaque-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.destaque h1 {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.destaque-data {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.botao-acao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-marinho);
+  text-decoration: none;
+  background-color: var(--cor-destaque);
+  border-radius: var(--raio);
+}
+
+.botao-acao:hover {
+  background-color: #CFD93A;
+}
+
+/* Os quatro números: liberados, em carência, bloqueados, aguardando */
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.resumo-card {
+  padding: 20px;
+  background-color: var(--cor-status-escura);
+  border-radius: 12px;
+}
+
+.resumo-numero {
+  display: block;
+  font-family: var(--fonte-titulo);
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.resumo-nome {
+  display: block;
+  font-size: 14px;
+}
+
+.resumo-detalhe {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cor-destaque);
+}
+
+/* ===== Duas colunas: talhões e lateral ===== */
+.colunas {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: start;
+  gap: 24px;
+}
+
+.secao-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.secao-topo h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.ver-todos {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ver-todos .icone {
+  width: 16px;
+  height: 16px;
+}
+
+.cartao {
+  margin-bottom: 16px;
+  padding: 20px;
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+}
+
+.cartao .secao-topo h2 {
+  font-size: 16px;
+}
+
+.cartao-rotulo {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* Quadradinho colorido com um ícone dentro */
+.icone-caixa {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.icone-caixa.status-carencia {
+  color: var(--cor-status-escura);
+  background-color: var(--cor-status-fundo);
+}
+
+/* ===== Card de talhão ===== */
+.talhao {
+  margin-bottom: 12px;
+  padding: 20px;
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-left: 4px solid var(--cor-status);
+  border-radius: 12px;
+}
+
+.talhao-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.talhao h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.talhao-detalhe {
+  margin: 0;
+  font-size: 14px;
+  color: var(--cor-texto-suave);
+}
+
+.selo {
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--cor-status-escura);
+  background-color: var(--cor-status-fundo);
+  border-radius: 20px;
+}
+
+.selo::before {
+  content: "● ";
+  color: var(--cor-status);
+}
+
+.talhao-aviso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cor-status-escura);
+}
+
+.talhao-aviso .icone {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Barra do período de carência ===== */
+.carencia {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cor-borda);
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+}
+
+.carencia-linha {
+  display: flex;
+  justify-content: space-between;
+}
+
+.carencia-linha strong {
+  color: #8A6410;
+}
+
+.barra {
+  height: 6px;
+  margin: 8px 0;
+  background-color: var(--cor-borda);
+  border-radius: 3px;
+}
+
+.barra-preenchida {
+  height: 100%;
+  background-color: var(--cor-carencia);
+  border-radius: 3px;
+}
+
+/* ===== Alertas ===== */
+.lista-alertas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alerta {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.alerta .icone {
+  margin-top: 2px;
+  color: var(--cor-status);
+}
+
+.alerta strong {
+  display: block;
+  font-size: 14px;
+}
+
+.alerta p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+.alerta span {
+  font-size: 12px;
+  color: #9A9F9B;
+}
+
+/* ===== Próxima liberação ===== */
+.liberacao-topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.liberacao-topo strong {
+  display: block;
+  font-size: 14px;
+}
+
+.liberacao-topo span {
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+.liberacao-data {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+.liberacao-data strong {
+  color: var(--cor-texto);
+}
+
+/* ===== Lista vazia ===== */
+.vazio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 16px 0;
+  font-size: 14px;
+  color: var(--cor-texto-suave);
+}
+
+/* ===== Telas médias: resumo em 2 colunas ===== */
+@media (max-width: 1100px) {
+  .resumo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .colunas {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Celular: o menu vai para o topo ===== */
+@media (max-width: 860px) {
+  .painel {
+    flex-direction: column;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    height: auto;
+    padding: 16px;
+    position: static;
+  }
+
+  .menu-titulo {
+    display: none;
+  }
+
+  /* Os links ficam em linha e rolam para o lado */
+  .menu-links {
+    display: flex;
+    gap: 4px;
+    margin-top: 16px;
+    overflow-x: auto;
+  }
+
+  .menu-link {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .menu-rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .menu-usuario {
+    padding-bottom: 0;
+  }
+
+  .conteudo {
+    padding: 16px;
+  }
+
+  .destaque {
+    padding: 20px;
+  }
+
+  .destaque h1 {
+    font-size: 26px;
+  }
+}

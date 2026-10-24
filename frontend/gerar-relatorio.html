@@ -1,0 +1,125 @@
+<!--feito pela aluna marília santos-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar de Conformidade | Minha Colheita</title>
+  <link rel="icon" href="img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/painel.css">
+  <link rel="stylesheet" href="css/novas-telas.css"> 
+</head>
+<body>
+  <div class="painel">
+    <nav class="menu-lateral">
+      <div class="marca">
+        <img class="marca-logo" src="img/logo.png" alt="Logo">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+      <p class="menu-titulo">MENU</p>
+      <!-- Ícones: Lucide (lucide.dev), licença ISC -->
+      <div class="menu-links">
+        <a href="dashboard.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Dashboard
+        </a>
+        <a href="pages/listagemTalhao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg>
+          Talhões
+        </a>
+        <a href="pages/nova-aplicacao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h.01"/><path d="M7 5h.01"/><path d="M11 7h.01"/><path d="M3 7h.01"/><path d="M7 9h.01"/><path d="M3 11h.01"/><rect width="4" height="4" x="15" y="5"/><path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1V11l2-2"/><path d="m13 14 8-2"/><path d="m13 19 8-2"/></svg>
+          Nova aplicação
+        </a>
+        <a href="consulta.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          Consulta de Produtos
+        </a>
+        <a href="pages/avisos.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+          Avisos
+        </a>
+        <a href="relatorios.html" class="menu-link ativo">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+          Relatórios
+        </a>
+      </div>
+      <div class="menu-rodape">
+        <div class="menu-usuario">
+          <div class="menu-iniciais">JC</div>
+          <div>
+            <strong>João Carlos</strong>
+            <span>Fazenda São Luís</span>
+          </div>
+        </div>
+        <a href="login.html" class="menu-link menu-sair">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+          Sair da conta
+        </a>
+      </div>
+    </nav>
+
+    <main class="conteudo">
+      <a href="relatorios.html" class="voltar-link">
+        <svg class="icone" viewBox="0 0 24 24" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Voltar
+      </a>
+      <h1 class="chamada-titulo" style="font-size: 32px; color: var(--cor-marinho); margin-bottom: 4px;">Registrar de Conformidade</h1>
+      <p class="subtitulo">Adicione as informações e gere seu relatório:</p>
+
+      <form id="form-relatorio" class="caixa-branca">
+        <div class="grid-3">
+          <div class="campo">
+            <label>Fazenda <span class="obrigatorio">*</span></label>
+            <select required>
+              <option value="">Selecione a fazenda</option>
+              <option>Fazenda São Luís</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Talhão <span class="obrigatorio">*</span></label>
+            <select required>
+              <option value="">Selecione o talhão</option>
+              <option>Todos os talhões</option>
+              <option>Talhão A1</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Tipo de Documento <span class="obrigatorio">*</span></label>
+            <select required>
+              <option value="">Selecione o tipo</option>
+              <option>Relatório de Conformidade</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Período de Início e Fim <span class="obrigatorio">*</span></label>
+        </div>
+        <div class="grid-2">
+          <div class="campo">
+            <label>Início</label>
+            <input type="date" required>
+          </div>
+          <div class="campo">
+            <label>Fim</label>
+            <input type="date" required>
+          </div>
+        </div>
+
+
+        <div class="acoes-footer">
+          <button type="button" class="botao botao-secundario" onclick="window.location.href='relatorios.html'">Cancelar</button>
+          <button type="submit" class="botao botao-destaque">Gerar Relatório (PDF)</button>
+        </div>
+      </form>
+    </main>
+  </div>
+  <script src="js/gerar-relatorio.js"></script>
+</body>
+</html>

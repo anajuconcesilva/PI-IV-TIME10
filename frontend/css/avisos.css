@@ -1,0 +1,552 @@
+/* Aluna: Ana Júlia Conceição da Silva | RA: 25002592 */
+/* Estilos exclusivos da Central de Avisos */
+
+/* ===== Conteúdo principal ===== */
+
+.avisos-conteudo {
+  min-width: 0;
+  padding: 26px 24px;
+  background-color: var(--cor-fundo);
+}
+
+/* ===== Cabeçalho azul ===== */
+
+.avisos-cabecalho {
+  position: relative;
+  min-height: 84px;
+  margin-bottom: 18px;
+  padding: 19px 20px;
+
+  color: var(--cor-branco);
+  background-color: var(--cor-marinho);
+  border-radius: 12px;
+}
+
+.avisos-titulo-grupo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 3px;
+}
+
+.avisos-titulo-grupo h1 {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--cor-branco);
+}
+
+.avisos-nao-lidos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cor-branco);
+
+  background-color: #C93632;
+  border-radius: 20px;
+}
+
+.avisos-cabecalho > p {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* Botão de marcar todos */
+
+.avisos-marcar-todos {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+
+  padding: 8px 0;
+  font-family: var(--fonte-texto);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cor-destaque);
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.avisos-marcar-todos:hover {
+  text-decoration: underline;
+}
+
+.avisos-marcar-todos:focus-visible {
+  outline: 2px solid var(--cor-destaque);
+  outline-offset: 4px;
+}
+
+/* ===== Filtros ===== */
+
+.avisos-filtros {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.aviso-filtro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  min-height: 31px;
+  padding: 6px 14px;
+
+  font-family: var(--fonte-texto);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.aviso-filtro:hover {
+  border-color: var(--cor-marinho);
+}
+
+.aviso-filtro.ativo {
+  color: var(--cor-branco);
+  background-color: var(--cor-marinho);
+  border-color: var(--cor-marinho);
+}
+
+.aviso-filtro:focus-visible {
+  outline: 2px solid var(--cor-acao);
+  outline-offset: 2px;
+}
+
+/* ===== Lista de cartões ===== */
+
+.avisos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== Cartão de aviso ===== */
+
+.aviso-card {
+  --aviso-cor: #2F5FA8;
+  --aviso-fundo-icone: #E3EBF8;
+  --aviso-cor-status: #24508F;
+  --aviso-fundo-status: #E3EBF8;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+
+  min-height: 95px;
+  padding: 15px 30px 14px 16px;
+
+  background-color: var(--cor-branco);
+  border: 1px solid #E5E6DD;
+  border-left: 3px solid var(--aviso-cor);
+  border-radius: 10px;
+
+  box-shadow: 0 1px 2px rgba(11, 37, 64, 0.07);
+  transition: box-shadow 0.2s, opacity 0.2s;
+}
+
+.aviso-card:hover {
+  box-shadow: 0 3px 9px rgba(11, 37, 64, 0.07);
+}
+
+/* ===== Cores por status ===== */
+
+.aviso-bloqueado {
+  --aviso-cor: #D92D2D;
+  --aviso-fundo-icone: #FDE8E7;
+  --aviso-cor-status: #C62828;
+  --aviso-fundo-status: #FDE8E7;
+}
+
+.aviso-carencia {
+  --aviso-cor: #D49A00;
+  --aviso-fundo-icone: #FFF2CC;
+  --aviso-cor-status: #B77900;
+  --aviso-fundo-status: #FFF2CC;
+}
+
+.aviso-liberado {
+  --aviso-cor: #008B55;
+  --aviso-fundo-icone: #DDF4EC;
+  --aviso-cor-status: #008B55;
+  --aviso-fundo-status: #DDF4EC;
+}
+
+.aviso-aguardando {
+  --aviso-cor: #7895C3;
+  --aviso-fundo-icone: #EDF1F7;
+  --aviso-cor-status: #6686B8;
+  --aviso-fundo-status: #EDF1F7;
+}
+
+/* ===== Ícone do aviso ===== */
+
+.aviso-icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  margin-top: 1px;
+
+  color: var(--aviso-cor);
+  background-color: var(--aviso-fundo-icone);
+  border-radius: 10px;
+}
+
+.aviso-icone svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===== Texto do aviso ===== */
+
+.aviso-corpo {
+  min-width: 0;
+}
+
+.aviso-corpo h2 {
+  margin: 1px 0 4px;
+
+  font-family: var(--fonte-texto);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #202B25;
+}
+
+.aviso-corpo > p {
+  margin: 0;
+
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #68716C;
+}
+
+/* ===== Status e data ===== */
+
+.aviso-informacoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 9px;
+}
+
+.aviso-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  min-height: 17px;
+  padding: 3px 8px;
+
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+
+  color: var(--aviso-cor-status);
+  background-color: var(--aviso-fundo-status);
+  border-radius: 20px;
+}
+
+.aviso-status::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+
+  background-color: currentColor;
+  border-radius: 50%;
+}
+
+.aviso-informacoes time {
+  font-size: 9px;
+  line-height: 1.4;
+  color: #A0A9B7;
+}
+
+/* ===== Ações à direita ===== */
+
+.aviso-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: center;
+  gap: 12px;
+
+  min-width: max-content;
+  padding-left: 8px;
+}
+
+.aviso-marcar-lido {
+  padding: 5px 0;
+
+  font-family: var(--fonte-texto);
+  font-size: 9px;
+  font-weight: 400;
+  color: #A0A9B7;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.aviso-marcar-lido:hover {
+  color: var(--cor-marinho);
+  text-decoration: underline;
+}
+
+.aviso-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px 0;
+
+  font-family: var(--fonte-texto);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #174A96;
+  text-decoration: none;
+}
+
+.aviso-link:hover {
+  text-decoration: underline;
+}
+
+.aviso-link span {
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 0.8;
+}
+
+/* ===== Indicador de não lido ===== */
+
+.aviso-indicador {
+  position: absolute;
+  top: 19px;
+  right: 15px;
+
+  width: 8px;
+  height: 8px;
+
+  background-color: #2452A0;
+  border-radius: 50%;
+}
+
+.aviso-card.lido .aviso-indicador {
+  display: none;
+}
+
+/* Avisos lidos ficam levemente mais discretos */
+
+.aviso-card.lido .aviso-corpo h2,
+.aviso-card.lido .aviso-corpo > p {
+  color: #9AA39D;
+}
+
+.aviso-card.lido .aviso-status {
+  opacity: 0.65;
+}
+
+.aviso-card[hidden] {
+  display: none !important;
+}
+
+/* ===== Lista vazia ===== */
+
+.avisos-vazio {
+  padding: 36px 20px;
+  text-align: center;
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+}
+
+.avisos-vazio h2 {
+  margin: 0 0 6px;
+  font-family: var(--fonte-titulo);
+  font-size: 18px;
+  color: var(--cor-marinho);
+}
+
+.avisos-vazio p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+/* ===== Responsividade ===== */
+
+@media (max-width: 1100px) {
+  .aviso-card {
+    grid-template-columns: 32px minmax(0, 1fr);
+    padding-right: 28px;
+  }
+
+  .aviso-acoes {
+    grid-column: 2;
+    justify-self: end;
+    align-self: start;
+    margin-top: 2px;
+  }
+
+  .aviso-indicador {
+    top: 15px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 860px) {
+  .avisos-conteudo {
+    padding: 18px 16px;
+  }
+
+  .avisos-cabecalho {
+    padding: 18px;
+  }
+
+  .avisos-cabecalho > p {
+    max-width: 75%;
+  }
+
+  .avisos-marcar-todos {
+    position: static;
+    display: block;
+    margin-top: 10px;
+    transform: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .avisos-conteudo {
+    padding: 14px 10px;
+  }
+
+  .avisos-cabecalho {
+    padding: 16px;
+  }
+
+  .avisos-titulo-grupo {
+    gap: 7px;
+  }
+
+  .avisos-titulo-grupo h1 {
+    font-size: 20px;
+  }
+
+  .avisos-cabecalho > p {
+    max-width: 100%;
+    font-size: 11px;
+  }
+
+  .avisos-filtros {
+    gap: 5px;
+  }
+
+  .aviso-filtro {
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+
+  .aviso-card {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 9px;
+    padding: 13px 24px 12px 10px;
+  }
+
+  .aviso-icone {
+    width: 28px;
+    height: 28px;
+  }
+
+  .aviso-corpo h2 {
+    font-size: 11px;
+  }
+
+  .aviso-corpo > p {
+    font-size: 10px;
+  }
+
+  .aviso-acoes {
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .aviso-marcar-lido,
+  .aviso-link {
+    font-size: 9px;
+  }
+
+  .aviso-indicador {
+    top: 14px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+  }
+}
+
+/* Contador de avisos no menu lateral */
+
+.menu-aviso-contador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 18px;
+  height: 18px;
+  margin-left: auto;
+  padding: 0 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cor-branco);
+
+  background-color: #C93632;
+  border-radius: 50%;
+}
+
+.menu-aviso-contador[hidden] {
+  display: none;
+}
+
+/* Botão desabilitado quando todos os avisos forem lidos */
+
+.avisos-marcar-todos:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: none;
+}

@@ -1,0 +1,169 @@
+<!--Beatriz Naomi Ferreira Sasaki - RA: 25016735-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talhões | Minha Colheita </title>
+        <link rel="icon" href="../img/logo.png">
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@600&display=swap" rel="stylesheet">
+    <!-- Fonte CSS-->
+    <link rel="stylesheet" href="../css/comumTalhao.css">
+    <link rel="stylesheet" href="../css/listagemTalhao.css">
+    <!--Fonte Javascript-->
+    <script src="../js/comumTalhao.js" defer></script>
+    <script src="../js/listagemTalhao.js" defer></script>
+</head>
+<body>
+    <!--Menu lateral-->
+    <aside class="menu-lateral" aria-label="Menu lateral">
+
+      <div class="marca">
+        <img class="marca-logo" src="../img/logo.png" alt="">
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <p class="menu-titulo">MENU</p>
+
+      <!-- Ícones: Lucide (lucide.dev), licença ISC -->
+      <nav class="menu-links">
+        <a class="menu-link" href="../dashboard.html" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Dashboard
+        </a>
+        <a class="menu-link ativo" href="listagemTalhao.html" aria-current="page">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg>
+          Talhões
+        </a>
+         <a class="menu-link" href="nova-aplicacao.html" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h.01"/><path d="M7 5h.01"/><path d="M11 7h.01"/><path d="M3 7h.01"/><path d="M7 9h.01"/><path d="M3 11h.01"/><rect width="4" height="4" x="15" y="5"/><path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1V11l2-2"/><path d="m13 14 8-2"/><path d="m13 19 8-2"/></svg>
+          Nova aplicação
+         </a>
+        <a class="menu-link" href="../consulta.html" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          Consulta de produtos
+        </a>
+         <a class="menu-link" href="avisos.html" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+          Avisos
+         </a>
+        <a class="menu-link"  href="../relatorios.html" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+          Relatórios
+        </a>
+      </nav>
+
+      <div class="menu-rodape">
+        <div class="menu-usuario">
+          <span class="menu-iniciais" id="usuario-iniciais">JC</span>
+          <div>
+            <strong id="usuario-nome">João Carlos</strong>
+            <span id="usuario-propriedade" class="propriedade">Fazenda São Luís</span>
+          </div>
+        </div>
+
+        <a class="menu-link menu-sair" href= '../login.html' aria-disabled="true" >
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+          Sair da conta
+        </a>
+      </div>
+    </aside>
+    <main>
+        <header class="cabecalho-listagem">
+            <div>
+                <h1>Talhões</h1>
+                <p>
+                    <span id="quantidade-talhoes">0</span>
+                    talhões cadastrados
+                </p>
+            </div>
+            <a class="botao salvar" href="cadastroTalhao.html">
+               <svg class="icone-lucide " aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              Novo talhão
+            </a>
+        </header>
+
+        <!--data-count associa cada contador ao status usado pelo JavaScript-->
+        <section class="contadores" aria-label="Resumo dos talhões">
+            <div class="contador">
+                <strong data-count="liberado">2</strong>
+                <span>Liberado</span>
+            </div>
+            <div class="contador">
+            <strong data-count="emCarencia">1</strong>
+            <span>Em carência</span>
+            </div>
+            <div class="contador">
+            <strong data-count="aguardando">1</strong>
+            <span>Aguardando</span>
+            </div>
+        </section>
+        <!--Busca por nome/cultura-->
+        <div class="barra-ferramentas">
+            <input type="search" id="busca" placeholder="Buscar por nome ou cultura..." aria-label="Buscar por nome ou cultura">
+        </div>
+        <div class="filtros-talhoes">
+            <label>Cultura
+                <select id="filtro-cultura">
+                    <option value="">Todas</option>
+                </select>
+            </label>
+            <label>Status
+                <select id="filtro-status">
+                    <option value="">Todos</option>
+                    <option value="liberado">Liberado</option>
+                    <option value="emCarencia">Em carência</option>
+                    <option value="aguardando">Aguardando</option>
+                </select>
+            </label>
+            <label>Safra
+                <select id="filtro-safra">
+                    <option value="">Todas</option>
+                </select>
+            </label>
+            <button class="botao" id="limpar-filtros" type="button">Limpar filtros</button>
+        </div>
+        <section class="painel resumo-tabela">
+            <!--Cabeçalho fixo da tabela-->
+            <table id="tabela-talhoes">
+                <thead>
+                    <tr>
+                        <th scope="col">Talhão</th>
+                        <th scope="col">Área</th>
+                        <th scope="col">SAFRA</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Última Aplicação</th>
+                        <th scope="col" aria-label="Ações"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+             <!-- hidden mantém o aviso oculto enquanto houver resultados na busca. -->
+            <p class="sem-resultado" id="sem-resultado" hidden>Nenhum talhão encontrado.</p>
+        </section>
+    </main>
+    <dialog class="alerta-modal" id="alerta-exclusao" aria-labelledby="titulo-alerta-exclusao"  aria-describedby="descricao-alerta-exclusao">
+         <svg class="icone-lucide alerta-icone" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <h2 id="titulo-alerta-exclusao">Tem certeza de que deseja excluir esse talhão?</h2>
+        <p id="descricao-alerta-exclusao">Esta ação não poderá ser desfeita</p>            
+        <div class="alerta-acoes">
+            <button class="botao" id="cancelar-exclusao" type="button" autofocus>Cancelar</button>
+            <button class="botao botao-excluir" id="confirmar-exclusao" type="button">Excluir</button>
+        </div>
+    </dialog>
+    <!-- Só aparece depois de salvar os dados com sucesso-->
+    <dialog class="alerta-modal" id="alerta-sucesso" arialabelledby="titulo-alerta-sucesso">
+        <svg class="icone-lucide alerta-icone sucesso" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        <h2 id="titulo-alerta-sucesso">Operação realizada com sucesso!</h2>
+        <div class="alerta-acoes">
+            <button class="botao salvar" id="fechar-alerta-sucesso" type="button" autofocus>Continuar</button>
+        </div>
+    </dialog>
+</body>
+</html>

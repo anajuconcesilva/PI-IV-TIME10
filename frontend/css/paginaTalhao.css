@@ -1,0 +1,388 @@
+/* Beatriz Naomi Ferreira Sasaki - RA: 25016735*/
+.detalhes {
+  padding: 32px;
+}
+
+/* Cabeçalho do talhão */
+.cabecalho-talhao {
+  background: #00213e;
+  color: white;
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  min-height: 198px;
+  margin-bottom: 24px;
+}
+
+.cabecalho-talhao .voltar {
+  color: #839bab;
+  margin-bottom: 14px;
+}
+
+.cabecalho-talhao .voltar {
+  color: #839bab;
+  margin-bottom: 14px;
+}
+
+/* Estado atual no cabeçalho */
+.opcoes-status {
+  position: absolute;
+  right: 30px;
+  top: 32px;
+  display: flex;
+  gap: 8px;
+}
+
+.opcoes-status span {
+  border: 1px solid #365064;
+  border-radius: 20px;
+  padding: 7px 13px;
+  font-size: 12px;
+  color: #8aa0b0;
+}
+
+.opcoes-status .selected {
+  background: #dce747;
+  color: #00213e;
+  border-color: #dce747;
+}
+
+/* Conteúdo principal e coluna lateral */
+.layout-detalhes {
+  display: grid;
+  grid-template-columns: 2.22fr 1fr;
+  gap: 38px;
+}
+
+.coluna-principal, .coluna-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Aviso conforme o estado do talhão */
+.aviso {
+  background: #e0f2eb;
+  border: 1px solid #9bd9c3;
+  border-radius: 16px;
+  padding: 26px 32px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.aviso > .icone-lucide {
+  color: #008653;
+  font-size: 24px;
+}
+
+.aviso h2 {
+  color: #008653;
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+/* Dados da última aplicação */
+.informacoes-aplicacao {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 0 10px 24px;
+}
+
+.informacao-aplicacao {
+  background: #f6f7ed;
+  padding: 14px 12px;
+  border-radius: 12px;
+}
+
+.informacao-aplicacao span {
+  display: block;
+  color: #9aa5b8;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.item-historico {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 0;
+  border-bottom: 1px solid #e4e7da;
+}
+
+.item-historico:last-child {
+  border: 0;
+  padding-bottom: 12px;
+}
+
+.item-historico small {
+  display: block;
+  color: #9aa5b8;
+  margin-top: 4px;
+}
+
+/* Cartão para registrar a colheita */
+.colheita {
+  position: relative;
+  overflow: hidden;
+  background: #00213e;
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  min-height: 208px;
+}
+
+.colheita h2 {
+  margin: 16px 0 6px;
+}
+
+.colheita p {
+  color: #8ba3b4;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.colheita .botao {
+  width: 100%;
+}
+
+.icone-confirmacao {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: #dce747;
+  color: #00213e;
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+/* Atalhos da tela */
+.acoes-rapidas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acoes-rapidas h2 {
+  margin-bottom: 4px;
+}
+
+.acoes-rapidas .botao {
+  justify-content: flex-start;
+  padding: 10px 16px;
+}
+
+.acoes-rapidas .botao:disabled {
+  cursor: default;
+  color: #64706c;
+}
+
+/* Rótulos e valores do talhão */
+.dados-talhao {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+}
+
+.dados-talhao dt {
+  color: #64706c;
+}
+
+.dados-talhao dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* Ajustes para telas menores */
+@media (max-width:1100px) {
+
+  .layout-detalhes {
+    gap: 24px;
+  }
+
+  .opcoes-status {
+    position: static;
+    margin-top: 18px;
+  }
+
+}
+
+/* Ajustes para telas menores */
+@media (max-width:800px) {
+
+  .layout-detalhes {
+    grid-template-columns: 1fr;
+  }
+
+  .informacoes-aplicacao {
+    grid-template-columns: 1fr;
+  }
+
+  .cabecalho-talhao {
+    padding: 24px;
+  }
+}
+
+.detalhes [hidden] {
+  display: none !important;
+}
+
+.conteudo-aviso {
+  flex: 1;
+  min-width: 0;
+}
+
+.aviso > .icone-lucide {
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+/* Aviso amarelo de carência*/
+.aviso.aviso-carencia {
+  background: #fff4ce;
+  border-color: #f2d486;
+}
+
+.aviso-carencia h2,
+.aviso-carencia > .icone-lucide,
+.aviso-carencia .rotulos-carencia strong {
+  color: #bd8500;
+}
+
+/* Aviso azul de aplicação pendente */
+.aviso.aviso-aguardando {
+  background: #e5ecf9;
+  border-color: #b0c2e5;
+}
+
+.aviso-aguardando h2,
+.aviso-aguardando > .icone-lucide {
+  color: #214f9d;
+}
+
+.detalhes-carencia {
+  margin-top: 22px;
+}
+
+.rotulos-carencia {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: #64706c;
+}
+
+/* Progresso do período de carência */
+#progresso-carencia {
+  display: block;
+  width: 100%;
+  height: 9px;
+  margin: 8px 0;
+  border: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #e1e5d8;
+  accent-color: #c48c00;
+  appearance: none;
+}
+
+#progresso-carencia::-webkit-progress-bar {
+  background: #e1e5d8;
+  border-radius: 20px;
+}
+
+#progresso-carencia::-webkit-progress-value {
+  background: #c48c00;
+  border-radius: 20px;
+}
+
+#progresso-carencia::-moz-progress-bar {
+  background: #c48c00;
+  border-radius: 20px;
+}
+
+.legenda-carencia {
+  margin-bottom: 10px;
+  font-size: 11px;
+}
+
+.detalhes-carencia p {
+  font-size: 12px;
+}
+
+#previsao-liberacao {
+  color: #132015;
+}
+
+#nota-carencia {
+  display: block;
+  margin-top: 6px;
+  color: #64706c;
+}
+
+/* Mensagem para histórico sem aplicações */
+.historico-vazio {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 16px;
+}
+
+.icone-historico-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  background: #e1e5d8;
+  color: #64706c;
+  font-size: 26px;
+}
+
+.historico-vazio h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.coluna-principal,
+.coluna-lateral {
+  min-width: 0;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 800px) {
+  .aviso {
+    padding: 22px 18px;
+    gap: 14px;
+  }
+
+  .historico-vazio {
+    min-height: 220px;
+  }
+}
+
+/* Confirmação compacta após a colheita */
+.colheita.colheita-registrada {
+  min-height: auto;
+  padding: 20px;
+}
+.colheita-registrada p {
+  margin-bottom: 0;
+}
+.colheita .botao[hidden] {
+  display: none;
+}

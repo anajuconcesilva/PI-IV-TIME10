@@ -1,0 +1,498 @@
+/* Beatriz Naomi Ferreira Sasaki - RA: 25016735*/
+/* Arquivos de estilos comum entre as telas - cadastroTalhao, listagemTalhao e paginaTalhao*/
+/* Base da interface */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter,Arial,sans-serif;
+  background: #f6f7ed;
+  color: #132015;
+  font-size: 14px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button, a, input, select, textarea {
+  outline-offset: 4px;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Espaço reservado para o menu lateral */
+main {
+  margin-left: 240px;
+  padding: 70px 4.8%;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 30px;
+  margin: 0 0 6px;
+  letter-spacing: -1px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 0 0 24px;
+}
+
+p {
+  color: #64706c;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Botões e links de ação */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #e4e7da;
+  border-radius: 8px;
+  background: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  color: #132015;
+}
+
+.salvar {
+  background: #dce747;
+  border-color: #dce747;
+  color: #00213e;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #e4e7da;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: white;
+  color: #132015;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9aa5b8;
+}
+
+/* Cartões de conteúdo. */
+.painel {
+  background: white;
+  border: 1px solid #e4e7da;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.resumo-tabela {
+  padding: 0;
+  overflow: auto;
+}
+
+/* Tabelas compartilhadas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  background: #f6f7ed;
+  font-size: 12px;
+  color: #64706c;
+  padding: 14px 20px;
+}
+
+td {
+
+  border-top: 1px solid #e4e7da;
+  padding: 20px;
+  color: #64706c;
+}
+
+td strong {
+  color: #132015;
+  font-weight: 600;
+}
+
+td small {
+  display: block;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.data-aplicacao {
+  color: #9aa5b8;
+}
+
+/* Etiquetas dos três estados */
+.etiqueta-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.etiqueta-status:before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.liberado {
+  background: #dff2eb;
+  color: #008653;
+}
+
+.aguardando {
+  background: #e5ecf9;
+  color: #214f9d;
+}
+
+.emCarencia {
+  background: #fff3ce;
+  color: #c58a00;
+}
+
+.voltar {
+  color: #365f9e;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Aviso temporário no canto da tela */
+.mensagem-temporaria {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 16px 24px;
+  background: #00213e;
+  color: white;
+  border-radius: 12px;
+  z-index: 10;
+}
+
+.erro-carregamento {
+  padding: 20px;
+  color: white;
+}
+
+/* Ajustes para telas menores */
+@media (max-width:1100px) {
+  main {
+    padding: 36px 28px;
+  }
+}
+
+/* Ajustes para telas menores */
+@media (max-width:800px) {
+
+  main {
+    margin-left: 0;
+    padding: 24px 16px;
+  }
+}
+
+/* Janelas de confirmação e sucesso */
+.alerta-modal {
+  width: min(380px, calc(100% - 32px));
+  padding: 32px 28px;
+  border: 1px solid #e4e7da;
+  border-radius: 16px;
+  background: white;
+  color: #132015;
+  text-align: center;
+  box-shadow: 0 20px 70px #00213e26;
+}
+
+.alerta-modal::backdrop {
+  background: #00213e66;
+}
+
+.alerta-icone {
+  display: block;
+  font-size: 100px;
+  line-height: 1;
+  margin: 0 auto 24px;
+  color: #00213e;
+}
+
+.alerta-icone.sucesso {
+  color: #008653;
+}
+
+.alerta-modal h2 {
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.alerta-modal p {
+  margin-bottom: 24px;
+}
+
+.alerta-acoes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.alerta-acoes .botao {
+  flex: 1;
+  padding: 10px 16px;
+}
+
+.botao-excluir {
+  background: #d12626;
+  border-color: #d12626;
+  color: white;
+}
+
+.filtros-talhoes, .filtros-historico { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; align-items: end; }
+
+.filtros-talhoes label, .filtros-historico label { flex: 1; min-width: 150px; font-size: 12px; color: #64706c; }
+
+.filtros-talhoes select, .filtros-historico input { margin-top: 6px; }
+
+.tabela-historico { min-width: 620px; }
+
+.nota-demonstracao {
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: #64706c;
+}
+
+/* Ícones locais, com a cor do texto */
+.icone-lucide {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
+
+.icone-lucide.alerta-icone {
+  display: block;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+}
+
+.aviso > .icone-lucide {
+  width: 24px;
+  height: 24px;
+}
+
+.icone-historico-vazio .icone-lucide {
+  width: 26px;
+  height: 26px;
+}
+
+/* Sidebar compartilhada pelas três telas */
+.menu-lateral {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  height: 100vh;
+  padding: 24px 12px 16px;
+  overflow-y: auto;
+  background: #0b2540;
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+/* Logo e nome do sistema */
+.menu-lateral .marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.menu-lateral .marca-logo {
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.menu-lateral .marca-nome {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-family: "Outfit", sans-serif;
+}
+
+.menu-lateral .marca-subtitulo {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  color: #dce54b;
+}
+
+.menu-lateral .menu-titulo {
+  margin: 28px 8px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #ffffff80;
+}
+
+.menu-lateral .icone {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Itens de navegação */
+.menu-lateral .menu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #ffffffd9;
+  text-decoration: none;
+}
+
+.menu-lateral a.menu-link:hover {
+  background: #ffffff14;
+}
+
+.menu-lateral .menu-link.ativo {
+  font-weight: 600;
+  color: #0b2540;
+  background: #dce54b;
+}
+
+.menu-lateral .menu-link[aria-disabled="true"] {
+  cursor: default;
+}
+
+/* Usuário e saída no rodapé do menu*/
+.menu-lateral .menu-rodape {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #ffffff1f;
+}
+
+.menu-lateral .menu-usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 8px;
+}
+
+.menu-lateral .menu-iniciais {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #2f8f4e;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.menu-lateral .menu-usuario strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.menu-lateral .propriedade,
+.menu-lateral .menu-sair {
+  font-size: 12px;
+  color: #ffffff99;
+}
+
+.menu-lateral .menu-sair {
+  font-size: 14px;
+}
+
+/* Em telas menores, o menu fica no topo */
+@media (max-width: 860px) {
+  .menu-lateral {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 16px;
+  }
+
+  .menu-lateral .menu-titulo {
+    display: none;
+  }
+
+  .menu-lateral .menu-links {
+    display: flex;
+    gap: 4px;
+    margin-top: 16px;
+    overflow-x: auto;
+  }
+
+  .menu-lateral .menu-link {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .menu-lateral .menu-rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .menu-lateral .menu-usuario {
+    padding-bottom: 0;
+  }
+
+  main {
+    margin-left: 0;
+  }
+}
