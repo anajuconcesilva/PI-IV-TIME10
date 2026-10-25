@@ -54,8 +54,6 @@
           <span class="passo-bolinha ativo">1</span>
           <span class="passo-linha"></span>
           <span class="passo-bolinha">2</span>
-          <span class="passo-linha"></span>
-          <span class="passo-bolinha">3</span>
         </div>
 
         <!-- novalidate: quem confere os campos é o cadastro.js, um passo por vez -->
@@ -63,47 +61,26 @@
 
           <!-- Passo 1 -->
           <fieldset class="etapa">
-            <p class="etapa-titulo">Passo 1 — Dados pessoais</p>
+            <p class="etapa-titulo">Passo 1 — Dados de acesso</p>
 
-            <div class="campo">
-              <label for="nome">Nome completo <span class="obrigatorio">*</span></label>
-              <input type="text" id="nome" name="nome"
-                     placeholder="João Carlos Silva" autocomplete="name" required>
+            <div class="linha-campos">
+              <div class="campo campo-grande">
+                <label for="cnpj">CNPJ <span class="obrigatorio">*</span></label>
+                <input type="text" id="cnpj" name="cnpj"
+                       placeholder="00.000.000/0000-00" inputmode="numeric" maxlength="18" required>
+              </div>
+
+              <div class="campo campo-grande">
+                <label for="celular">Celular <span class="obrigatorio">*</span></label>
+                <input type="tel" id="celular" name="celular"
+                       placeholder="(11) 9 9999-9999" autocomplete="tel" maxlength="16" required>
+              </div>
             </div>
-
-            <div class="campo">
-              <label for="documento">CPF ou CNPJ <span class="obrigatorio">*</span></label>
-              <input type="text" id="documento" name="documento"
-                     placeholder="000.000.000-00" inputmode="numeric" maxlength="18" required>
-            </div>
-
-            <div class="campo">
-              <label for="celular">Celular <span class="obrigatorio">*</span></label>
-              <input type="tel" id="celular" name="celular"
-                     placeholder="(11) 9 9999-9999" autocomplete="tel" maxlength="16" required>
-            </div>
-
-            <button type="submit" class="botao botao-primario">Próximo</button>
-          </fieldset>
-
-          <!-- Passo 2 -->
-          <fieldset class="etapa" hidden>
-            <p class="etapa-titulo">Passo 2 — Credenciais de acesso</p>
 
             <div class="campo">
               <label for="email">E-mail <span class="obrigatorio">*</span></label>
               <input type="email" id="email" name="email"
-                     placeholder="joao@email.com" autocomplete="email" required>
-            </div>
-
-            <div class="campo">
-              <label for="perfil">Perfil de acesso <span class="obrigatorio">*</span></label>
-              <select id="perfil" name="perfil" required>
-                <option value="">Selecione</option>
-                <option value="produtor">Produtor rural</option>
-                <option value="agronomo">Agrônomo</option>
-                <option value="operador">Operador</option>
-              </select>
+                     placeholder="contato@fazenda.com" autocomplete="email" required>
             </div>
 
             <div class="campo">
@@ -147,15 +124,12 @@
               </div>
             </div>
 
-            <div class="linha-botoes">
-              <button type="button" class="botao botao-secundario botao-voltar">← Voltar</button>
-              <button type="submit" class="botao botao-primario">Próximo</button>
-            </div>
+            <button type="submit" class="botao botao-primario">Próximo</button>
           </fieldset>
 
-          <!-- Passo 3 -->
+          <!-- Passo 2 -->
           <fieldset class="etapa" hidden>
-            <p class="etapa-titulo">Passo 3 — Dados da propriedade</p>
+            <p class="etapa-titulo">Passo 2 — Dados da propriedade</p>
 
             <div class="campo">
               <label for="propriedade">Nome da propriedade <span class="obrigatorio">*</span></label>
@@ -212,29 +186,27 @@
             </div>
 
             <div class="campo">
-              <label for="registro">Registro rural (opcional: CAR, DAP ou CAF)</label>
+              <label for="registro">Registro rural (CAR, DAP ou CAF) <span class="obrigatorio">*</span></label>
               <input type="text" id="registro" name="registro"
-                     placeholder="BR-SP-0000000-0000000000000">
+                     placeholder="BR-SP-0000000-0000000000000" required>
             </div>
 
             <div class="campo">
-              <p class="rotulo">Principais culturas que você planta <span class="obrigatorio">*</span></p>
-
-              <div class="lista-culturas" id="lista-culturas">
-                <label class="cultura"><input type="checkbox" name="culturas" value="Tomate"> Tomate</label>
-                <label class="cultura"><input type="checkbox" name="culturas" value="Milho"> Milho</label>
-                <label class="cultura"><input type="checkbox" name="culturas" value="Café"> Café</label>
-                <label class="cultura"><input type="checkbox" name="culturas" value="Hortaliças"> Hortaliças</label>
-                <label class="cultura"><input type="checkbox" name="culturas" value="Soja"> Soja</label>
-              </div>
+              <label for="busca-cultura">Principais culturas que você planta <span class="obrigatorio">*</span></label>
 
               <div class="linha-outro">
-                <input type="text" id="outra-cultura" placeholder="Outra cultura" aria-label="Outra cultura">
+                <input type="text" id="busca-cultura" list="sugestoes-culturas"
+                       placeholder="Digite para buscar: milho, café, soja..." autocomplete="off">
                 <button type="button" class="botao botao-secundario botao-pequeno" id="botao-adicionar">Adicionar</button>
               </div>
+              <datalist id="sugestoes-culturas"></datalist>
+
+              <div class="lista-culturas" id="lista-culturas"></div>
 
               <p class="mensagem-erro" id="erro-culturas" hidden>Marque pelo menos uma cultura.</p>
             </div>
+
+            <p class="mensagem-erro" id="erro-servidor" hidden></p>
 
             <div class="linha-botoes">
               <button type="button" class="botao botao-secundario botao-voltar">← Voltar</button>
@@ -259,6 +231,7 @@
 
   </div>
 
+  <script src="js/api.js"></script>
   <script src="js/olho-senha.js"></script>
   <script src="js/cadastro.js"></script>
 </body>
