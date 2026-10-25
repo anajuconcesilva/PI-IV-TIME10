@@ -1,10 +1,14 @@
-// Aluna: Ana Júlia Conceição da Silva | RA: 25002592 -->
 
 import { Router } from "express";
-import { listarRelatorios } from "../controllers/relatoriosController";
+
+import {
+  listarRelatorios,
+  gerarRelatorioPDF
+} from "../controllers/relatoriosController";
 
 const router = Router();
 
 router.get("/relatorios", listarRelatorios);
+router.post("/relatorios/gerar", gerarRelatorioPDF);
 
 export default router;
