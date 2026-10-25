@@ -5,7 +5,6 @@ import healthRoutes from './routes/healthRoutes';
 import cadastroRoutes from './routes/cadastroRoutes';
 import culturaRoutes from './routes/culturaRoutes';
 import authRoutes from './routes/authRoutes';
-import propriedadeRoutes from './routes/propriedadeRoutes';
 import { conectarBanco } from './mongodb';
 import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
@@ -20,7 +19,6 @@ app.use(healthRoutes);
 app.use(cadastroRoutes);
 app.use(culturaRoutes);
 app.use(authRoutes);
-app.use(propriedadeRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ erro: 'Rota não encontrada' });

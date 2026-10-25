@@ -1,7 +1,6 @@
 // Aluna: Eduarda Prado Deiró | RA: 25004440
 
-import { ObjectId, WithId, Document } from 'mongodb';
-import { obterBanco } from '../mongodb';
+import { WithId, Document } from 'mongodb';
 import { ErroApi } from '../utils/erroApi';
 
 const UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
@@ -12,7 +11,7 @@ export interface DadosPropriedade {
   municipio: string;
   uf: string;
   area: number;
-  registro?: string;
+  registro: string;
   culturas: string[];
 }
 
@@ -29,14 +28,15 @@ export function validarPropriedade(dados: DadosPropriedade) {
     throw new ErroApi(400, 'A área precisa ser maior que zero');
   }
 
+  if (!texto(dados.registro)) throw new ErroApi(400, 'Informe o registro rural (CAR, DAP ou CAF)');
+
   if (!Array.isArray(dados.culturas) || dados.culturas.filter((c) => texto(c)).length === 0) {
     throw new ErroApi(400, 'Escolha pelo menos uma cultura');
   }
 }
 
-export function montarPropriedade(usuarioId: ObjectId, dados: DadosPropriedade) {
+export function montarPropriedade(dados: DadosPropriedade) {
   return {
-    usuario_id: usuarioId,
     nome: texto(dados.nome),
     municipio: texto(dados.municipio),
     uf: texto(dados.uf),
@@ -47,16 +47,7 @@ export function montarPropriedade(usuarioId: ObjectId, dados: DadosPropriedade) 
   };
 }
 
-function formatar(propriedade: WithId<Document>) {
-  const { _id, usuario_id, ...resto } = propriedade;
+export function formatarPropriedade(propriedade: WithId<Document>) {
+  const { _id, senha, ...resto } = propriedade;
   return { id: _id.toString(), ...resto };
-}
-
-export async function listarPropriedades(usuarioId: string) {
-  const propriedades = await obterBanco()
-    .collection('propriedades')
-    .find({ usuario_id: new ObjectId(usuarioId) })
-    .sort({ nome: 1 })
-    .toArray();
-  return propriedades.map(formatar);
 }

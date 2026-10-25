@@ -5,6 +5,6 @@ import { cadastrar } from '../controllers/cadastroController';
 
 const router = Router();
 
-router.post('/usuarios', cadastrar);
+router.post('/cadastro', cadastrar);
 
 export default router;

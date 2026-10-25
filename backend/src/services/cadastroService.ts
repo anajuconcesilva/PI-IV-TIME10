@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { obterBanco } from '../mongodb';
 import { ErroApi } from '../utils/erroApi';
 import { todasExistem } from './culturaService';
-import { DadosPropriedade, montarPropriedade, validarPropriedade } from './propriedadeService';
+import { DadosPropriedade, formatarPropriedade, montarPropriedade, validarPropriedade } from './propriedadeService';
 
 export interface DadosCadastro {
   cnpj: string;
@@ -15,7 +15,7 @@ export interface DadosCadastro {
   municipio: string;
   uf: string;
   area: number;
-  registro?: string;
+  registro: string;
   culturas: string[];
 }
 
@@ -25,6 +25,17 @@ function texto(valor: unknown) {
 
 function somenteNumeros(valor: unknown) {
   return texto(valor).replace(/\D/g, '');
+}
+
+function dadosDaPropriedade(dados: DadosCadastro): DadosPropriedade {
+  return {
+    nome: dados.propriedade,
+    municipio: dados.municipio,
+    uf: dados.uf,
+    area: dados.area,
+    registro: dados.registro,
+    culturas: dados.culturas,
+  };
 }
 
 function validar(dados: DadosCadastro) {
@@ -47,18 +58,7 @@ function validar(dados: DadosCadastro) {
   validarPropriedade(dadosDaPropriedade(dados));
 }
 
-function dadosDaPropriedade(dados: DadosCadastro): DadosPropriedade {
-  return {
-    nome: dados.propriedade,
-    municipio: dados.municipio,
-    uf: dados.uf,
-    area: dados.area,
-    registro: dados.registro,
-    culturas: dados.culturas,
-  };
-}
-
-export async function cadastrarUsuario(dados: DadosCadastro) {
+export async function cadastrarPropriedade(dados: DadosCadastro) {
   validar(dados);
 
   const culturas = dados.culturas.map(texto).filter((cultura) => cultura);
@@ -66,32 +66,25 @@ export async function cadastrarUsuario(dados: DadosCadastro) {
     throw new ErroApi(400, 'Escolha culturas da lista do Agrofit');
   }
 
-  const banco = obterBanco();
-  const usuarios = banco.collection('usuarios');
-
+  const propriedades = obterBanco().collection('propriedades');
   const email = texto(dados.email).toLowerCase();
   const cnpj = somenteNumeros(dados.cnpj);
 
-  if (await usuarios.findOne({ email })) {
+  if (await propriedades.findOne({ email })) {
     throw new ErroApi(409, 'Já existe uma conta com este e-mail');
   }
-  if (await usuarios.findOne({ cnpj })) {
+  if (await propriedades.findOne({ cnpj })) {
     throw new ErroApi(409, 'Já existe uma conta com este CNPJ');
   }
 
-  const { insertedId } = await usuarios.insertOne({
+  const propriedade = {
     email,
     senha: await bcrypt.hash(dados.senha, 10),
     cnpj,
     telefone: somenteNumeros(dados.celular),
-  });
+    ...montarPropriedade(dadosDaPropriedade(dados)),
+  };
+  const { insertedId } = await propriedades.insertOne(propriedade);
 
-  try {
-    await banco.collection('propriedades').insertOne(montarPropriedade(insertedId, dadosDaPropriedade(dados)));
-  } catch (erro) {
-    await usuarios.deleteOne({ _id: insertedId });
-    throw erro;
-  }
-
-  return { id: insertedId.toString(), email };
+  return formatarPropriedade({ _id: insertedId, ...propriedade });
 }
