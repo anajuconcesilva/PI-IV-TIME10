@@ -8,25 +8,15 @@ function mostrarErro(mensagem) {
   erroLogin.hidden = false;
 }
 
-async function guardarPropriedade(token) {
-  const resposta = await fetch(API_URL + "/propriedades", {
-    headers: { Authorization: "Bearer " + token },
-  });
-  if (!resposta.ok) {
-    return;
-  }
-
-  const propriedades = await resposta.json();
-  if (propriedades.length > 0) {
-    const propriedade = {
-      id: propriedades[0].id,
-      nome: propriedades[0].nome,
-      areaTotal: propriedades[0].area,
-      municipio: propriedades[0].municipio,
-      uf: propriedades[0].uf,
-    };
-    localStorage.setItem("minhaColheita.propriedadeConta", JSON.stringify(propriedade));
-  }
+function guardarPropriedade(propriedade) {
+  const dados = {
+    id: propriedade.id,
+    nome: propriedade.nome,
+    areaTotal: propriedade.area,
+    municipio: propriedade.municipio,
+    uf: propriedade.uf,
+  };
+  localStorage.setItem("minhaColheita.propriedadeConta", JSON.stringify(dados));
 }
 
 formLogin.addEventListener("submit", async function (evento) {
@@ -52,9 +42,7 @@ formLogin.addEventListener("submit", async function (evento) {
     }
 
     localStorage.setItem("token", corpo.token);
-    localStorage.setItem("usuario", JSON.stringify(corpo.usuario));
-
-    await guardarPropriedade(corpo.token);
+    guardarPropriedade(corpo.propriedade);
     window.location.href = "dashboard.html";
   } catch (erro) {
     mostrarErro("Não foi possível falar com o servidor. Confira se a API está rodando.");

@@ -59,7 +59,6 @@ function preencherMenuConta() {
 
 function sairDaConta() {
   localStorage.removeItem("token");
-  localStorage.removeItem("usuario");
   localStorage.removeItem("minhaColheita.propriedadeConta");
 }
 
