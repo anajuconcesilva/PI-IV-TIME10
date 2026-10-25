@@ -2,7 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './config/env';
 import healthRoutes from './routes/healthRoutes';
+import cadastroRoutes from './routes/cadastroRoutes';
+import culturaRoutes from './routes/culturaRoutes';
+import authRoutes from './routes/authRoutes';
+import propriedadeRoutes from './routes/propriedadeRoutes';
 import { conectarBanco } from './mongodb';
+import { ErroApi } from './utils/erroApi';
+import { responderErro } from './utils/responderErro';
 
 const app = express();
 
@@ -11,9 +17,17 @@ app.use(cors());
 app.use(express.json());
 
 app.use(healthRoutes);
+app.use(cadastroRoutes);
+app.use(culturaRoutes);
+app.use(authRoutes);
+app.use(propriedadeRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ erro: 'Rota não encontrada' });
+});
+
+app.use((erro: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  responderErro(res, erro instanceof SyntaxError ? new ErroApi(400, 'JSON inválido') : erro);
 });
 
 
