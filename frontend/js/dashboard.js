@@ -3,12 +3,6 @@
 // ===================== DADOS MOCKADOS =====================
 // Tudo neste bloco é inventado, só para a tela funcionar.
 
-const usuario = {
-  nome: "João Carlos",
-  propriedade: "Fazenda São Luís",
-  uf: "SP"
-};
-
 // status: "liberado", "carencia", "bloqueado" ou "aguardando"
 const talhoes = [
   { nome: "Talhão A1", cultura: "Soja", area: 14.2, status: "liberado" },
@@ -102,20 +96,9 @@ function barraCarencia(talhao) {
     </div>`;
 }
 
-function mostrarUsuario() {
-  const partes = usuario.nome.split(" ");
-  let iniciais = "";
-  for (let i = 0; i < partes.length; i++) {
-    iniciais += partes[i][0];
-  }
-
-  document.getElementById("usuario-iniciais").textContent = iniciais;
-  document.getElementById("usuario-nome").textContent = usuario.nome;
-  document.getElementById("usuario-propriedade").textContent = usuario.propriedade;
-}
-
 // A saudação e a data são de verdade: vêm do relógio do computador
 function mostrarSaudacao() {
+  const propriedade = lerPropriedadeConta();
   const agora = new Date();
   const hora = agora.getHours();
 
@@ -131,9 +114,16 @@ function mostrarSaudacao() {
   });
   data = data[0].toUpperCase() + data.slice(1);
 
-  document.getElementById("saudacao").textContent = saudacao + ", " + usuario.nome;
-  document.getElementById("data-hoje").textContent =
-    data + " · " + usuario.propriedade + ", " + usuario.uf;
+  if (!propriedade) {
+    document.getElementById("saudacao").textContent = saudacao;
+    document.getElementById("data-hoje").textContent = data;
+    return;
+  }
+
+  document.getElementById("saudacao").textContent = saudacao + ", " + propriedade.nome;
+
+  const localizacao = localizacaoDaPropriedade(propriedade);
+  document.getElementById("data-hoje").textContent = localizacao ? data + " · " + localizacao : data;
 }
 
 function mostrarResumo() {
@@ -266,7 +256,6 @@ function mostrarProximaLiberacao() {
     <p class="liberacao-data">Liberação em: <strong>${dataTexto}</strong></p>`;
 }
 
-mostrarUsuario();
 mostrarSaudacao();
 mostrarResumo();
 mostrarTalhoes();
