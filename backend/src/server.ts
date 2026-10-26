@@ -5,6 +5,7 @@ import { env } from './config/env';
 import healthRoutes from './routes/healthRoutes';
 import cadastroRoutes from './routes/cadastroRoutes';
 import culturaRoutes from './routes/culturaRoutes';
+import produtoRoutes from './routes/produtoRoutes';   
 import authRoutes from './routes/authRoutes';
 import relatoriosRoutes from './routes/relatoriosRoutes';
 import { conectarBanco } from './mongodb';
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(healthRoutes);
 app.use(cadastroRoutes);
 app.use(culturaRoutes);
+app.use(produtoRoutes);                               
 app.use(authRoutes);
 app.use(relatoriosRoutes);
 
