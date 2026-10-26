@@ -1,10 +1,14 @@
 // Aluna: Eduarda Prado Deiró | RA: 25004440
 
+import { ObjectId } from 'mongodb';
 import { obterBanco } from '../mongodb';
+import { ErroApi } from '../utils/erroApi';
 
 interface Cultura {
   id: string;
+  culturaId: number;          // novo
   nome: string;
+  periodoCarencia: number | null;  // novo
   quantidadeProdutos: number;
 }
 
@@ -28,10 +32,27 @@ export async function listarCulturas() {
 
   culturasEmMemoria = culturas.map((cultura) => ({
     id: cultura._id.toString(),
+    culturaId: cultura.cultura_id,                    // novo
     nome: cultura.nome,
+    periodoCarencia: cultura.periodo_carencia ?? null, // novo
     quantidadeProdutos: totalPorNome.get(cultura.nome) ?? 0,
   }));
   return culturasEmMemoria;
+}
+
+/// src/services/culturaService.ts
+export async function buscarCultura(id: unknown) {
+  if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+    throw new ErroApi(400, 'ID de cultura inválido');
+  }
+
+  const cultura = (await listarCulturas()).find((item) => item.id === id);
+
+  if (!cultura) {
+    throw new ErroApi(404, 'Cultura não encontrada');
+  }
+
+  return cultura;
 }
 
 export async function todasExistem(nomes: string[]) {
