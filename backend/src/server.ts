@@ -8,6 +8,7 @@ import culturaRoutes from './routes/culturaRoutes';
 import authRoutes from './routes/authRoutes';
 import relatoriosRoutes from './routes/relatoriosRoutes';
 import talhaoRoutes from './routes/talhaoRoutes';
+import historicoAplicacoesRoutes from './routes/historicoAplicacoesRoutes';
 import { conectarBanco } from './mongodb';
 import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
@@ -25,6 +26,7 @@ app.use(culturaRoutes);
 app.use(authRoutes);
 app.use(relatoriosRoutes);
 app.use(talhaoRoutes);
+app.use(historicoAplicacoesRoutes);
 
 // Resposta para rotas inexistentes
 app.use((req, res) => {
