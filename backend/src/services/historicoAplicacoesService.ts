@@ -3,9 +3,25 @@ import { obterBanco } from "../mongodb";
 import { ErroApi } from "../utils/erroApi";
 import {ObjectId} from 'mongodb';
 
+function converterData(valor:string): Date {
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(valor)){
+        throw new ErroApi(400, 'Use datas no formato AAAA-MM-DD');
+    }
+
+    const data = new Date(`${valor}T00:00:00.000Z`);
+
+    if(Number.isNaN(data.getTime()) || data.toISOString().slice(0,10) !== valor){
+        throw new ErroApi(400, 'Data inválida');
+    }
+
+    return data;
+}
+
 export async function listarHistoricoAplicacoes(
     propriedadeId:string,
-    talhaoId:string
+    talhaoId:string,
+    dataInicio?:string,
+    dataFim?:string
 ){
 
     if(!ObjectId.isValid(propriedadeId)){
@@ -15,14 +31,38 @@ export async function listarHistoricoAplicacoes(
     if (!ObjectId.isValid(talhaoId)) {
         throw new ErroApi(400, 'Identificador do talhão inválido');
     }
+
+    const inicio = dataInicio !== undefined ? converterData(dataInicio) : undefined;
+    const fim = dataFim !== undefined ? converterData(dataFim) : undefined;
+
+    if(inicio && fim && inicio > fim){
+        throw new ErroApi(400, 'A data inicial não pode ser posterior à final');
+    }
+
+    const periodo: { $gte?: Date, $lt?:Date}={};
+
+    if(inicio){
+        periodo.$gte=inicio;
+    }
+
+    if(fim){
+        const diaSeguinte = new Date(fim.getTime());
+        diaSeguinte.setUTCDate(diaSeguinte.getUTCDate()+1);
+
+        periodo.$lt= diaSeguinte;
+    }
+
+
     const banco = obterBanco();
 
     // Busca as aplicacações realizadas no talhão, da mais recente para a mais antiga
-    const aplicacoes = await banco.collection('aplicacoes').find({
+    const aplicacoes = await banco.collection('aplicacoes')
+    .find({
         propriedade_id: new ObjectId(propriedadeId),
-        talhao_id: new ObjectId(talhaoId)
+        talhao_id: new ObjectId(talhaoId),
+        ...(inicio || fim ? { data_aplicacao: periodo } : {})
     })
-    .sort({data_aplicacao: -1})
+    .sort({ data_aplicacao: -1 })
     .toArray();
 
     const produtos = await banco.collection('produtos')
