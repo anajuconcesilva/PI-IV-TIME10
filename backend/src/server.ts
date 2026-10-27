@@ -10,6 +10,7 @@ import relatoriosRoutes from './routes/relatoriosRoutes';
 import { conectarBanco } from './mongodb';
 import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
+import recuperacaoSenhaRoutes from './routes/recuperacaoSenhaRoutes';   // novo
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.use(cadastroRoutes);
 app.use(culturaRoutes);
 app.use(authRoutes);
 app.use(relatoriosRoutes);
+app.use(authRoutes);
+app.use(recuperacaoSenhaRoutes); 
 
 // Resposta para rotas inexistentes
 app.use((req, res) => {
