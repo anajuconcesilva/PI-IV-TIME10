@@ -8,9 +8,11 @@ import culturaRoutes from './routes/culturaRoutes';
 import authRoutes from './routes/authRoutes';
 import relatoriosRoutes from './routes/relatoriosRoutes';
 import talhaoRoutes from './routes/talhaoRoutes';
+import colheitaRoutes from './routes/colheitaRoutes';
 import { conectarBanco } from './mongodb';
 import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
+
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(cadastroRoutes);
 app.use(culturaRoutes);
 app.use(authRoutes);
 app.use(relatoriosRoutes);
+app.use(colheitaRoutes);
 app.use(talhaoRoutes);
 
 // Resposta para rotas inexistentes
