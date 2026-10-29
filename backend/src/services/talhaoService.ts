@@ -242,3 +242,57 @@ export async function atualizarTalhao(
 
     return consultarTalhao(propriedadeId, talhaoId);
 }
+
+// Atualiza o status do talhão com base nas aplicações realizadas
+export async function atualizarStatusTalhao(propriedadeId:string, talhaoId: string){
+    if(!ObjectId.isValid(propriedadeId)){
+        throw new ErroApi(401, 'Identificação da propriedade inválida');
+    }
+    
+    if (!ObjectId.isValid(talhaoId)) {
+        throw new ErroApi(400, 'Identificador do talhão inválido');
+    }
+
+    const banco= obterBanco();
+    const aplicacoes = await banco.collection('aplicacoes')
+    .find({
+        propriedade_id: new ObjectId(propriedadeId),
+        talhao_id: new ObjectId(talhaoId),
+        status: 'realizada'
+    }).toArray();
+
+    const agora = new Date();
+    let status='aguardando';
+
+    if(aplicacoes.length>0){
+        let temCarenciaPendente= false;
+
+        for(const aplicacao of aplicacoes){
+            const liberacao = aplicacao.data_liberacao_colheita;
+        
+            if(!(liberacao instanceof Date) || Number.isNaN(liberacao.getTime())){
+                throw new ErroApi(500, 'Aplicação com data de liberação inválida');
+            }
+
+            if(liberacao> agora){
+                temCarenciaPendente=true;
+            }
+
+            status= temCarenciaPendente ? 'em_carencia' : 'liberado';
+        }
+
+        await banco.collection('propriedades').updateOne(
+            {
+                _id: new ObjectId(propriedadeId),
+                'talhoes.talhao_id': new ObjectId(talhaoId)
+            },
+            {
+                $set:{
+                    'talhoes.$.status': status
+                }
+            }
+        );
+        return status;
+    }
+    
+}
