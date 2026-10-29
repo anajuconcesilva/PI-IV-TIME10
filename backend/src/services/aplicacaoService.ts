@@ -3,6 +3,7 @@ import { obterBanco } from "../mongodb";
 import { ErroApi } from "../utils/erroApi";
 import { converterData } from "../utils/converterData";
 import { ObjectId } from 'mongodb';
+import { atualizarStatusTalhao } from "./talhaoService";
 
 interface DadosAplicacao{
     propriedadeId:string;
@@ -100,6 +101,12 @@ export async function criarAplicacao(propriedadeId: string,
     );
     await buscarProduto(dados.produtoId);
 
+    const statusTalhao = await atualizarStatusTalhao(propriedadeId, dados.talhaoId);
+
+    if(statusTalhao !== 'aguardando'){
+        throw new ErroApi(409, 'Só é possível registrar aplicacação em talhão aguardando');
+    }
+
     const banco = obterBanco();
 
     const cultura = await banco.collection('culturas').findOne({
@@ -145,6 +152,7 @@ export async function criarAplicacao(propriedadeId: string,
     const resultado = await banco.collection('aplicacoes')
     .insertOne(aplicacao);
 
+    await atualizarStatusTalhao(propriedadeId, dados.talhaoId);
     return{
         id: resultado.insertedId.toString(),
         aplicacao: aplicacao
