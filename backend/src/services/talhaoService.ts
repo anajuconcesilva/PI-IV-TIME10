@@ -149,7 +149,10 @@ export async function consultarTalhao(propriedadeId: string, talhaoId:string){
     const banco = obterBanco();
 
     const propriedades= banco.collection<{
-        talhoes:{talhao_id: ObjectId} [];
+        talhoes:{
+            talhao_id: ObjectId;
+            status:string;
+        } [];
     }>('propriedades');
 
     const resultado = await propriedades.findOne({
@@ -162,6 +165,15 @@ export async function consultarTalhao(propriedadeId: string, talhaoId:string){
     }
 
     const talhao = resultado.talhoes.find((item)=> item.talhao_id.equals(new ObjectId(talhaoId)));
+
+    if(!talhao){
+        throw new ErroApi(404, 'Talhão não encontrado');
+    }
+    
+    talhao.status = await atualizarStatusTalhao(
+        propriedadeId,
+        talhao.talhao_id.toString()
+    );
 
     return talhao;
 }
@@ -183,6 +195,13 @@ export async function listarTalhoes(propriedadeId: string){
 
     if(!resultado){
         throw new ErroApi(404, 'Propriedade não encontrada');
+    }
+    
+    for (const talhao of resultado.talhoes){
+        talhao.status = await atualizarStatusTalhao(
+            propriedadeId,
+            talhao.talhao_id.toString()
+        );
     }
     
     return resultado.talhoes;
@@ -280,8 +299,8 @@ export async function atualizarStatusTalhao(propriedadeId:string, talhaoId: stri
 
             status= temCarenciaPendente ? 'em_carencia' : 'liberado';
         }
-
-        await banco.collection('propriedades').updateOne(
+    }
+    const resultado= await banco.collection('propriedades').updateOne(
             {
                 _id: new ObjectId(propriedadeId),
                 'talhoes.talhao_id': new ObjectId(talhaoId)
@@ -292,7 +311,9 @@ export async function atualizarStatusTalhao(propriedadeId:string, talhaoId: stri
                 }
             }
         );
-        return status;
+
+    if(resultado.matchedCount==0){
+        throw new ErroApi(404, 'Talhão não encontrado nesta propriedade');
     }
-    
+     return status;
 }
