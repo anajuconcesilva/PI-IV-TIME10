@@ -4,6 +4,19 @@ import { ErroApi } from "../utils/erroApi";
 import { converterData } from "../utils/converterData";
 import {ObjectId} from 'mongodb';
 
+interface dadosAplicacao {
+    id: string;
+    data_aplicacao: Date;
+    principio_ativo: string;
+    marca: string;
+    dosagem: number;
+    responsavel: string;
+    observacoes: string;
+    condicoes_climaticas: string;
+    periodo_carencia: number;
+    data_liberacao_colheita: Date;
+    status: 'realizada' | 'finalizada';
+}
 
 export async function listarHistoricoAplicacoes(
     propriedadeId:string,
@@ -61,31 +74,33 @@ export async function listarHistoricoAplicacoes(
     })
     .toArray();
 
-    const agora= new Date();
-
     const historico = aplicacoes.map((aplicacao)=>{
         const produto = produtos.find((item)=>
         item._id.equals(aplicacao.produto_id)
     );
 
-    const dataLiberacao = aplicacao.data_liberacao_colheita;
+        const dataLiberacao = aplicacao.data_liberacao_colheita;
 
-    if(!(dataLiberacao instanceof Date) || Number.isNaN(dataLiberacao.getTime())){
-      throw new ErroApi(500, 'Aplicação com data de liberação ausente ou inválida');
-    }
-    
-    
-    return{
-        id: aplicacao._id.toString(),
-        data_aplicacao: aplicacao.data_aplicacao,
-        principio_ativo: produto?.principio_ativo ?? 'Não informado',
-        marca: produto?.marca ?? 'Produto não encontrado',
-        dosagem: aplicacao.dosagem,
-        periodo_carencia: aplicacao.periodo_carencia,
-        status: agora < dataLiberacao
-            ? 'em_carencia'
-            : 'liberado'
-    };
+        if(!(dataLiberacao instanceof Date) || Number.isNaN(dataLiberacao.getTime())){
+        throw new ErroApi(500, 'Aplicação com data de liberação ausente ou inválida');
+        }
+        
+        const aplicacaoFormatada: dadosAplicacao ={
+            id: aplicacao._id.toString(),
+            data_aplicacao: aplicacao.data_aplicacao,
+            principio_ativo: produto?.principio_ativo ?? 'Não informado',
+            marca: produto?.marca ?? 'Produto não encontrado',
+            dosagem: aplicacao.dosagem,
+            responsavel: aplicacao.responsavel ?? '',
+            observacoes: aplicacao.observacoes ?? '',
+            condicoes_climaticas: aplicacao.condicoes_climaticas ?? '',
+            periodo_carencia: aplicacao.periodo_carencia,
+            data_liberacao_colheita: dataLiberacao,
+            status: aplicacao.status,
+        
+        }
+        
+        return aplicacaoFormatada;
 
     });
     
