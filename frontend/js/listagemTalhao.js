@@ -103,7 +103,7 @@ function adicionarAcoes(linha,talhao){
     acoes.className='acoes';
     const link= document.createElement('a');
     link.className='botao-icone';
-    link.href='paginaTalhao.html?id=' + encodeURIComponent(talhao.id);
+    link.href='cadastroTalhao.html?id=' + encodeURIComponent(talhao.id);
     link.title = 'Ver talhão';
     link.setAttribute('aria-label', 'Abrir ' + talhao.nome);
     link.innerHTML = '<svg class="icone-lucide" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +

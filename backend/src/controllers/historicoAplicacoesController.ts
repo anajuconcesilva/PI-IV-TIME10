@@ -7,7 +7,6 @@ import { listarHistoricoAplicacoes } from '../services/historicoAplicacoesServic
 export async function consultarHistoricoAplicacoes(req: Request, res: Response){
     try{
         const propriedadeId= req.propriedadeId;
-
         if(!propriedadeId){
             throw new ErroApi(401, 'Faça login para continuar');
         }
@@ -17,7 +16,15 @@ export async function consultarHistoricoAplicacoes(req: Request, res: Response){
             throw new ErroApi(400, 'identificador de talhão invalido');
         }
 
-        const aplicacoesRealizadas = await listarHistoricoAplicacoes(propriedadeId, talhaoId);
+        const {dataInicio, dataFim} = req.query;
+
+        if((dataInicio !== undefined && typeof dataInicio !== 'string')||
+            (dataFim !== undefined && typeof dataFim !== 'string')
+        ){
+            throw new ErroApi(400, 'As datas devem ser textos no formato AAAA-MM-DD');
+        }
+
+        const aplicacoesRealizadas = await listarHistoricoAplicacoes(propriedadeId, talhaoId, dataInicio, dataFim);
 
          res.status(200).json({
                 mensagem: aplicacoesRealizadas.length === 0
