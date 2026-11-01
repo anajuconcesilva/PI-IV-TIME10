@@ -1,6 +1,6 @@
-<!--feito pela aluna marília santos-->
+        <!-- feito por marilia santos -->
 
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -57,7 +57,7 @@
       </div>
 
       <div class="linha-filtros">
-        <!-- Grupo Cultura: Pílulas + Input Autocomplete conectado à API -->
+        <!-- Grupo Cultura -->
         <div class="grupo-filtro">
           <h4>Suas Culturas</h4>
           <div class="filtros-pills" id="filtros-cultura">
@@ -67,67 +67,25 @@
             <button class="pill" data-filter="tomate">Tomate</button>
             
             <input type="text" id="input-outra-cultura" class="pill-input" list="bd-culturas" placeholder="+ Buscar cultura..." autocomplete="off">
-            <!-- O Datalist começa vazio e é preenchido pelo fetch no JS -->
             <datalist id="bd-culturas"></datalist>
           </div>
         </div>
 
+        <!-- Grupo Classe (Agora dinâmico) -->
         <div class="grupo-filtro">
           <h4>Classe</h4>
           <div class="filtros-pills" id="filtros-classe">
-            <button class="pill ativo" data-filter="todas">Todas</button>
-            <button class="pill" data-filter="herbicida">Herbicida</button>
-            <button class="pill" data-filter="inseticida">Inseticida</button>
-            <button class="pill" data-filter="fungicida">Fungicida</button>
+            <button class="pill ativo" id="btn-todas-classes" data-filter="todas">Todas</button>
+            
+            <input type="text" id="input-classe" class="pill-input" list="bd-classes" placeholder="Buscar classe..." autocomplete="off">
+            <datalist id="bd-classes"></datalist>
           </div>
         </div>
       </div>
 
-      <div class="contador-resultados" id="contador-texto">8 produtos encontrados</div>
-
+      <div class="contador-resultados" id="contador-texto">Aguardando busca...</div>
       <div class="lista-produtos" id="lista-produtos">
-        <!-- Cards de Produtos Estáticos (Para testar filtros visuais) -->
-        <div class="card-produto" data-cultura="soja milho cafe cana-de-açucar" data-classe="herbicida">
-          <div class="produto-info">
-            <h3>Roundup Original <span class="badge">Herbicida</span></h3>
-            <p class="produto-sub">Glifosato · Reg. BR-0101283</p>
-            <div class="tags-cultura">
-              <span class="tag">Soja</span><span class="tag">Milho</span><span class="tag">Cana-de-açúcar</span><span class="tag">Café</span>
-            </div>
-          </div>
-          <div class="produto-carencia">
-            <span>14</span>
-            <small>dias carência</small>
-          </div>
-        </div>
 
-        <div class="card-produto" data-cultura="milho soja feijao algodao" data-classe="inseticida">
-          <div class="produto-info">
-            <h3>Imidacloprid 700 WG <span class="badge">Inseticida</span></h3>
-            <p class="produto-sub">Imidacloprido · Reg. BR-0093012</p>
-            <div class="tags-cultura">
-              <span class="tag">Milho</span><span class="tag">Soja</span><span class="tag">Feijão</span><span class="tag">Algodão</span>
-            </div>
-          </div>
-          <div class="produto-carencia">
-            <span>21</span>
-            <small>dias carência</small>
-          </div>
-        </div>
-        
-        <div class="card-produto" data-cultura="feijao milho tomate batata" data-classe="fungicida">
-          <div class="produto-info">
-            <h3>Dithane NT <span class="badge">Fungicida</span></h3>
-            <p class="produto-sub">Mancozebe · Reg. BR-0047291</p>
-            <div class="tags-cultura">
-              <span class="tag">Feijão</span><span class="tag">Milho</span><span class="tag">Tomate</span><span class="tag">Batata</span>
-            </div>
-          </div>
-          <div class="produto-carencia">
-            <span>10</span>
-            <small>dias carência</small>
-          </div>
-        </div>
       </div>
     </main>
   </div>
