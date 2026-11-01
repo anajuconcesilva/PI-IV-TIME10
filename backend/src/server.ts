@@ -9,6 +9,8 @@ import authRoutes from './routes/authRoutes';
 import relatoriosRoutes from './routes/relatoriosRoutes';
 import talhaoRoutes from './routes/talhaoRoutes';
 import colheitaRoutes from './routes/colheitaRoutes';
+import historicoAplicacoesRoutes from './routes/historicoAplicacoesRoutes';
+import aplicacaoRoutes from './routes/aplicacaoRoutes';
 import { conectarBanco } from './mongodb';
 import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
@@ -28,6 +30,8 @@ app.use(authRoutes);
 app.use(relatoriosRoutes);
 app.use(colheitaRoutes);
 app.use(talhaoRoutes);
+app.use(historicoAplicacoesRoutes);
+app.use(aplicacaoRoutes);
 
 // Resposta para rotas inexistentes
 app.use((req, res) => {

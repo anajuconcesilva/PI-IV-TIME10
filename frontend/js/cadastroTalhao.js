@@ -1,7 +1,8 @@
 // Beatriz Naomi Ferreira Sasaki - RA: 25016735
 
 // Variáveis da página
-const formulario=document.querySelector('#formulario');
+const formulario = document.querySelector('#formulario');
+
 const campoNome = formulario.elements.nome;
 const campoCultura = formulario.elements.cultura;
 const campoArea = formulario.elements.area;
@@ -9,225 +10,342 @@ const campoSafra = formulario.elements.safra;
 const campoData = formulario.elements.dataInicio;
 const campoObservacoes = formulario.elements.observacoes;
 
-// Registro que está sendo editado; null indica um cadastro novo.
+// Registro que está sendo editado.
+// null indica um cadastro novo.
 let talhaoEmEdicao = null;
+
 // Soma dos hectares ocupados pelos talhões.
 let areaUsada = 0;
 
-//Cria uma linha da tabela com os dados de um talhão
-function criarLinhaTalhao(talhao){
+// Culturas retornadas pela API.
+let culturasDisponiveis = [];
+
+// Cria uma linha da tabela com os dados de um talhão.
+function criarLinhaTalhao(talhao) {
     // O ID no link diz à página de detalhes qual talhão abrir.
     const endereco = 'paginaTalhao.html?id=' + encodeURIComponent(talhao.id);
+
     const linha = document.createElement('tr');
 
-    linha.innerHTML=
-    '<td><a href="' + endereco + '">' +
-    '<strong>' + protegerTexto(talhao.nome) + '</strong>' +
-    '<small>' + protegerTexto(talhao.cultura) + '</small>' +
-    '</a></td>' +
-    '<td>' + formatarArea(talhao.area) + '</td>' +
-    '<td>' + criarEtiquetaStatus(talhao.status) + '</td>';
-     
+    linha.innerHTML =
+        '<td><a href="' + endereco + '">' +
+        '<strong>' + protegerTexto(talhao.nome) + '</strong>' +
+        '<small>' + protegerTexto(talhao.cultura) + '</small>' +
+        '</a></td>' +
+        '<td>' + formatarArea(talhao.area) + '</td>' +
+        '<td>' + criarEtiquetaStatus(talhao.status) + '</td>';
+
     return linha;
 }
 
-//Campos do formulário
-// precisará ser alterado quando conectado a API
-// verificar se registro pertence a uma conta autenticada
-function prepararFormulario(){
-    const parametros= new URLSearchParams(window.location.search);
-    // pega o id do talhão a partir dos parâmetros do endereço
-    const idTalhao = parametros.get('id');
-    talhaoEmEdicao = procurarTalhao(idTalhao);
+// Consulta as culturas disponíveis na API.
+async function carregarCulturas() {
+    const resposta = await requisicaoAPI('/culturas');
 
-     // A URL sem ID abre um cadastro novo com ID conhecido, permite editar.
-     // Verifica se esta editando um cadastro existente
-    if(talhaoEmEdicao!==null){
-        document.querySelector('#Titulo-formulario').textContent = 'Editar talhão';
-        document.querySelector('#enviar-formulario').textContent = 'Salvar alterações';
+    if (!Array.isArray(resposta)) {
+        throw new Error('A API retornou uma lista de culturas inválida.');
+    }
+
+    culturasDisponiveis = resposta;
+
+    return culturasDisponiveis;
+}
+
+// Procura a cultura pelo nome digitado.
+function procurarCultura(nome) {
+    const nomeNormalizado = nome.trim().toLowerCase();
+
+    for (const cultura of culturasDisponiveis) {
+        if (
+            cultura.nome &&
+            cultura.nome.trim().toLowerCase() === nomeNormalizado
+        ) {
+            return cultura;
+        }
+    }
+
+    return null;
+}
+
+// Calcula a previsão de colheita usando o período de carência da cultura.
+function obterPrevisaoColheita(dataInicio, cultura) {
+    const periodoCarencia = Number(cultura.periodo_carencia);
+
+    if (!Number.isFinite(periodoCarencia) || periodoCarencia < 0) {
+        throw new Error(
+            'Não foi possível obter o período de carência da cultura.'
+        );
+    }
+
+    return calcularPrevisaoColheita(dataInicio, periodoCarencia);
+}
+
+// Prepara o formulário.
+// Se houver um ID na URL, busca o talhão para edição.
+async function prepararFormulario() {
+    const parametros = new URLSearchParams(window.location.search);
+
+    const idTalhao = parametros.get('id');
+
+    if (idTalhao) {
+        talhaoEmEdicao = await buscarTalhaoAPI(idTalhao);
+
+        document.querySelector('#Titulo-formulario').textContent =
+            'Editar talhão';
+
+        document.querySelector('#enviar-formulario').textContent =
+            'Salvar alterações';
+
         campoNome.value = talhaoEmEdicao.nome;
         campoCultura.value = talhaoEmEdicao.cultura;
         campoArea.value = talhaoEmEdicao.area;
         campoSafra.value = talhaoEmEdicao.safra;
         campoData.value = talhaoEmEdicao.dataInicio;
-        campoObservacoes.value = '';
-
-        // Verifica se estamos editando um cadastro existente, em vez de criar um novo.
-        if (talhaoEmEdicao.observacoes != null) {
-            campoObservacoes.value = talhaoEmEdicao.observacoes;
-        }
+        campoObservacoes.value = talhaoEmEdicao.observacoes ?? '';
     }
 }
 
-// Soma as áreas já usadas e atualiza a tabela
-// Necessário alterar quando houver conexão com API, para guardar
-// a área total e os talhões reais retornados pelo backend, para realizar contagem
-function mostrarResumoPropriedade(){
+// Soma as áreas já usadas e atualiza a tabela.
+function mostrarResumoPropriedade() {
     const corpoTabela = document.querySelector('#talhoes-resumo');
-    // Remove o conteúdo antigo para preencher a lista atualizada
+
+    // Remove o conteúdo antigo para preencher a lista atualizada.
     corpoTabela.innerHTML = '';
+
     areaUsada = 0;
 
     const propriedade = propriedadeConta;
-    mostrarPropriedadeConta();
-    document.querySelector('#nome-propriedade').textContent = propriedade.nome;
 
-    // Percorre talhoes, pegando um item por vez com o nome talhao.
-    for(const talhao of talhoes){
-        if (talhao.propriedadeId !== propriedade.id) continue;
-        areaUsada = areaUsada + talhao.area;
+    mostrarPropriedadeConta();
+
+    document.querySelector('#nome-propriedade').textContent =
+        propriedade.nome;
+
+    // Os talhões já vêm filtrados pelo backend conforme a conta autenticada.
+    for (const talhao of talhoes) {
+        areaUsada += Number(talhao.area);
+
         corpoTabela.appendChild(criarLinhaTalhao(talhao));
     }
 
     // Área total da propriedade menos a área já ocupada.
-    let areaDisponivel = propriedadeConta.areaTotal - areaUsada;
-    if(areaDisponivel<0){
+    let areaDisponivel = propriedade.areaTotal - areaUsada;
+
+    if (areaDisponivel < 0) {
         areaDisponivel = 0;
     }
 
-    let porcentagem = areaUsada / propriedadeConta.areaTotal * 100;
-    if(porcentagem>100){
-        porcentagem=100;
+    let porcentagem = areaUsada / propriedade.areaTotal * 100;
+
+    if (porcentagem > 100) {
+        porcentagem = 100;
     }
 
-    // Atualiza campos de área usada e área disponível
-    document.querySelector('#area-usada').textContent = formatarNumero(areaUsada);
-    document.querySelector('#area-disponivel').textContent = formatarNumero(areaDisponivel);
-    // ajusta a largura da barra usando a porcentagem calculada
-    document.querySelector('#total-usado').style.width = porcentagem + '%';
-}   
+    // Atualiza os campos de área usada e área disponível.
+    document.querySelector('#area-usada').textContent =
+        formatarNumero(areaUsada);
 
-// Valida os campos e salva o cadastro ou as alterações.
-// Necessário alteração nesse código após conexão com API
-// Verificar validações no backend
-function cadastrarTalhao(evento){
-    // Impede o envio padrão do formulário: salva os dados no navegador.
+    document.querySelector('#area-disponivel').textContent =
+        formatarNumero(areaDisponivel);
+
+    // Ajusta a largura da barra usando a porcentagem calculada.
+    document.querySelector('#total-usado').style.width =
+        porcentagem + '%';
+}
+
+// Valida os campos e envia o cadastro ou as alterações para a API.
+async function cadastrarTalhao(evento) {
+    // Impede o envio padrão do formulário.
     evento.preventDefault();
-    // Verifica os campos obrigatórios e os limites definidos
-    // interrompe se houver erro
-    if (!formulario.reportValidity()) return;
+
+    // Verifica os campos obrigatórios e os limites definidos.
+    if (!formulario.reportValidity()) {
+        return;
+    }
 
     const nome = campoNome.value.trim();
-    const cultura = campoCultura.value.trim();
+    const culturaNome = campoCultura.value.trim();
     const area = Number(campoArea.value);
+    const dataInicio = campoData.value;
+    const safra = campoSafra.value.trim();
+    const observacoes = campoObservacoes.value.trim();
 
+    // Verifica a área disponível.
     let areaDisponivel = propriedadeConta.areaTotal - areaUsada;
 
-    // Verifica se estamos editando um cadastro existente, em vez de criar um novo.
+    // Na edição, desconta a área do próprio talhão antes de validar.
     if (talhaoEmEdicao !== null) {
-        // recalcula a área disponivel
-        areaDisponivel = areaDisponivel + talhaoEmEdicao.area;
+        areaDisponivel += Number(talhaoEmEdicao.area);
     }
 
-    // Verifica se a área digitada ultrapassa o espaço disponível
     if (area > areaDisponivel) {
-        campoArea.setCustomValidity('A área disponível é ' + formatarArea(areaDisponivel) + '.');
-        // Mostra no campo a mensagem de validação para a pessoa corrigir o valor.
+        campoArea.setCustomValidity(
+            'A área disponível é ' + formatarArea(areaDisponivel) + '.'
+        );
+
         campoArea.reportValidity();
+
         return;
     }
 
-      // Verifica se o nome ficou vazio depois de remover os espaços.
-    if(nome===''){
+    // Verifica se o nome ficou vazio depois de remover os espaços.
+    if (nome === '') {
         campoNome.setCustomValidity('Informe o nome do talhão.');
         campoNome.reportValidity();
+
         return;
     }
 
-    if (cultura === '') {
+    if (culturaNome === '') {
         campoCultura.setCustomValidity('Informe a cultura do talhão.');
         campoCultura.reportValidity();
+
         return;
     }
 
-    const novoTalhao={
-        // O id por enquanto é gerado local, mas deverá depois ser usado ID retornado pelo backend
-        id: 'T' + Date.now(),
-        // O vínculo à propriedade deve ser validado ou definido pelo servidor a partir da conta logada
-        propriedadeId: propriedadeConta.id,
-        nome:nome,
-        cultura: cultura,
+    // Procura a cultura correspondente na lista da API.
+    const culturaSelecionada = procurarCultura(culturaNome);
+
+    if (culturaSelecionada === null) {
+        campoCultura.setCustomValidity(
+            'Informe uma cultura cadastrada no sistema.'
+        );
+
+        campoCultura.reportValidity();
+
+        return;
+    }
+
+    // O backend espera o identificador numérico da cultura.
+    const culturaId = Number(culturaSelecionada.cultura_id);
+
+    if (!Number.isInteger(culturaId)) {
+        mostrarMensagem(
+            'A API não retornou o identificador numérico da cultura.'
+        );
+
+        return;
+    }
+
+    // Calcula a previsão de colheita.
+    let previsaoColheita;
+
+    try {
+        previsaoColheita = obterPrevisaoColheita(
+            dataInicio,
+            culturaSelecionada
+        );
+    } catch (erro) {
+        mostrarMensagem(erro.message);
+        return;
+    }
+
+    // Monta os dados no formato esperado pelo backend.
+    const dadosTalhao = {
+        nome: nome,
+        cultura_id: culturaId,
         area: area,
-        safra: campoSafra.value,
-        status:'aguardando',
-        dataInicio: campoData.value,
-        observacoes: campoObservacoes.value.trim(),
-        // talhão novo ainda não tem aplicação
-        produto: null,
-        dataAplicacao: null
+        safra: safra,
+        inicio_cultivo: dataInicio,
+        previsao_colheita: previsaoColheita,
+        observacao: observacoes
     };
 
-    // Na edição, preserva a identificação e os dados da última aplicação.
-    if(talhaoEmEdicao!==null){
-        novoTalhao.id = talhaoEmEdicao.id;
-        novoTalhao.status = talhaoEmEdicao.status;
-        novoTalhao.produto = talhaoEmEdicao.produto;
-        novoTalhao.dataAplicacao = talhaoEmEdicao.dataAplicacao;
-        novoTalhao.colheita= talhaoEmEdicao.colheita;
-    }
+    // Evita enviar o formulário mais de uma vez.
+    const botaoEnviar = document.querySelector('#enviar-formulario');
 
-    const novaLista= [];
-    for (const talhao of talhoes) {
-        if (talhao.id === novoTalhao.id) {
-            // Se o id for igual, coloca a versão atualizada desse talhão
-            novaLista.push(novoTalhao);
-        } else {
-            // Se o id for diferente, mantém o talhão como estava
-            novaLista.push(talhao);
-        }
-    }
-    // se for um cadastro novo, acrescenta o novo talhão ao final
-    if (talhaoEmEdicao === null) {
-        novaLista.push(novoTalhao);
-    }
+    botaoEnviar.disabled = true;
 
-    // depois aqui deve entrar a confirmação da resposta de cadastro ou edição da API
-     // Mostra o sucesso depois de salvar; retorna à listagem quando o alerta de sucesso é fechado
-    if (salvarTalhoes(novaLista)) {
+    try {
         if (talhaoEmEdicao === null) {
-            mostrarAlertaSucesso('Cadastro do talhão realizado com sucesso!');
+            // Cadastro novo: envia POST para a API.
+            await cadastrarTalhaoAPI(dadosTalhao);
+
+            mostrarAlertaSucesso(
+                'Cadastro do talhão realizado com sucesso!'
+            );
+
         } else {
-            mostrarAlertaSucesso('Talhão atualizado com sucesso!');
+            // Edição: envia PUT para a API.
+            await editarTalhaoAPI(
+                talhaoEmEdicao.id,
+                dadosTalhao
+            );
+
+            mostrarAlertaSucesso(
+                'Talhão atualizado com sucesso!'
+            );
         }
+
+    } catch (erro) {
+        mostrarMensagem(
+            erro.message || 'Não foi possível salvar o talhão.'
+        );
+
+    } finally {
+        botaoEnviar.disabled = false;
     }
 }
 
 // Limpa o erro personalizado do campo para permitir uma nova validação.
-function limparErroArea(){
+function limparErroArea() {
     campoArea.setCustomValidity('');
 }
+
 function limparErroNome() {
-  campoNome.setCustomValidity('');
+    campoNome.setCustomValidity('');
 }
 
 function limparErroCultura() {
-  campoCultura.setCustomValidity('');
+    campoCultura.setCustomValidity('');
 }
 
-//Inicio da página
-if (propriedadeConta !== null) {
-  talhoes = carregarTalhoes();
- 
-  if (talhoes !== null) {
-    mostrarPropriedadeConta();
-    prepararFormulario();
-    mostrarResumoPropriedade();
-  } else {
-    mostrarErroCarregamento('Não foi possível carregar os talhões');
-  }
+// Início da página.
+async function iniciarPagina() {
+    if (propriedadeConta === null) {
+        mostrarErroPropriedade();
+        return;
+    }
 
-} else {
-  mostrarErroPropriedade();
+    try {
+        // Carrega os talhões reais da API.
+        talhoes = await carregarTalhoes();
+
+        // Carrega as culturas disponíveis.
+        await carregarCulturas();
+
+        mostrarPropriedadeConta();
+
+        // Busca os dados do talhão caso seja uma edição.
+        await prepararFormulario();
+
+        // Atualiza o resumo da propriedade.
+        mostrarResumoPropriedade();
+
+    } catch (erro) {
+        mostrarErroCarregamento(
+            'Não foi possível carregar os dados dos talhões'
+        );
+
+        console.error('Erro ao iniciar a página:', erro);
+    }
 }
 
+// Eventos do formulário.
 formulario.addEventListener('submit', cadastrarTalhao);
+
 campoArea.addEventListener('input', limparErroArea);
 campoNome.addEventListener('input', limparErroNome);
 campoCultura.addEventListener('input', limparErroCultura);
 
 // Abre a listagem depois que o alerta de sucesso é fechado.
 function voltarParaListagem() {
-  window.location.href = 'listagemTalhao.html';
+    window.location.href = 'listagemTalhao.html';
 }
 
-alertaSucesso.addEventListener('close', voltarParaListagem);
+if (alertaSucesso) {
+    alertaSucesso.addEventListener('close', voltarParaListagem);
+}
+
+// Inicializa a página.
+iniciarPagina();
