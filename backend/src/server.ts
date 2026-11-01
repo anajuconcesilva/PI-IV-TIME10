@@ -14,6 +14,7 @@ import aplicacaoRoutes from './routes/aplicacaoRoutes';
 import { conectarBanco } from './mongodb';
 import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
+import avisosRoutes from './routes/avisosRoutes';
 
 
 const app = express();
@@ -32,7 +33,7 @@ app.use(colheitaRoutes);
 app.use(talhaoRoutes);
 app.use(historicoAplicacoesRoutes);
 app.use(aplicacaoRoutes);
-
+app.use(avisosRoutes);
 // Resposta para rotas inexistentes
 app.use((req, res) => {
   res.status(404).json({ erro: 'Rota não encontrada' });
