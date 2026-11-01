@@ -4,6 +4,7 @@ import { ErroApi } from "../utils/erroApi";
 import { converterData } from "../utils/converterData";
 import { ObjectId } from 'mongodb';
 import { atualizarStatusTalhao } from "./talhaoService";
+import { criarAvisoCarencia } from './avisosService';
 
 interface DadosAplicacao{
     propriedadeId:string;
@@ -151,6 +152,12 @@ export async function criarAplicacao(propriedadeId: string,
 
     const resultado = await banco.collection('aplicacoes')
     .insertOne(aplicacao);
+
+    await criarAvisoCarencia(
+    propriedadeId,
+    dados.talhaoId,
+    talhao.nome ?? 'Talhão'
+);
 
     await atualizarStatusTalhao(propriedadeId, dados.talhaoId);
     return{
