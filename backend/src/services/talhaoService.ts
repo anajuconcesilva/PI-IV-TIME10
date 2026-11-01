@@ -152,7 +152,7 @@ export async function consultarTalhao(propriedadeId: string, talhaoId:string){
         talhoes:{
             talhao_id: ObjectId;
             status:string;
-        } [],
+        } [];
     }>('propriedades');
 
     const resultado = await propriedades.findOne({
@@ -197,6 +197,13 @@ export async function listarTalhoes(propriedadeId: string){
         throw new ErroApi(404, 'Propriedade não encontrada');
     }
 
+    for (const talhao of resultado.talhoes){
+        talhao.status = await atualizarStatusTalhao(
+            propriedadeId,
+            talhao.talhao_id.toString()
+        );
+    }
+    
     for (const talhao of resultado.talhoes){
         talhao.status = await atualizarStatusTalhao(
             propriedadeId,
