@@ -1,5 +1,5 @@
+/* feito por marilia santos */
 
-/* aluna marília santos 25014905 */
 .banner-info {
   display: flex;
   align-items: center;
@@ -38,11 +38,6 @@
   font-size: 15px;
   background-color: var(--cor-branco);
 }
-.barra-pesquisa input:focus {
-  outline: none;
-  border-color: var(--cor-acao);
-  box-shadow: 0 0 0 3px rgba(31, 111, 158, 0.18);
-}
 .barra-pesquisa .icone {
   position: absolute;
   left: 16px;
@@ -69,6 +64,7 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
 }
 .pill {
   padding: 8px 16px;
@@ -85,6 +81,27 @@
   background-color: var(--cor-marinho);
   color: var(--cor-branco);
   border-color: var(--cor-marinho);
+}
+.pill-input {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--cor-borda);
+  background-color: var(--cor-branco);
+  color: var(--cor-texto);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--fonte-texto);
+  width: 150px;
+  transition: width 0.3s ease, border-color 0.3s ease;
+}
+.pill-input:focus {
+  outline: none;
+  border-color: var(--cor-marinho);
+  width: 220px;
+  box-shadow: 0 0 0 3px rgba(31, 111, 158, 0.18);
+}
+.pill-input::placeholder {
+  color: var(--cor-texto-suave);
 }
 .contador-resultados {
   font-size: 14px;
@@ -187,7 +204,6 @@
   gap: 24px;
   margin-bottom: 24px;
 }
-/* CORREÇÃO DOS CHECKBOXES GIGANTES */
 .checkbox-grupo {
   display: flex;
   flex-direction: column;

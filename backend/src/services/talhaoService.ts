@@ -149,7 +149,10 @@ export async function consultarTalhao(propriedadeId: string, talhaoId:string){
     const banco = obterBanco();
 
     const propriedades= banco.collection<{
-        talhoes:{talhao_id: ObjectId} [];
+        talhoes:{
+            talhao_id: ObjectId;
+            status:string;
+        } [];
     }>('propriedades');
 
     const resultado = await propriedades.findOne({
@@ -162,6 +165,15 @@ export async function consultarTalhao(propriedadeId: string, talhaoId:string){
     }
 
     const talhao = resultado.talhoes.find((item)=> item.talhao_id.equals(new ObjectId(talhaoId)));
+
+    if(!talhao){
+        throw new ErroApi(404, 'Talhão não encontrado');
+    }
+    
+    talhao.status = await atualizarStatusTalhao(
+        propriedadeId,
+        talhao.talhao_id.toString()
+    );
 
     return talhao;
 }
@@ -183,6 +195,20 @@ export async function listarTalhoes(propriedadeId: string){
 
     if(!resultado){
         throw new ErroApi(404, 'Propriedade não encontrada');
+    }
+
+    for (const talhao of resultado.talhoes){
+        talhao.status = await atualizarStatusTalhao(
+            propriedadeId,
+            talhao.talhao_id.toString()
+        );
+    }
+    
+    for (const talhao of resultado.talhoes){
+        talhao.status = await atualizarStatusTalhao(
+            propriedadeId,
+            talhao.talhao_id.toString()
+        );
     }
     
     return resultado.talhoes;
@@ -241,4 +267,60 @@ export async function atualizarTalhao(
     }
 
     return consultarTalhao(propriedadeId, talhaoId);
+}
+
+// Atualiza o status do talhão com base nas aplicações realizadas
+export async function atualizarStatusTalhao(propriedadeId:string, talhaoId: string){
+    if(!ObjectId.isValid(propriedadeId)){
+        throw new ErroApi(401, 'Identificação da propriedade inválida');
+    }
+    
+    if (!ObjectId.isValid(talhaoId)) {
+        throw new ErroApi(400, 'Identificador do talhão inválido');
+    }
+
+    const banco= obterBanco();
+    const aplicacoes = await banco.collection('aplicacoes')
+    .find({
+        propriedade_id: new ObjectId(propriedadeId),
+        talhao_id: new ObjectId(talhaoId),
+        status: 'realizada'
+    }).toArray();
+
+    const agora = new Date();
+    let status='aguardando';
+
+    if(aplicacoes.length>0){
+        let temCarenciaPendente= false;
+
+        for(const aplicacao of aplicacoes){
+            const liberacao = aplicacao.data_liberacao_colheita;
+        
+            if(!(liberacao instanceof Date) || Number.isNaN(liberacao.getTime())){
+                throw new ErroApi(500, 'Aplicação com data de liberação inválida');
+            }
+
+            if(liberacao> agora){
+                temCarenciaPendente=true;
+            }
+
+            status= temCarenciaPendente ? 'em_carencia' : 'liberado';
+        }
+    }
+    const resultado= await banco.collection('propriedades').updateOne(
+            {
+                _id: new ObjectId(propriedadeId),
+                'talhoes.talhao_id': new ObjectId(talhaoId)
+            },
+            {
+                $set:{
+                    'talhoes.$.status': status
+                }
+            }
+        );
+
+    if(resultado.matchedCount==0){
+        throw new ErroApi(404, 'Talhão não encontrado nesta propriedade');
+    }
+     return status;
 }
