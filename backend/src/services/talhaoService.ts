@@ -196,6 +196,13 @@ export async function listarTalhoes(propriedadeId: string){
     if(!resultado){
         throw new ErroApi(404, 'Propriedade não encontrada');
     }
+
+    for (const talhao of resultado.talhoes){
+        talhao.status = await atualizarStatusTalhao(
+            propriedadeId,
+            talhao.talhao_id.toString()
+        );
+    }
     
     for (const talhao of resultado.talhoes){
         talhao.status = await atualizarStatusTalhao(

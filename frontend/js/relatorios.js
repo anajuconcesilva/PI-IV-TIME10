@@ -1,4 +1,5 @@
 // Marília Santos - 25014905
+
 const API_URL = 'http://localhost:3000';
 
 const blocoResumo = document.getElementById('bloco-resumo');
@@ -7,6 +8,49 @@ const estadoVazio = document.getElementById('estado-vazio');
 
 const tituloLista = blocoLista.querySelector('.secao-titulo');
 const listaRelatorios = blocoLista.querySelector('.lista-relatorios');
+
+// Obtém o token salvo durante o login.
+function obterToken() {
+  return localStorage.getItem('token');
+}
+
+// Descobre o caminho da tela de login.
+function enderecoDoLogin() {
+  if (window.location.pathname.includes('/pages/')) {
+    return '../login.html';
+  }
+
+  return 'login.html';
+}
+
+// Faz requisições autenticadas para a API.
+async function requisicaoAutenticada(url, opcoes = {}) {
+  const token = obterToken();
+
+  if (!token) {
+    window.location.replace(enderecoDoLogin());
+    throw new Error('Sua sessão expirou. Faça login novamente.');
+  }
+
+  const resposta = await fetch(url, {
+    ...opcoes,
+    headers: {
+      ...(opcoes.headers || {}),
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (resposta.status === 401) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('minhaColheita.propriedadeConta');
+
+    window.location.replace(enderecoDoLogin());
+
+    throw new Error('Sua sessão expirou. Faça login novamente.');
+  }
+
+  return resposta;
+}
 
 function alternarEstadoVazio(vazio) {
   blocoResumo.hidden = vazio;
@@ -112,7 +156,6 @@ function criarCardRelatorio(relatorio, indice) {
 
   const botaoDownload = card.querySelector('.btn-download');
 
-  // Faz o download do PDF gerado pelo backend.
   botaoDownload.addEventListener('click', async () => {
     if (!id) {
       alert('Não foi possível identificar este relatório.');
@@ -123,21 +166,21 @@ function criarCardRelatorio(relatorio, indice) {
       botaoDownload.disabled = true;
       botaoDownload.textContent = 'Baixando...';
 
-      const resposta = await fetch(
+      const resposta = await requisicaoAutenticada(
         `${API_URL}/relatorios/${encodeURIComponent(String(id))}/pdf`
       );
 
       if (!resposta.ok) {
-        let mensagem = 'Não foi possível baixar o relatório.';
+        let mensagemErro = 'Não foi possível baixar o relatório.';
 
         try {
-          const erro = await resposta.json();
-          mensagem = erro.erro || mensagem;
+          const dadosErro = await resposta.json();
+          mensagemErro = dadosErro.erro || dadosErro.mensagem || mensagemErro;
         } catch {
-          // Mantém a mensagem padrão se a resposta não for JSON.
+          // A resposta pode não ser JSON.
         }
 
-        throw new Error(mensagem);
+        throw new Error(mensagemErro);
       }
 
       const arquivo = await resposta.blob();
@@ -151,20 +194,20 @@ function criarCardRelatorio(relatorio, indice) {
       link.click();
       link.remove();
 
-      // Revoga a URL depois que o navegador iniciar o download.
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (erro) {
       console.error('Erro ao baixar relatório:', erro);
 
-      alert(
-        erro instanceof Error
-          ? erro.message
-          : 'Ocorreu um erro ao baixar o PDF.'
-      );
+      if (obterToken()) {
+        alert(
+          erro instanceof Error
+            ? erro.message
+            : 'Ocorreu um erro ao baixar o PDF.'
+        );
+      }
     } finally {
       botaoDownload.disabled = false;
 
-      // Restaura o botão e seu ícone.
       botaoDownload.innerHTML = `
         <svg class="icone" viewBox="0 0 24 24" width="18" height="18"
           fill="none" stroke="currentColor" stroke-width="2"
@@ -208,19 +251,30 @@ async function carregarRelatorios() {
   alternarEstadoVazio(true);
 
   try {
-    const resposta = await fetch(`${API_URL}/relatorios`);
+    const resposta = await requisicaoAutenticada(
+      `${API_URL}/relatorios`
+    );
 
     if (!resposta.ok) {
-      throw new Error(
-        `A API respondeu com o status ${resposta.status}.`
-      );
+      let mensagemErro = 'Não foi possível carregar os relatórios.';
+
+      try {
+        const dadosErro = await resposta.json();
+        mensagemErro = dadosErro.erro || dadosErro.mensagem || mensagemErro;
+      } catch {
+        // A resposta pode não ser JSON.
+      }
+
+      throw new Error(mensagemErro);
     }
 
     const dados = await resposta.json();
 
     const relatorios = Array.isArray(dados)
       ? dados
-      : dados.relatorios || [];
+      : Array.isArray(dados.relatorios)
+        ? dados.relatorios
+        : [];
 
     relatorios.sort((a, b) => {
       return new Date(b.data_geracao || 0) -
@@ -229,6 +283,8 @@ async function carregarRelatorios() {
 
     atualizarResumo(relatorios);
 
+    listaRelatorios.replaceChildren();
+
     if (relatorios.length === 0) {
       estadoVazio.textContent =
         'Você ainda não possui nenhum relatório gerado!';
@@ -236,8 +292,6 @@ async function carregarRelatorios() {
       alternarEstadoVazio(true);
       return;
     }
-
-    listaRelatorios.replaceChildren();
 
     relatorios.forEach((relatorio, indice) => {
       listaRelatorios.appendChild(
@@ -254,9 +308,15 @@ async function carregarRelatorios() {
   } catch (erro) {
     console.error('Erro ao carregar relatórios:', erro);
 
+    // Se o token foi removido, a navegação para o login já foi iniciada.
+    if (!obterToken()) {
+      return;
+    }
+
     estadoVazio.textContent =
-      'Não foi possível carregar os relatórios. ' +
-      'Confira se o backend está rodando e tente novamente.';
+      erro instanceof Error
+        ? erro.message
+        : 'Não foi possível carregar os relatórios. Confira se o backend está rodando.';
 
     alternarEstadoVazio(true);
   }
