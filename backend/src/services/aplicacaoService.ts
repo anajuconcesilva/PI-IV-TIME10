@@ -166,3 +166,69 @@ export async function criarAplicacao(propriedadeId: string,
     };
   
 }
+
+// Lista as aplicações necessárias para montar o Dashboard.
+export async function listarAplicacoesDashboard(propriedadeId: string) {
+    if (!ObjectId.isValid(propriedadeId)) {
+        throw new ErroApi(401, 'Identificação da propriedade inválida');
+    }
+
+    const banco = obterBanco();
+
+    // Busca a propriedade e seus talhões.
+    const propriedade = await banco.collection('propriedades').findOne({
+        _id: new ObjectId(propriedadeId)
+    });
+
+    if (!propriedade) {
+        throw new ErroApi(404, 'Propriedade não encontrada');
+    }
+
+    const talhoes = propriedade.talhoes ?? [];
+
+    // Busca as aplicações realizadas na propriedade.
+    const aplicacoes = await banco.collection('aplicacoes')
+        .find({
+            propriedade_id: new ObjectId(propriedadeId),
+            status: 'realizada'
+        })
+        .sort({ data_liberacao_colheita: 1 })
+        .toArray();
+
+    // Busca os produtos relacionados às aplicações.
+    const idsProdutos = aplicacoes.map(
+        aplicacao => aplicacao.produto_id
+    );
+
+    const produtos = await banco.collection('produtos')
+        .find({
+            _id: { $in: idsProdutos }
+        })
+        .toArray();
+
+    // Relaciona aplicação, produto e talhão.
+    return aplicacoes.map(aplicacao => {
+        const produto = produtos.find(item =>
+            item._id.equals(aplicacao.produto_id)
+        );
+
+        const talhao = talhoes.find((item: any) =>
+            item.talhao_id.equals(aplicacao.talhao_id)
+        );
+
+        return {
+            id: aplicacao._id.toString(),
+
+            talhao_id: aplicacao.talhao_id.toString(),
+            talhao_nome: talhao?.nome ?? 'Talhão não encontrado',
+
+            produto_id: aplicacao.produto_id.toString(),
+            produto: produto?.marca ?? 'Produto não encontrado',
+            principio_ativo: produto?.principio_ativo ?? 'Não informado',
+
+            data_aplicacao: aplicacao.data_aplicacao,
+            periodo_carencia: aplicacao.periodo_carencia,
+            data_liberacao_colheita: aplicacao.data_liberacao_colheita
+        };
+    });
+}
