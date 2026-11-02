@@ -55,7 +55,7 @@ function formatarColheita(colheita: any) {
     id: colheita._id.toString(),
     talhaoId: colheita.talhao_id.toString(),
     culturaId: colheita.cultura_id,
-    dataColheita: colheita.data_colheita,
+    dataColheita: colheita.data,
     quantidade: colheita.quantidade,
     unidade: colheita.unidade,
     observacao: colheita.observacao,
@@ -99,7 +99,7 @@ export async function registrarColheita(propriedadeId: string, dados: Record<str
     propriedade_id: new ObjectId(propriedadeId),
     talhao_id: new ObjectId(talhaoId),
     cultura_id: talhao.cultura_id ?? null,
-    data_colheita: dataColheita,
+    data: dataColheita,
     quantidade,
     unidade,
     observacao: typeof dados.observacao === 'string' ? dados.observacao.trim() : '',
@@ -138,7 +138,7 @@ export async function listarColheitas(propriedadeId: string, filtros: Record<str
   if (filtros.dataFim !== undefined) {
     periodo.$lt = new Date(inicioDoDia(lerData(filtros.dataFim, 'Data final inválida')) + DIA_MS);
   }
-  if (Object.keys(periodo).length) consulta.data_colheita = periodo;
+  if (Object.keys(periodo).length) consulta.data = periodo;
 
   const pagina = Math.max(parseInt(String(filtros.pagina ?? '1'), 10) || 1, 1);
   const limite = Math.min(Math.max(parseInt(String(filtros.limite ?? '20'), 10) || 20, 1), 100);
@@ -148,7 +148,7 @@ export async function listarColheitas(propriedadeId: string, filtros: Record<str
     colecao.countDocuments(consulta),
     colecao
       .find(consulta)
-      .sort({ data_colheita: -1 })
+      .sort({ data: -1 })
       .skip((pagina - 1) * limite)
       .limit(limite)
       .toArray(),

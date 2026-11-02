@@ -36,6 +36,7 @@ app.use(historicoAplicacoesRoutes);
 app.use(aplicacaoRoutes);
 app.use(avisosRoutes);
 app.use(produtoRoutes);
+
 // Resposta para rotas inexistentes
 app.use((req, res) => {
   res.status(404).json({ erro: 'Rota não encontrada' });
