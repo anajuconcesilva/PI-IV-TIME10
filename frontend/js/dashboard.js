@@ -1,263 +1,457 @@
 // Aluna: Eduarda Prado Deiró | RA: 25004440
-
-// ===================== DADOS MOCKADOS =====================
-// Tudo neste bloco é inventado, só para a tela funcionar.
-
-// status: "liberado", "carencia", "bloqueado" ou "aguardando"
-const talhoes = [
-  { nome: "Talhão A1", cultura: "Soja", area: 14.2, status: "liberado" },
-  {
-    nome: "Talhão B2", cultura: "Milho", area: 8.5, status: "carencia",
-    produto: "Imidacloprid 700 WG", periodoCarencia: 21, diasRestantes: 5
-  },
-  {
-    nome: "Talhão C3", cultura: "Tomate", area: 2.1, status: "bloqueado",
-    motivo: "Produto não autorizado para esta cultura"
-  },
-  { nome: "Talhão D4", cultura: "Café", area: 22.8, status: "aguardando" }
-];
-
-// tipo: "bloqueado", "carencia" ou "liberado"
-const alertas = [
-  {
-    tipo: "bloqueado",
-    titulo: "Talhão C3 — colheita bloqueada",
-    detalhe: "Acephate 750 BR sem registro MAPA para tomate",
-    quando: "Hoje, 08:15"
-  },
-  {
-    tipo: "carencia",
-    titulo: "Talhão B2 — carência encerra em 5 dias",
-    detalhe: "Imidacloprid 700 WG · Milho",
-    quando: "Hoje, 08:00"
-  },
-  {
-    tipo: "liberado",
-    titulo: "Talhão A1 — liberado para colheita",
-    detalhe: "Período de carência encerrado · Soja",
-    quando: "2 dias atrás"
-  }
-];
-
-// =================== FIM DOS DADOS MOCKADOS ===================
+const API = 'http://localhost:3000';
 
 const NOMES_STATUS = {
-  liberado: "Liberado",
-  carencia: "Em carência",
-  bloqueado: "Bloqueado",
-  aguardando: "Aguardando aplicação"
+    liberado: 'Liberado',
+    carencia: 'Em carência',
+    em_carencia: 'Em carência',
+    bloqueado: 'Bloqueado',
+    aguardando: 'Aguardando aplicação'
 };
 
-// Ícones: Lucide (lucide.dev), licença ISC
 const ICONES = {
-  check: '<path d="M20 6 9 17l-5-5"/>',
-  alerta: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
-  calendario: '<path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>'
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    alerta: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/> <path d="M12 9v4"/> <path d="M12 17h.01"/>',
+    calendario: '<path d="M8 2v3"/> <path d="M16 2v3"/> <rect x="3" y="3" width="18" height="18" rx="2"/> <path d="M3 9h18"/>'
 };
 
 const ICONE_DO_ALERTA = {
-  bloqueado: "alerta",
-  carencia: "calendario",
-  liberado: "check"
+    bloqueado: 'alerta',
+    carencia: 'calendario',
+    em_carencia: 'calendario',
+    liberado: 'check'
 };
 
+let talhoes = [];
+let alertas = [];
+let aplicacoes = [];
+
 function icone(nome) {
-  return '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true">' + ICONES[nome] + "</svg>";
+    return `<svg class="icone" viewBox="0 0 24 24" aria-hidden="true">${ICONES[nome] || ICONES.alerta}</svg>`;
+}
+
+// Evita inserir textos do banco diretamente como HTML.
+function escaparHTML(valor) {
+    return String(valor ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+function normalizarStatus(status) {
+    if (status === 'em_carencia') {
+        return 'carencia';
+    }
+
+    return status;
 }
 
 function contarTalhoes(status) {
-  let total = 0;
-  for (let i = 0; i < talhoes.length; i++) {
-    if (talhoes[i].status === status) {
-      total++;
+    return talhoes.filter(talhao =>
+        normalizarStatus(talhao.status) === status
+    ).length;
+}
+
+function formatarData(data) {
+    if (!data) return 'Data não informada';
+
+    const dataObj = new Date(data);
+
+    if (Number.isNaN(dataObj.getTime())) {
+        return 'Data inválida';
     }
-  }
-  return total;
+
+    return dataObj.toLocaleDateString('pt-BR');
 }
 
-// Barra que mostra quanto do período de carência já passou
-function barraCarencia(talhao) {
-  const diasPassados = talhao.periodoCarencia - talhao.diasRestantes;
-  const porcentagem = (diasPassados / talhao.periodoCarencia) * 100;
+function calcularDiasRestantes(data) {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
 
-  return `
-    <div class="carencia">
-      <div class="carencia-linha">
-        <span>Período de carência</span>
-        <strong>${talhao.diasRestantes} dias restantes</strong>
-      </div>
-      <div class="barra">
-        <div class="barra-preenchida" style="width: ${porcentagem}%"></div>
-      </div>
-      <div class="carencia-linha">
-        <span>Dia 0</span>
-        <span>Dia ${talhao.periodoCarencia}</span>
-      </div>
-    </div>`;
+    const liberacao = new Date(data);
+    liberacao.setHours(0, 0, 0, 0);
+
+    return Math.max(
+        0,
+        Math.ceil((liberacao - hoje) / (1000 * 60 * 60 * 24))
+    );
 }
 
-// A saudação e a data são de verdade: vêm do relógio do computador
+function mostrarErro(elemento, mensagem) {
+    if (elemento) {
+        elemento.innerHTML = `<p class="vazio">${escaparHTML(mensagem)}</p>`;
+    }
+}
+
+// ===================== SAUDAÇÃO =====================
+
 function mostrarSaudacao() {
-  const propriedade = lerPropriedadeConta();
-  const agora = new Date();
-  const hora = agora.getHours();
+    const propriedade = lerPropriedadeConta();
+    const agora = new Date();
+    const hora = agora.getHours();
 
-  let saudacao = "Boa noite";
-  if (hora >= 5 && hora < 12) {
-    saudacao = "Bom dia";
-  } else if (hora >= 12 && hora < 18) {
-    saudacao = "Boa tarde";
-  }
+    let saudacao = 'Boa noite';
 
-  let data = agora.toLocaleDateString("pt-BR", {
-    weekday: "long", day: "numeric", month: "long", year: "numeric"
-  });
-  data = data[0].toUpperCase() + data.slice(1);
+    if (hora >= 5 && hora < 12) {
+        saudacao = 'Bom dia';
+    } else if (hora >= 12 && hora < 18) {
+        saudacao = 'Boa tarde';
+    }
 
-  if (!propriedade) {
-    document.getElementById("saudacao").textContent = saudacao;
-    document.getElementById("data-hoje").textContent = data;
-    return;
-  }
+    let data = agora.toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
 
-  document.getElementById("saudacao").textContent = saudacao + ", " + propriedade.nome;
+    data = data.charAt(0).toUpperCase() + data.slice(1);
 
-  const localizacao = localizacaoDaPropriedade(propriedade);
-  document.getElementById("data-hoje").textContent = localizacao ? data + " · " + localizacao : data;
+    const elementoSaudacao = document.getElementById('saudacao');
+    const elementoData = document.getElementById('data-hoje');
+
+    if (elementoSaudacao) {
+        elementoSaudacao.textContent = propriedade
+            ? `${saudacao}, ${propriedade.nome}`
+            : saudacao;
+    }
+
+    if (elementoData) {
+        const localizacao = propriedade
+            ? localizacaoDaPropriedade(propriedade)
+            : '';
+
+        elementoData.textContent = localizacao
+            ? `${data} · ${localizacao}`
+            : data;
+    }
 }
+
+// ===================== RESUMO =====================
 
 function mostrarResumo() {
-  let encerrando = 0;
-  for (let i = 0; i < talhoes.length; i++) {
-    if (talhoes[i].status === "carencia" && talhoes[i].diasRestantes <= 7) {
-      encerrando++;
+    const encerrando = aplicacoes.filter(aplicacao => {
+        const dias = calcularDiasRestantes(
+            aplicacao.data_liberacao_colheita
+        );
+
+        return dias <= 7 &&
+            new Date(aplicacao.data_liberacao_colheita) > new Date();
+    }).length;
+
+    const cards = [
+        {
+            status: 'liberado',
+            nome: 'Liberados',
+            detalhe: 'Prontos para colheita'
+        },
+        {
+            status: 'carencia',
+            nome: 'Em carência',
+            detalhe: `${encerrando} liberações nesta semana`
+        },
+        {
+            status: 'bloqueado',
+            nome: 'Bloqueados',
+            detalhe: 'Exige regularização'
+        },
+        {
+            status: 'aguardando',
+            nome: 'Aguardando',
+            detalhe: 'Sem aplicação ativa'
+        }
+    ];
+
+    let html = '';
+
+    for (const card of cards) {
+        html += `
+            <div class="resumo-card status-${card.status}">
+                <span class="resumo-numero">
+                    ${contarTalhoes(card.status)}
+                </span>
+                <span class="resumo-nome">${card.nome}</span>
+                <span class="resumo-detalhe">${card.detalhe}</span>
+            </div>
+        `;
     }
-  }
 
-  const cards = [
-    { status: "liberado", nome: "Liberados", detalhe: "Pronto para colheita" },
-    { status: "carencia", nome: "Em carência", detalhe: encerrando + " encerra esta semana" },
-    { status: "bloqueado", nome: "Bloqueados", detalhe: "Exige regularização" },
-    { status: "aguardando", nome: "Aguardando", detalhe: "Sem aplicação ativa" }
-  ];
-
-  let html = "";
-  for (let i = 0; i < cards.length; i++) {
-    html += `
-      <div class="resumo-card status-${cards[i].status}">
-        <span class="resumo-numero">${contarTalhoes(cards[i].status)}</span>
-        <span class="resumo-nome">${cards[i].nome}</span>
-        <span class="resumo-detalhe">${cards[i].detalhe}</span>
-      </div>`;
-  }
-
-  document.getElementById("resumo").innerHTML = html;
+    document.getElementById('resumo').innerHTML = html;
 }
+
+// ===================== TALHÕES =====================
 
 function mostrarTalhoes() {
-  const lista = document.getElementById("lista-talhoes");
+    const lista = document.getElementById('lista-talhoes');
 
-  if (talhoes.length === 0) {
-    lista.innerHTML = '<p class="vazio">' + icone("calendario") + "Nenhum talhão cadastrado ainda.</p>";
-    return;
-  }
-
-  let html = "";
-  for (let i = 0; i < talhoes.length; i++) {
-    const talhao = talhoes[i];
-
-    // Cada status mostra uma coisa diferente embaixo do nome
-    let complemento = "";
-    if (talhao.status === "liberado") {
-      complemento = '<p class="talhao-aviso">' + icone("check") + "Pronto para colheita</p>";
-    } else if (talhao.status === "carencia") {
-      complemento = barraCarencia(talhao);
-    } else if (talhao.status === "bloqueado") {
-      complemento = '<p class="talhao-aviso">' + icone("alerta") + talhao.motivo + "</p>";
+    if (talhoes.length === 0) {
+        mostrarErro(lista, 'Nenhum talhão cadastrado ainda.');
+        return;
     }
 
-    html += `
-      <article class="talhao status-${talhao.status}">
-        <div class="talhao-topo">
-          <div>
-            <h3>${talhao.nome}</h3>
-            <p class="talhao-detalhe">${talhao.cultura} · ${talhao.area.toLocaleString("pt-BR")} ha</p>
-          </div>
-          <span class="selo">${NOMES_STATUS[talhao.status]}</span>
-        </div>
-        ${complemento}
-      </article>`;
-  }
+    let html = '';
 
-  lista.innerHTML = html;
+    for (const talhao of talhoes) {
+        const status = normalizarStatus(talhao.status);
+
+        let complemento = '';
+
+        if (status === 'liberado') {
+            complemento = `
+                <p class="talhao-aviso">
+                    ${icone('check')}
+                    Pronto para colheita
+                </p>
+            `;
+        } else if (status === 'carencia') {
+            complemento = `
+                <p class="talhao-aviso">
+                    ${icone('calendario')}
+                    Talhão em período de carência
+                </p>
+            `;
+        } else if (status === 'bloqueado') {
+            complemento = `
+                <p class="talhao-aviso">
+                    ${icone('alerta')}
+                    Talhão bloqueado
+                </p>
+            `;
+        }
+
+        const cultura = talhao.cultura
+            ? talhao.cultura
+            : `Cultura ${talhao.cultura_id ?? 'não informada'}`;
+
+        html += `
+            <article class="talhao status-${status}">
+                <div class="talhao-topo">
+                    <div>
+                        <h3>${escaparHTML(talhao.nome)}</h3>
+                        <p class="talhao-detalhe">
+                            ${escaparHTML(cultura)}
+                            · ${Number(talhao.area || 0).toLocaleString('pt-BR')} ha
+                        </p>
+                    </div>
+
+                    <span class="selo">
+                        ${NOMES_STATUS[status] || 'Não informado'}
+                    </span>
+                </div>
+
+                ${complemento}
+            </article>
+        `;
+    }
+
+    lista.innerHTML = html;
 }
+
+// ===================== ALERTAS =====================
 
 function mostrarAlertas() {
-  const lista = document.getElementById("lista-alertas");
+    const lista = document.getElementById('lista-alertas');
 
-  if (alertas.length === 0) {
-    lista.innerHTML = '<li class="vazio">' + icone("check") + "Nenhum alerta por enquanto.</li>";
-    return;
-  }
+    // Mostra os alertas ativos mais recentes.
+    const recentes = alertas
+        .filter(alerta => alerta.status === 'ativo')
+        .slice(0, 5);
 
-  let html = "";
-  for (let i = 0; i < alertas.length; i++) {
-    const alerta = alertas[i];
+    if (recentes.length === 0) {
+        lista.innerHTML = `
+            <li class="vazio">
+                ${icone('check')}
+                Nenhum alerta por enquanto.
+            </li>
+        `;
+        return;
+    }
 
-    html += `
-      <li class="alerta status-${alerta.tipo}">
-        ${icone(ICONE_DO_ALERTA[alerta.tipo])}
-        <div>
-          <strong>${alerta.titulo}</strong>
-          <p>${alerta.detalhe}</p>
-          <span>${alerta.quando}</span>
-        </div>
-      </li>`;
-  }
+    let html = '';
 
-  lista.innerHTML = html;
+    for (const alerta of recentes) {
+        const tipo = alerta.tipo || 'carencia';
+        const iconeNome = ICONE_DO_ALERTA[tipo] || 'alerta';
+
+        const talhao = talhoes.find(item =>
+            item.talhao_id?.toString() === alerta.talhao_id
+        );
+
+        const titulo = talhao
+            ? `${talhao.nome} — ${alerta.mensagem}`
+            : alerta.mensagem;
+
+        html += `
+            <li class="alerta status-${normalizarStatus(tipo)}">
+                ${icone(iconeNome)}
+                <div>
+                    <strong>${escaparHTML(titulo)}</strong>
+                    <p>${escaparHTML(tipo === 'carencia' ? 'Período de carência' : tipo)}</p>
+                    <span>${formatarData(alerta.data)}</span>
+                </div>
+            </li>
+        `;
+    }
+
+    lista.innerHTML = html;
 }
 
-// Mostra o talhão em carência que será liberado primeiro
+// ===================== PRÓXIMA LIBERAÇÃO =====================
+
 function mostrarProximaLiberacao() {
-  const caixa = document.getElementById("proxima-liberacao");
+    const caixa = document.getElementById('proxima-liberacao');
 
-  let proximo = null;
-  for (let i = 0; i < talhoes.length; i++) {
-    const talhao = talhoes[i];
-    if (talhao.status !== "carencia") {
-      continue;
+    const agora = new Date();
+
+    const pendentes = aplicacoes
+        .filter(aplicacao => {
+            const liberacao = new Date(
+                aplicacao.data_liberacao_colheita
+            );
+
+            return liberacao > agora;
+        })
+        .sort((a, b) =>
+            new Date(a.data_liberacao_colheita) -
+            new Date(b.data_liberacao_colheita)
+        );
+
+    if (pendentes.length === 0) {
+        mostrarErro(caixa, 'Nenhum talhão em carência.');
+        return;
     }
-    if (proximo === null || talhao.diasRestantes < proximo.diasRestantes) {
-      proximo = talhao;
-    }
-  }
 
-  if (proximo === null) {
-    caixa.innerHTML = '<p class="vazio">' + icone("calendario") + "Nenhum talhão em carência.</p>";
-    return;
-  }
+    const proxima = pendentes[0];
+    const diasRestantes = calcularDiasRestantes(
+        proxima.data_liberacao_colheita
+    );
 
-  const dataLiberacao = new Date();
-  dataLiberacao.setDate(dataLiberacao.getDate() + proximo.diasRestantes);
-  const dataTexto = dataLiberacao.toLocaleDateString("pt-BR", {
-    day: "numeric", month: "short", year: "numeric"
-  });
+    const porcentagem = proxima.periodo_carencia > 0
+        ? Math.min(
+            100,
+            Math.max(
+                0,
+                ((proxima.periodo_carencia - diasRestantes) /
+                    proxima.periodo_carencia) * 100
+            )
+        )
+        : 100;
 
-  caixa.innerHTML = `
-    <div class="liberacao-topo">
-      <div class="icone-caixa status-carencia">${icone("calendario")}</div>
-      <div>
-        <strong>${proximo.nome} — ${proximo.cultura}</strong>
-        <span>${proximo.produto}</span>
-      </div>
-    </div>
-    ${barraCarencia(proximo)}
-    <p class="liberacao-data">Liberação em: <strong>${dataTexto}</strong></p>`;
+    const dataTexto = formatarData(
+        proxima.data_liberacao_colheita
+    );
+
+    caixa.innerHTML = `
+        <div class="liberacao-topo">
+            <div class="icone-caixa status-carencia">
+                ${icone('calendario')}
+            </div>
+
+            <div>
+                <strong>${escaparHTML(proxima.talhao_nome)}</strong>
+                <span>${escaparHTML(proxima.produto)}</span>
+            </div>
+        </div>
+
+        <div class="carencia">
+            <div class="carencia-linha">
+                <span>Período de carência</span>
+                <strong>${diasRestantes} dias restantes</strong>
+            </div>
+
+            <div class="barra">
+                <div
+                    class="barra-preenchida"
+                    style="width: ${porcentagem}%"
+                ></div>
+            </div>
+
+            <div class="carencia-linha">
+                <span>Dia ${Math.max(0, proxima.periodo_carencia - diasRestantes)}</span>
+                <span>Dia ${proxima.periodo_carencia}</span>
+            </div>
+        </div>
+
+        <p class="liberacao-data">
+            Liberação em: <strong>${dataTexto}</strong>
+        </p>
+    `;
 }
 
-mostrarSaudacao();
-mostrarResumo();
-mostrarTalhoes();
-mostrarAlertas();
-mostrarProximaLiberacao();
+// ===================== CONSULTAS À API =====================
+
+async function buscarDados(url, token) {
+    const resposta = await fetch(`${API}${url}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.mensagem || 'Não foi possível consultar os dados.'
+        );
+    }
+
+    return dados;
+}
+
+async function carregarDashboard() {
+    mostrarSaudacao();
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const [dadosTalhoes, dadosAlertas, dadosAplicacoes] =
+            await Promise.all([
+                buscarDados('/consultarTalhoes', token),
+                buscarDados('/avisos', token),
+                buscarDados('/consultarAplicacoesDashboard', token)
+            ]);
+
+        talhoes = dadosTalhoes.talhoes || [];
+        alertas = dadosAlertas.avisos || [];
+        aplicacoes = dadosAplicacoes.aplicacoes || [];
+
+        mostrarResumo();
+        mostrarTalhoes();
+        mostrarAlertas();
+        mostrarProximaLiberacao();
+
+    } catch (erro) {
+        console.error('Erro ao carregar Dashboard:', erro);
+
+        mostrarErro(
+            document.getElementById('resumo'),
+            'Não foi possível carregar o resumo.'
+        );
+
+        mostrarErro(
+            document.getElementById('lista-talhoes'),
+            'Não foi possível carregar os talhões.'
+        );
+
+        mostrarErro(
+            document.getElementById('lista-alertas'),
+            'Não foi possível carregar os alertas.'
+        );
+
+        mostrarErro(
+            document.getElementById('proxima-liberacao'),
+            'Não foi possível carregar a próxima liberação.'
+        );
+    }
+}
+
+carregarDashboard();
