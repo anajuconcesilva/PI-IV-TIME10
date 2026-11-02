@@ -13,7 +13,7 @@ export async function listarAvisos(propriedadeId: string) {
 
     const banco = obterBanco();
 
-    const avisos = await banco.collection('avisos')
+    const avisos = await banco.collection('alertas')
         .find({
             propriedade_id: new ObjectId(propriedadeId)
         })
@@ -45,7 +45,7 @@ export async function marcarAvisoComoLido(
 
     const banco = obterBanco();
 
-    const resultado = await banco.collection('avisos').updateOne(
+    const resultado = await banco.collection('alertas').updateOne(
         {
             _id: new ObjectId(avisoId),
             propriedade_id: new ObjectId(propriedadeId)
@@ -72,7 +72,7 @@ export async function marcarTodosAvisosComoLidos(
 
     const banco = obterBanco();
 
-    const resultado = await banco.collection('avisos').updateMany(
+    const resultado = await banco.collection('alertas').updateMany(
         {
             propriedade_id: new ObjectId(propriedadeId),
             status: 'ativo'
@@ -101,7 +101,7 @@ export async function criarAvisoCarencia(
     const banco = obterBanco();
 
     // Verifica se já existe um aviso para esta aplicação/talhão.
-    const avisoExistente = await banco.collection('avisos').findOne({
+    const avisoExistente = await banco.collection('alertas').findOne({
         propriedade_id: new ObjectId(propriedadeId),
         talhao_id: new ObjectId(talhaoId),
         tipo: 'carencia',
@@ -121,5 +121,5 @@ export async function criarAvisoCarencia(
         talhao_id: new ObjectId(talhaoId)
     };
 
-    await banco.collection('avisos').insertOne(aviso);
+    await banco.collection('alertas').insertOne(aviso);
 }
