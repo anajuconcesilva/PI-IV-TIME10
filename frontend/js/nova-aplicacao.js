@@ -1,7 +1,7 @@
 // Aluna: Ana Júlia Conceição da Silva | RA: 25002592
 // Integração da tela Registrar Aplicação com a API Minha Colheita
 
-const API = "http://localhost:3000";
+const API = API_URL;
 
 // Elementos
 const formulario = document.getElementById("form-aplicacao");
@@ -13,6 +13,8 @@ const inputData = document.getElementById("data-aplicacao");
 const inputResponsavel = document.getElementById("responsavel");
 const inputObservacoes = document.getElementById("observacoes");
 const botaoEnviar = formulario.querySelector('button[type="submit"]');
+const alertaSucesso = document.getElementById("alerta-sucesso");
+const botaoFecharSucesso = document.getElementById("fechar-alerta-sucesso");
 
 // Armazena os produtos encontrados e seus respectivos IDs
 const produtosEncontrados = new Map();
@@ -115,6 +117,8 @@ async function carregarTalhoes() {
 
         if (talhoes.length === 0) {
             selectTalhao.innerHTML = '<option value="">Nenhum talhão cadastrado</option>';
+            botaoEnviar.disabled = true;
+            mostrarMensagem("Cadastre um talhão na tela de Talhões para registrar uma aplicação.");
         }
 
     } catch (erro) {
@@ -283,10 +287,7 @@ formulario.addEventListener("submit", async (evento) => {
             );
         }
 
-        mostrarMensagem(
-            "Aplicação registrada com sucesso! O aviso de carência foi gerado.",
-            "sucesso"
-        );
+        alertaSucesso.showModal();
 
         formulario.reset();
 
@@ -300,6 +301,10 @@ formulario.addEventListener("submit", async (evento) => {
         botaoEnviar.disabled = false;
         botaoEnviar.textContent = "Registrar aplicação";
     }
+});
+
+botaoFecharSucesso.addEventListener("click", function () {
+    alertaSucesso.close();
 });
 
 // 7. Inicialização da tela

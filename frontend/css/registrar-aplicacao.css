@@ -13,7 +13,7 @@
 .aplicacao-cabecalho,
 .aplicacao-formulario {
   width: 100%;
-  max-width: 560px;
+  max-width: 760px;
 }
 
 /* ===== Link voltar ===== */
@@ -65,7 +65,7 @@
 
 .aplicacao-formulario {
   width: 100%;
-  max-width: 560px;
+  max-width: 760px;
   padding: 18px 20px 16px;
 
   background-color: var(--cor-branco);
@@ -243,4 +243,40 @@
   .aplicacao-acoes .botao {
     height: 40px;
   }
+}
+
+.alerta-modal {
+  width: min(380px, calc(100% - 32px));
+  padding: 32px 28px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  background: var(--cor-branco);
+  text-align: center;
+  box-shadow: 0 20px 70px #00213e26;
+}
+
+.alerta-modal::backdrop {
+  background: #00213e66;
+}
+
+.alerta-icone {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 24px;
+  fill: none;
+  stroke: #008653;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.alerta-modal h2 {
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+.alerta-modal .botao {
+  width: 100%;
 }

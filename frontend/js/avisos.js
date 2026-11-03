@@ -2,7 +2,7 @@
 /* Funcionalidades da Central de Avisos integrada à API */
 
 // Endereço da API do backend.
-const API_URL = "http://localhost:3000/avisos";
+const URL_AVISOS = API_URL + "/avisos";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
       listaAvisos.innerHTML = "<p>Carregando avisos...</p>";
       mensagemVazia.hidden = true;
 
-      const resposta = await fetch(API_URL, {
+      const resposta = await fetch(URL_AVISOS, {
         method: "GET",
         headers: obterCabecalhos()
       });
@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
 
       const resposta = await fetch(
-        API_URL + "/" + encodeURIComponent(avisoId) + "/lido",
+        URL_AVISOS + "/" + encodeURIComponent(avisoId) + "/lido",
         {
           method: "PATCH",
           headers: obterCabecalhos()
@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
 
       const resposta = await fetch(
-        API_URL + "/marcar-todos-lidos",
+        URL_AVISOS + "/marcar-todos-lidos",
         {
           method: "PATCH",
           headers: obterCabecalhos()
