@@ -145,17 +145,18 @@
       <!-- FORMULÁRIO -->
       <form id="form-aplicacao" class="aplicacao-formulario">
 
+        <!-- TALHÃO -->
         <div class="aplicacao-campo">
           <label for="talhao">
             Talhão <span class="obrigatorio">*</span>
           </label>
 
           <select id="talhao" name="talhao" required>
-            <option value="">Selecione o talhão</option>
-            <option value="A1">Talhão A1</option>
+            <option value="">Carregando talhões...</option>
           </select>
         </div>
 
+        <!-- PRODUTO -->
         <div class="aplicacao-campo">
           <label for="produto">
             Produto aplicado <span class="obrigatorio">*</span>
@@ -165,11 +166,16 @@
             type="text"
             id="produto"
             name="produto"
+            list="lista-produtos-aplicacao"
             placeholder="Buscar pelo nome do produto ou ingrediente ativo..."
+            autocomplete="off"
             required
           >
+
+          <datalist id="lista-produtos-aplicacao"></datalist>
         </div>
 
+        <!-- DOSE E UNIDADE -->
         <div class="aplicacao-linha">
 
           <div class="aplicacao-campo">
@@ -201,6 +207,7 @@
 
         </div>
 
+        <!-- DATA -->
         <div class="aplicacao-campo">
           <label for="data-aplicacao">
             Data de aplicação <span class="obrigatorio">*</span>
@@ -214,6 +221,7 @@
           >
         </div>
 
+        <!-- RESPONSÁVEL -->
         <div class="aplicacao-campo">
           <label for="responsavel">
             Responsável técnico (opcional)
@@ -227,6 +235,7 @@
           >
         </div>
 
+        <!-- OBSERVAÇÕES -->
         <div class="aplicacao-campo aplicacao-campo-observacoes">
           <label for="observacoes">
             Observações (opcional)
@@ -260,6 +269,10 @@
       </form>
     </main>
   </div>
+
+  <!-- SCRIPTS -->
   <script src="../js/conta.js"></script>
+  <script src="../js/nova-aplicacao.js"></script>
+
 </body>
 </html>
