@@ -8,6 +8,7 @@ const botoesVoltar = document.querySelectorAll(".botao-voltar");
 
 const campoCnpj = document.getElementById("cnpj");
 const campoCelular = document.getElementById("celular");
+const campoRegistro = document.getElementById("registro");
 const campoSenha = document.getElementById("senha");
 const campoConfirmar = document.getElementById("confirmar-senha");
 
@@ -90,6 +91,17 @@ campoCelular.addEventListener("input", function () {
     campoCelular.setCustomValidity("");
   } else {
     campoCelular.setCustomValidity("Digite o DDD e os 9 números do celular.");
+  }
+});
+
+campoRegistro.addEventListener("input", function () {
+  const texto = campoRegistro.value.toUpperCase().replace(/[^A-Z0-9.-]/g, "").slice(0, 50);
+  campoRegistro.value = texto;
+
+  if (texto.length >= 6) {
+    campoRegistro.setCustomValidity("");
+  } else {
+    campoRegistro.setCustomValidity("Digite o registro rural completo, com pelo menos 6 caracteres.");
   }
 });
 

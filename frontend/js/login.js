@@ -15,6 +15,7 @@ function guardarPropriedade(propriedade) {
     areaTotal: propriedade.area,
     municipio: propriedade.municipio,
     uf: propriedade.uf,
+    culturas: propriedade.culturas,
   };
   localStorage.setItem("minhaColheita.propriedadeConta", JSON.stringify(dados));
 }
