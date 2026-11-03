@@ -150,6 +150,11 @@
   width: 100%;
 }
 
+.colheita input {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
 .icone-confirmacao {
   display: inline-flex;
   justify-content: center;

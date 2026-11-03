@@ -3,7 +3,7 @@
 
 // Endereço da API.
 // Altere a porta caso o backend esteja utilizando outra.
-const URL_API = 'http://localhost:3000';
+const URL_API = API_URL;
 
 // Relaciona os códigos de status ao texto mostrado na tela.
 const NOMES_STATUS = {
@@ -151,8 +151,10 @@ function adaptarTalhao(talhao) {
       talhao.observacoes ??
       '',
     status: converterStatusFrontend(talhao.status),
-    produto: talhao.produto ?? null,
-    dataAplicacao: talhao.dataAplicacao ?? null
+    produto: talhao.produto_nome ?? talhao.produto ?? null,
+    dataAplicacao: talhao.data_ultima_aplicacao
+      ? formatarDataAPI(talhao.data_ultima_aplicacao).split('-').reverse().join('/')
+      : talhao.dataAplicacao ?? null
   };
 }
 
@@ -175,11 +177,7 @@ function carregarPropriedadeConta() {
     const salvo = localStorage.getItem('minhaColheita.propriedadeConta');
 
     if (salvo === null) {
-      return {
-        id: 'sao-luis',
-        nome: 'Fazenda São Luís',
-        areaTotal: 66.3
-      };
+      throw new Error('Propriedade não encontrada.');
     }
 
     const propriedade = JSON.parse(salvo);
@@ -203,7 +201,7 @@ function carregarPropriedadeConta() {
 
 // Mostra o nome da propriedade no menu lateral.
 function mostrarPropriedadeConta() {
-  const elemento = document.querySelector('.propriedade');
+  const elemento = document.querySelector('#nome-propriedade');
 
   if (elemento) {
     elemento.textContent = propriedadeConta?.nome ?? 'Propriedade indisponível';
@@ -385,7 +383,7 @@ function mostrarValorOuTraco(valor) {
 
 // Mostra uma falha de carregamento da propriedade.
 function mostrarErroPropriedade() {
-  const elemento = document.querySelector('.propriedade');
+  const elemento = document.querySelector('#nome-propriedade');
 
   if (elemento) {
     elemento.textContent = 'Propriedade indisponível';

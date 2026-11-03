@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../css/comumTalhao.css">
     <link rel="stylesheet" href="../css/paginaTalhao.css">
     <!--Link para o JavaScript-->
+    <script src="../js/api.js" defer></script>
     <script src="../js/comumTalhao.js" defer></script>
     <script src="../js/paginaTalhao.js" defer></script>
 </head>
@@ -185,6 +186,8 @@
                     <p id="descricao-colheita">
                         Confirme a colheita para atualizar o histórico de conformidade.
                     </p>
+
+                    <input id="quantidade-colheita" type="number" min="0" step="any" placeholder="Quantidade colhida (kg)">
 
                     <button class="botao salvar" id="registrar-colheita" type="button">
                         Registrar colheita

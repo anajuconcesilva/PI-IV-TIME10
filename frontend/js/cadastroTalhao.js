@@ -8,6 +8,7 @@ const campoCultura = formulario.elements.cultura;
 const campoArea = formulario.elements.area;
 const campoSafra = formulario.elements.safra;
 const campoData = formulario.elements.dataInicio;
+const campoPrevisao = formulario.elements.previsaoColheita;
 const campoObservacoes = formulario.elements.observacoes;
 
 // Registro que está sendo editado.
@@ -51,6 +52,33 @@ async function carregarCulturas() {
     return culturasDisponiveis;
 }
 
+function adicionarOpcaoCultura(nome) {
+    const opcao = document.createElement('option');
+
+    opcao.value = nome;
+    opcao.textContent = nome;
+
+    campoCultura.appendChild(opcao);
+}
+
+function preencherCulturas() {
+    let nomes = [];
+
+    if (Array.isArray(propriedadeConta.culturas)) {
+        nomes = propriedadeConta.culturas;
+    }
+
+    if (nomes.length === 0) {
+        nomes = culturasDisponiveis.map(function (cultura) {
+            return cultura.nome;
+        });
+    }
+
+    for (const nome of nomes) {
+        adicionarOpcaoCultura(nome);
+    }
+}
+
 // Procura a cultura pelo nome digitado.
 function procurarCultura(nome) {
     const nomeNormalizado = nome.trim().toLowerCase();
@@ -65,19 +93,6 @@ function procurarCultura(nome) {
     }
 
     return null;
-}
-
-// Calcula a previsão de colheita usando o período de carência da cultura.
-function obterPrevisaoColheita(dataInicio, cultura) {
-    const periodoCarencia = Number(cultura.periodo_carencia);
-
-    if (!Number.isFinite(periodoCarencia) || periodoCarencia < 0) {
-        throw new Error(
-            'Não foi possível obter o período de carência da cultura.'
-        );
-    }
-
-    return calcularPrevisaoColheita(dataInicio, periodoCarencia);
 }
 
 // Prepara o formulário.
@@ -97,10 +112,22 @@ async function prepararFormulario() {
             'Salvar alterações';
 
         campoNome.value = talhaoEmEdicao.nome;
+
+        const culturaNaLista = Array.from(campoCultura.options).some(
+            function (opcao) {
+                return opcao.value === talhaoEmEdicao.cultura;
+            }
+        );
+
+        if (talhaoEmEdicao.cultura && !culturaNaLista) {
+            adicionarOpcaoCultura(talhaoEmEdicao.cultura);
+        }
+
         campoCultura.value = talhaoEmEdicao.cultura;
         campoArea.value = talhaoEmEdicao.area;
         campoSafra.value = talhaoEmEdicao.safra;
         campoData.value = talhaoEmEdicao.dataInicio;
+        campoPrevisao.value = talhaoEmEdicao.previsao_colheita;
         campoObservacoes.value = talhaoEmEdicao.observacoes ?? '';
     }
 }
@@ -227,16 +254,15 @@ async function cadastrarTalhao(evento) {
         return;
     }
 
-    // Calcula a previsão de colheita.
-    let previsaoColheita;
+    const previsaoColheita = campoPrevisao.value;
 
-    try {
-        previsaoColheita = obterPrevisaoColheita(
-            dataInicio,
-            culturaSelecionada
+    if (previsaoColheita < dataInicio) {
+        campoPrevisao.setCustomValidity(
+            'A previsão de colheita não pode ser anterior ao início do cultivo.'
         );
-    } catch (erro) {
-        mostrarMensagem(erro.message);
+
+        campoPrevisao.reportValidity();
+
         return;
     }
 
@@ -300,6 +326,10 @@ function limparErroCultura() {
     campoCultura.setCustomValidity('');
 }
 
+function limparErroPrevisao() {
+    campoPrevisao.setCustomValidity('');
+}
+
 // Início da página.
 async function iniciarPagina() {
     if (propriedadeConta === null) {
@@ -313,6 +343,8 @@ async function iniciarPagina() {
 
         // Carrega as culturas disponíveis.
         await carregarCulturas();
+
+        preencherCulturas();
 
         mostrarPropriedadeConta();
 
@@ -337,6 +369,8 @@ formulario.addEventListener('submit', cadastrarTalhao);
 campoArea.addEventListener('input', limparErroArea);
 campoNome.addEventListener('input', limparErroNome);
 campoCultura.addEventListener('input', limparErroCultura);
+campoPrevisao.addEventListener('input', limparErroPrevisao);
+campoData.addEventListener('input', limparErroPrevisao);
 
 // Abre a listagem depois que o alerta de sucesso é fechado.
 function voltarParaListagem() {
