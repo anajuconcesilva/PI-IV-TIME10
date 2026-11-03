@@ -20,13 +20,39 @@ export async function listarAvisos(propriedadeId: string) {
         .sort({ data: -1 })
         .toArray();
 
-    return avisos.map((aviso) => ({
-        id: aviso._id.toString(),
-        tipo: aviso.tipo,
-        mensagem: aviso.mensagem,
-        data: aviso.data,
-        status: aviso.status,
-        talhao_id: aviso.talhao_id?.toString() ?? null
+    const agora = new Date();
+    const limiteUrgencia = new Date(agora.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+    return Promise.all(avisos.map(async (aviso) => {
+        let urgente = false;
+
+        if (aviso.status === 'ativo' && aviso.tipo === 'carencia' && aviso.talhao_id) {
+            const [ultimaAplicacao] = await banco.collection('aplicacoes')
+                .find({
+                    propriedade_id: new ObjectId(propriedadeId),
+                    talhao_id: aviso.talhao_id,
+                    status: 'realizada'
+                })
+                .sort({ data_liberacao_colheita: -1 })
+                .limit(1)
+                .toArray();
+
+            const liberacao = ultimaAplicacao?.data_liberacao_colheita;
+
+            urgente = liberacao instanceof Date &&
+                liberacao > agora &&
+                liberacao <= limiteUrgencia;
+        }
+
+        return {
+            id: aviso._id.toString(),
+            tipo: aviso.tipo,
+            mensagem: aviso.mensagem,
+            data: aviso.data,
+            status: aviso.status,
+            talhao_id: aviso.talhao_id?.toString() ?? null,
+            urgente: urgente
+        };
     }));
 }
 

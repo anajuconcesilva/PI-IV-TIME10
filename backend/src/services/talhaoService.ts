@@ -78,6 +78,36 @@ async function verificarCultura(culturaId: number) {
     }
 }
 
+async function verificarAreaDisponivel(
+    propriedadeId: string,
+    area: number,
+    talhaoId?: string
+) {
+    const banco = obterBanco();
+
+    const propriedade = await banco.collection('propriedades').findOne({
+        _id: new ObjectId(propriedadeId)
+    });
+
+    if (!propriedade) {
+        throw new ErroApi(404, 'Propriedade não encontrada');
+    }
+
+    let areaUsada = 0;
+
+    for (const talhao of propriedade.talhoes ?? []) {
+        if (talhaoId && talhao.talhao_id.toString() === talhaoId) {
+            continue;
+        }
+
+        areaUsada += talhao.area;
+    }
+
+    if (areaUsada + area > propriedade.area + 1e-9) {
+        throw new ErroApi(400, 'A área dos talhões ultrapassa a área da propriedade');
+    }
+}
+
 // Cria um objeto talhão e registra no banco.
 export async function criarTalhao(
     propriedadeId: string,
@@ -89,6 +119,8 @@ export async function criarTalhao(
     if (!ObjectId.isValid(propriedadeId)) {
         throw new ErroApi(401, 'Identificação da propriedade inválida');
     }
+
+    await verificarAreaDisponivel(propriedadeId, dados.area);
 
     const talhao = {
         talhao_id: new ObjectId(),
@@ -183,6 +215,8 @@ export async function consultarTalhao(
         talhoes: {
             talhao_id: ObjectId;
             status: string;
+            cultura_id: number;
+            cultura_nome?: string;
         }[];
     }>('propriedades');
 
@@ -207,6 +241,12 @@ export async function consultarTalhao(
         propriedadeId,
         talhao.talhao_id.toString()
     );
+
+    const cultura = await banco.collection('culturas').findOne({
+        cultura_id: talhao.cultura_id
+    });
+
+    talhao.cultura_nome = cultura?.nome ?? '';
 
     return talhao;
 }
@@ -235,6 +275,33 @@ export async function listarTalhoes(propriedadeId: string) {
             propriedadeId,
             talhao.talhao_id.toString()
         );
+
+        const cultura = await banco.collection('culturas').findOne({
+            cultura_id: talhao.cultura_id
+        });
+
+        talhao.cultura_nome = cultura?.nome ?? '';
+
+        const [ultimaAplicacao] = await banco.collection('aplicacoes')
+            .find({
+                propriedade_id: new ObjectId(propriedadeId),
+                talhao_id: talhao.talhao_id
+            })
+            .sort({ data_aplicacao: -1 })
+            .limit(1)
+            .toArray();
+
+        talhao.produto_nome = null;
+        talhao.data_ultima_aplicacao = null;
+
+        if (ultimaAplicacao) {
+            const produto = await banco.collection('produtos').findOne({
+                _id: ultimaAplicacao.produto_id
+            });
+
+            talhao.produto_nome = produto?.marca ?? null;
+            talhao.data_ultima_aplicacao = ultimaAplicacao.data_aplicacao;
+        }
     }
 
     return resultado.talhoes;
@@ -256,6 +323,8 @@ export async function atualizarTalhao(
     if (!ObjectId.isValid(talhaoId)) {
         throw new ErroApi(400, 'Identificador do talhão inválido');
     }
+
+    await verificarAreaDisponivel(propriedadeId, dados.area, talhaoId);
 
     const dadosAtualizados = {
         nome: dados.nome.trim(),

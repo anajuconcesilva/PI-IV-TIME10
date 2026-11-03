@@ -30,6 +30,10 @@ export function validarPropriedade(dados: DadosPropriedade) {
 
   if (!texto(dados.registro)) throw new ErroApi(400, 'Informe o registro rural (CAR, DAP ou CAF)');
 
+  if (!/^[A-Za-z0-9.-]{6,50}$/.test(texto(dados.registro))) {
+    throw new ErroApi(400, 'O registro rural deve ter de 6 a 50 letras, números, pontos ou traços');
+  }
+
   if (!Array.isArray(dados.culturas) || dados.culturas.filter((c) => texto(c)).length === 0) {
     throw new ErroApi(400, 'Escolha pelo menos uma cultura');
   }

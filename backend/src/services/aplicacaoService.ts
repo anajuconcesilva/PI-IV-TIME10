@@ -12,6 +12,7 @@ interface DadosAplicacao{
     produtoId: string;
     dataAplicacao: string;
     dosagem:number;
+    unidade?:string;
     responsavel?: string;
     observacao?: string;
     condicoesClimaticas?:string;
@@ -142,6 +143,7 @@ export async function criarAplicacao(propriedadeId: string,
         produto_id: new ObjectId(dados.produtoId),
         data_aplicacao: dataAplicacao,
         dosagem: dados.dosagem,
+        unidade: typeof dados.unidade === 'string' ? dados.unidade.trim() : '',
         responsavel: dados.responsavel?.trim() ?? '',
         observacoes: dados.observacao?.trim() ?? '',
         condicoes_climaticas: dados.condicoesClimaticas?.trim() ?? '',

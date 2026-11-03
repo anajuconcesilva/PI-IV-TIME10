@@ -10,6 +10,7 @@ interface dadosAplicacao {
     principio_ativo: string;
     marca: string;
     dosagem: number;
+    unidade: string;
     responsavel: string;
     observacoes: string;
     condicoes_climaticas: string;
@@ -91,6 +92,7 @@ export async function listarHistoricoAplicacoes(
             principio_ativo: produto?.principio_ativo ?? 'Não informado',
             marca: produto?.marca ?? 'Produto não encontrado',
             dosagem: aplicacao.dosagem,
+            unidade: aplicacao.unidade ?? '',
             responsavel: aplicacao.responsavel ?? '',
             observacoes: aplicacao.observacoes ?? '',
             condicoes_climaticas: aplicacao.condicoes_climaticas ?? '',
