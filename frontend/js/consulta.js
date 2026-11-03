@@ -1,5 +1,5 @@
 // marilia santos
-const API = 'http://localhost:3000';
+const API = API_URL;
 
 // 1. Estado único
 const estado = {
@@ -24,8 +24,20 @@ const inputBusca = document.getElementById('input-busca');
 const listaProdutos = document.getElementById('lista-produtos');
 const contador = document.getElementById('contador-texto');
 
-const botoesCultura = document.querySelectorAll('#filtros-cultura .pill');
 const inputNovaCultura = document.getElementById('input-outra-cultura');
+
+const culturasDaConta = (lerPropriedadeConta() || {}).culturas || [];
+
+culturasDaConta.forEach(nome => {
+  const botao = document.createElement('button');
+  botao.className = 'pill';
+  botao.setAttribute('data-filter', nome);
+  botao.dataset.exata = 'true';
+  botao.textContent = nome;
+  inputNovaCultura.insertAdjacentElement('beforebegin', botao);
+});
+
+const botoesCultura = document.querySelectorAll('#filtros-cultura .pill');
 const datalistCulturas = document.getElementById('bd-culturas');
 
 const btnTodasClasses = document.getElementById('btn-todas-classes');
@@ -199,7 +211,7 @@ botoesCultura.forEach(botao => {
     marcarBotaoCultura(botao);
     inputNovaCultura.value = '';
     estado.cultura = botao.getAttribute('data-filter') || 'todas';
-    estado.culturaExata = false;
+    estado.culturaExata = botao.dataset.exata === 'true';
     agendarBusca(0);
   });
 });

@@ -1,6 +1,5 @@
 // Marília Santos - 25014905
 
-const API_URL = 'http://localhost:3000';
 
 const ROTA_TALHOES = '/consultarTalhoes';
 const ROTA_GERAR_RELATORIO = '/relatorios/gerar';

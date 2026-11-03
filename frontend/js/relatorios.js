@@ -1,6 +1,5 @@
 // Marília Santos - 25014905
 
-const API_URL = 'http://localhost:3000';
 
 const blocoResumo = document.getElementById('bloco-resumo');
 const blocoLista = document.getElementById('bloco-lista');

@@ -1,5 +1,5 @@
 // Aluna: Eduarda Prado Deiró | RA: 25004440
-const API = 'http://localhost:3000';
+const API = API_URL;
 
 const NOMES_STATUS = {
     liberado: 'Liberado',
@@ -221,8 +221,8 @@ function mostrarTalhoes() {
             `;
         }
 
-        const cultura = talhao.cultura
-            ? talhao.cultura
+        const cultura = talhao.cultura_nome
+            ? talhao.cultura_nome
             : `Cultura ${talhao.cultura_id ?? 'não informada'}`;
 
         html += `
