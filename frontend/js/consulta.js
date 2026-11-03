@@ -1,4 +1,4 @@
-// Consulta de Produtos — Minha Colheita
+// marilia santos
 const API = 'http://localhost:3000';
 
 // 1. Estado único
