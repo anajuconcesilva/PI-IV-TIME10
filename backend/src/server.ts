@@ -16,7 +16,7 @@ import { ErroApi } from './utils/erroApi';
 import { responderErro } from './utils/responderErro';
 import avisosRoutes from './routes/avisosRoutes';
 import produtoRoutes from './routes/produtoRoutes';
-
+import recuperacaoSenhaRoutes from './routes/recuperacaoSenhaRoutes';
 
 const app = express();
 
@@ -36,6 +36,7 @@ app.use(historicoAplicacoesRoutes);
 app.use(aplicacaoRoutes);
 app.use(avisosRoutes);
 app.use(produtoRoutes);
+app.use(recuperacaoSenhaRoutes);
 
 // Resposta para rotas inexistentes
 app.use((req, res) => {
