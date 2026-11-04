@@ -13,7 +13,7 @@
 .aplicacao-cabecalho,
 .aplicacao-formulario {
   width: 100%;
-  max-width: 760px;
+  max-width: 640px;
 }
 
 /* ===== Link voltar ===== */
@@ -65,7 +65,7 @@
 
 .aplicacao-formulario {
   width: 100%;
-  max-width: 760px;
+  max-width: 640px;
   padding: 18px 20px 16px;
 
   background-color: var(--cor-branco);
