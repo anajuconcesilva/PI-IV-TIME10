@@ -87,7 +87,7 @@
               <label for="senha">Senha <span class="obrigatorio">*</span></label>
               <div class="campo-com-botao">
                 <input type="password" id="senha" name="senha"
-                       placeholder="Mínimo de 6 caracteres"
+                       placeholder="6+ caracteres, maiúscula, minúscula e número"
                        autocomplete="new-password" minlength="6" required>
 
                 <!-- Ícones: Lucide (lucide.dev), licença ISC -->
@@ -140,8 +140,9 @@
             <div class="linha-campos">
               <div class="campo campo-grande">
                 <label for="municipio">Município <span class="obrigatorio">*</span></label>
-                <input type="text" id="municipio" name="municipio"
-                       placeholder="Ribeirão Preto" required>
+                <input type="text" id="municipio" name="municipio" list="lista-municipios"
+                       placeholder="Ribeirão Preto" autocomplete="off" required>
+                <datalist id="lista-municipios"></datalist>
               </div>
 
               <div class="campo campo-pequeno">
@@ -186,9 +187,18 @@
             </div>
 
             <div class="campo">
-              <label for="registro">Registro rural (CAR, DAP ou CAF) <span class="obrigatorio">*</span></label>
+              <label for="tipo-registro">Tipo de registro rural <span class="obrigatorio">*</span></label>
+              <select id="tipo-registro" name="tipo-registro" required>
+                <option value="CAR">CAR</option>
+                <option value="DAP">DAP</option>
+                <option value="CAF">CAF</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="registro">Número do registro rural <span class="obrigatorio">*</span></label>
               <input type="text" id="registro" name="registro"
-                     placeholder="BR-SP-0000000-0000000000000" maxlength="50" required>
+                     placeholder="SP-3550308-1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D" maxlength="50" required>
             </div>
 
             <div class="campo">

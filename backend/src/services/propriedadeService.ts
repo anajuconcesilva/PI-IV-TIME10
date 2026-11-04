@@ -6,11 +6,26 @@ import { ErroApi } from '../utils/erroApi';
 const UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
   'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
 
+const FORMATO_CAR = /^([A-Z]{2})-\d{7}-([A-F0-9]{32}|[A-F0-9]{4}(\.[A-F0-9]{4}){7})$/;
+const FORMATO_DAP_CAF = /^(?=.*[A-Z])(?=.*\d)[A-Z0-9.-]{8,30}$/;
+
+function registroValido(tipo: string, registro: string) {
+  const numero = registro.toUpperCase();
+
+  if (tipo === 'CAR') {
+    const partes = FORMATO_CAR.exec(numero);
+    return partes !== null && UFS.includes(partes[1]);
+  }
+
+  return FORMATO_DAP_CAF.test(numero);
+}
+
 export interface DadosPropriedade {
   nome: string;
   municipio: string;
   uf: string;
   area: number;
+  tipoRegistro: string;
   registro: string;
   culturas: string[];
 }
@@ -30,8 +45,12 @@ export function validarPropriedade(dados: DadosPropriedade) {
 
   if (!texto(dados.registro)) throw new ErroApi(400, 'Informe o registro rural (CAR, DAP ou CAF)');
 
-  if (!/^[A-Za-z0-9.-]{6,50}$/.test(texto(dados.registro))) {
-    throw new ErroApi(400, 'O registro rural deve ter de 6 a 50 letras, números, pontos ou traços');
+  if (!['CAR', 'DAP', 'CAF'].includes(texto(dados.tipoRegistro))) {
+    throw new ErroApi(400, 'Escolha o tipo de registro rural: CAR, DAP ou CAF');
+  }
+
+  if (!registroValido(texto(dados.tipoRegistro), texto(dados.registro))) {
+    throw new ErroApi(400, `O número do ${texto(dados.tipoRegistro)} está em um formato inválido`);
   }
 
   if (!Array.isArray(dados.culturas) || dados.culturas.filter((c) => texto(c)).length === 0) {
@@ -45,7 +64,8 @@ export function montarPropriedade(dados: DadosPropriedade) {
     municipio: texto(dados.municipio),
     uf: texto(dados.uf),
     area: dados.area,
-    registro: texto(dados.registro),
+    tipo_registro: texto(dados.tipoRegistro),
+    registro: texto(dados.registro).toUpperCase(),
     culturas: dados.culturas.map(texto).filter((c) => c),
     talhoes: [],
   };

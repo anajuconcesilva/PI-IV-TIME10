@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { obterBanco } from '../mongodb';
 import { ErroApi } from '../utils/erroApi';
 import { todasExistem } from './culturaService';
+import { validarMunicipio, validarSenha } from '../validators/validacoes';
 import { DadosPropriedade, formatarPropriedade, montarPropriedade, validarPropriedade } from './propriedadeService';
 
 export interface DadosCadastro {
@@ -15,6 +16,7 @@ export interface DadosCadastro {
   municipio: string;
   uf: string;
   area: number;
+  tipoRegistro: string;
   registro: string;
   culturas: string[];
 }
@@ -33,6 +35,7 @@ function dadosDaPropriedade(dados: DadosCadastro): DadosPropriedade {
     municipio: dados.municipio,
     uf: dados.uf,
     area: dados.area,
+    tipoRegistro: dados.tipoRegistro,
     registro: dados.registro,
     culturas: dados.culturas,
   };
@@ -51,8 +54,8 @@ function validar(dados: DadosCadastro) {
     throw new ErroApi(400, 'E-mail inválido');
   }
 
-  if (typeof dados.senha !== 'string' || dados.senha.length < 6) {
-    throw new ErroApi(400, 'A senha precisa ter pelo menos 6 caracteres');
+  if (typeof dados.senha !== 'string' || !validarSenha(dados.senha)) {
+    throw new ErroApi(400, 'A senha precisa ter pelo menos 6 caracteres, com letra maiúscula, minúscula e número');
   }
 
   validarPropriedade(dadosDaPropriedade(dados));
@@ -60,6 +63,16 @@ function validar(dados: DadosCadastro) {
 
 export async function cadastrarPropriedade(dados: DadosCadastro) {
   validar(dados);
+
+  let municipioValido = false;
+  try {
+    municipioValido = await validarMunicipio(texto(dados.municipio), texto(dados.uf));
+  } catch (erro) {
+    throw new ErroApi(503, 'Não foi possível verificar o município. Tente novamente.');
+  }
+  if (!municipioValido) {
+    throw new ErroApi(400, 'Município não encontrado na UF informada');
+  }
 
   const culturas = dados.culturas.map(texto).filter((cultura) => cultura);
   if (!(await todasExistem(culturas))) {
