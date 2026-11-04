@@ -102,11 +102,17 @@ export async function criarAplicacao(propriedadeId: string,
         dados.talhaoId
     );
     await buscarProduto(dados.produtoId);
-
+    
     const statusTalhao = await atualizarStatusTalhao(propriedadeId, dados.talhaoId);
 
     if(statusTalhao !== 'aguardando'){
         throw new ErroApi(409, 'Só é possível registrar aplicacação em talhão aguardando');
+    }
+
+    const talhaoVerificacao = await consultarTalhao(propriedadeId, dados.talhaoId);
+
+    if (dados.dataAplicacao < talhaoVerificacao.inicio_cultivo.toISOString().split('T')[0]) {
+        throw new ErroApi(400, 'A data de aplicação não pode ser anterior à data de plantio do talhão');
     }
 
     const banco = obterBanco();
