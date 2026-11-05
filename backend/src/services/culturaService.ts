@@ -52,11 +52,15 @@ export async function listarCulturas() {
   return culturasEmMemoria;
 }
 
+const NAO_PLANTIO = /^(todas as culturas|tratamento de solo)$|armazenad/i;
+
 export async function todasExistem(nomes: string[]) {
   const culturas = await listarCulturas();
 
   const existentes = new Set(
-    culturas.map((cultura) => cultura.nome)
+    culturas
+      .filter((cultura) => !NAO_PLANTIO.test(cultura.nome))
+      .map((cultura) => cultura.nome)
   );
 
   return nomes.every((nome) => existentes.has(nome));
