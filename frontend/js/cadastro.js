@@ -218,10 +218,15 @@ function textoProdutos(quantidade) {
   return quantidade.toLocaleString("pt-BR") + " produtos autorizados";
 }
 
+function culturaDePlantio(cultura) {
+  return !/^(todas as culturas|tratamento de solo)$|armazenad/i.test(cultura.nome);
+}
+
 async function carregarCulturas() {
   try {
     const resposta = await fetch(API_URL + "/culturas");
-    culturasDisponiveis = await resposta.json();
+    const todas = await resposta.json();
+    culturasDisponiveis = todas.filter(culturaDePlantio);
   } catch (erro) {
     mostrarErroCulturas("Não foi possível carregar as culturas. Confira se a API está rodando.");
     return;
