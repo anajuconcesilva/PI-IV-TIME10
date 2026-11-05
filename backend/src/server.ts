@@ -17,6 +17,7 @@ import { responderErro } from './utils/responderErro';
 import avisosRoutes from './routes/avisosRoutes';
 import produtoRoutes from './routes/produtoRoutes';
 import recuperacaoSenhaRoutes from './routes/recuperacaoSenhaRoutes';
+import contaRoutes from './routes/contaRoutes';
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use(aplicacaoRoutes);
 app.use(avisosRoutes);
 app.use(produtoRoutes);
 app.use(recuperacaoSenhaRoutes);
+app.use(contaRoutes);
 
 // Resposta para rotas inexistentes
 app.use((req, res) => {
