@@ -122,6 +122,7 @@
   align-items: center;
   gap: 12px;
   padding: 0 8px 8px;
+  cursor: pointer;
 }
 
 .menu-iniciais {

@@ -21,6 +21,13 @@ function enderecoDoLogin() {
   return "login.html";
 }
 
+function enderecoDaConta() {
+  if (window.location.pathname.includes("/pages/")) {
+    return "minhaConta.html";
+  }
+  return "pages/minhaConta.html";
+}
+
 function lerPropriedadeConta() {
   try {
     return JSON.parse(localStorage.getItem("minhaColheita.propriedadeConta")) || null;
@@ -64,6 +71,14 @@ function sairDaConta() {
 
 function iniciarConta() {
   preencherMenuConta();
+
+  const menuUsuario = document.querySelector(".menu-usuario");
+  if (menuUsuario) {
+    menuUsuario.title = "Minha conta";
+    menuUsuario.addEventListener("click", function () {
+      window.location.href = enderecoDaConta();
+    });
+  }
 
   const botaoSair = document.querySelector(".menu-sair");
   if (botaoSair) {
