@@ -77,6 +77,9 @@
   cursor: pointer;
   font-family: var(--fonte-texto);
 }
+a.pill {
+  text-decoration: none;
+}
 .pill.ativo {
   background-color: var(--cor-marinho);
   color: var(--cor-branco);
@@ -102,6 +105,11 @@
 }
 .pill-input::placeholder {
   color: var(--cor-texto-suave);
+}
+.pill-select,
+.pill-select:focus {
+  width: 280px;
+  cursor: pointer;
 }
 .contador-resultados {
   font-size: 14px;

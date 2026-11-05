@@ -75,12 +75,7 @@
 
     <main class="conteudo">
       <h1 class="chamada-titulo" style="font-size: 32px; color: var(--cor-marinho); margin-bottom: 4px;">Consulta de produtos</h1>
-      <p class="subtitulo" style="margin-bottom: 24px;">Base Agrofit/MAPA — verifique se um produto é registrado para sua cultura</p>
-
-      <div class="banner-info">
-        <div class="icone-info">i</div>
-        <span>Dados sincronizados com a base <strong>Agrofit</strong> do Ministério da Agricultura, Pecuária e Abastecimento (MAPA).</span>
-      </div>
+      <p class="subtitulo" style="margin-bottom: 24px;">Dados sincronizados com a base Agrofit/MAPA — verifique se um produto é registrado para sua cultura</p>
 
       <div class="barra-pesquisa">
         <svg class="icone" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -90,12 +85,12 @@
       <div class="linha-filtros">
         <!-- Grupo Cultura -->
         <div class="grupo-filtro">
-          <h4>Suas Culturas</h4>
-          <div class="filtros-pills" id="filtros-cultura">
-            <button class="pill ativo" data-filter="todas">Todas</button>
-
-            <input type="text" id="input-outra-cultura" class="pill-input" list="bd-culturas" placeholder="+ Buscar cultura..." autocomplete="off">
-            <datalist id="bd-culturas"></datalist>
+          <h4>Cultura</h4>
+          <div class="filtros-pills">
+            <select id="filtro-cultura" class="pill-input pill-select">
+              <option value="todas">Todas as minhas culturas</option>
+            </select>
+            <a class="pill" href="pages/minhaConta.html">+ Adicionar cultura</a>
           </div>
         </div>
 

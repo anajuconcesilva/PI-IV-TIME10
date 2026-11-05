@@ -10,7 +10,6 @@ const estado = {
 };
 
 // Opções reais do banco: chave minúscula -> valor original
-const opcoesCulturas = new Map();
 const opcoesClasses = new Map();
 
 const POR_PAGINA = 20;
@@ -24,21 +23,20 @@ const inputBusca = document.getElementById('input-busca');
 const listaProdutos = document.getElementById('lista-produtos');
 const contador = document.getElementById('contador-texto');
 
-const inputNovaCultura = document.getElementById('input-outra-cultura');
+const filtroCultura = document.getElementById('filtro-cultura');
 
 const culturasDaConta = (lerPropriedadeConta() || {}).culturas || [];
 
-culturasDaConta.forEach(nome => {
-  const botao = document.createElement('button');
-  botao.className = 'pill';
-  botao.setAttribute('data-filter', nome);
-  botao.dataset.exata = 'true';
-  botao.textContent = nome;
-  inputNovaCultura.insertAdjacentElement('beforebegin', botao);
-});
-
-const botoesCultura = document.querySelectorAll('#filtros-cultura .pill');
-const datalistCulturas = document.getElementById('bd-culturas');
+const GRUPOS_CULTURAS = {
+  'Grãos e cereais': ['Amendoim', 'Arroz', 'Arroz Sequeiro', 'Arroz irrigado', 'Aveia', 'Aveia Branca', 'Aveia preta', 'Centeio', 'Cevada', 'Ervilha', 'Feijão', 'Feijão-caupi', 'Feijão-fava', 'Feijão-guandu', 'Feijão-mungo', 'Feijões', 'Gergelim', 'Grão-de-bico', 'Lentilha', 'Milheto', 'Milho', 'Milho OGM', 'Quinoa', 'Soja', 'Soja OGM', 'Sorgo', 'Trigo', 'Trigo-mourisco', 'Triticale'],
+  'Hortaliças': ['Abobrinha', 'Abóbora', 'Acelga', 'Agrião', 'Aipo', 'Alface', 'Alho', 'Alho porró', 'Almeirão', 'Berinjela', 'Beterraba', 'Brócolis', 'Cebola', 'Cenoura', 'Chuchu', 'Couve', 'Couve-chinesa', 'Couve-de-bruxelas', 'Couve-flor', 'Espinafre', 'Feijão-vagem', 'Jiló', 'Nabo', 'Pepino', 'Pimenta', 'Pimentão', 'Quiabo', 'Rabanete', 'Repolho', 'Rúcula', 'Tomate', 'Tomate Industrial', 'Tomate Rasteiro Industrial', 'Tomate envarado'],
+  'Raízes e tubérculos': ['Batata', 'Batata yacon', 'Batata-doce', 'Batata-salsa', 'Gengibre', 'Inhame', 'Mandioca', 'Mandioquinha-salsa'],
+  'Frutas': ['Abacate', 'Abacaxi', 'Acerola', 'Ameixa', 'Amora', 'Açaí', 'Banana', 'Caju', 'Caqui', 'Carambola', 'Castanha-de-caju', 'Castanha-do-pará', 'Citros', 'Coco', 'Framboesa', 'Fruta-de-conde', 'Goiaba', 'Graviola', 'Jambo', 'Kiwi', 'Lichia', 'Limão', 'Mamão', 'Manga', 'Maracujá', 'Maçã', 'Melancia', 'Melão', 'Mirtilo', 'Morango', 'Nectarina', 'Pera', 'Pitaya', 'Pêssego', 'Romã', 'Seriguela', 'Uva', 'Uva de mesa'],
+  'Ervas e especiarias': ['Alecrim', 'Camomila', 'Coentro', 'Erva-doce', 'Hortelã', 'Manjericão', 'Orégano', 'Pimenta-do-reino', 'Salsa', 'Salvia'],
+  'Café, cana e outras industriais': ['Algodão', 'Algodão OGM', 'Cacau', 'Café', 'Cana Indica', 'Cana-de-açúcar', 'Cana-de-açúcar OGM', 'Duboisia', 'Erva-mate', 'Guaraná', 'Lúpulo', 'Palma forrageira', 'Tabaco'],
+  'Florestais': ['Bambu', 'Eucalipto', 'Eucalipto Dessecação', 'Eucalipto OGM', 'Eucalipto Pré-emergência', 'Pinus', 'Seringueira', 'Teca'],
+  'Flores e ornamentais': ['Begônia', 'Boca-de-Leão', 'Bromelia', 'Cravo', 'Hibiscos', 'Hortênsia', 'Kalanchoe', 'Lisianthus', 'Lírio', 'Lírio da paz', 'Rosa', 'Samambaias', 'Violeta']
+};
 
 const btnTodasClasses = document.getElementById('btn-todas-classes');
 const inputClasse = document.getElementById('input-classe');
@@ -62,14 +60,6 @@ function escaparHtml(valor) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-}
-
-function marcarBotaoCultura(botaoAtivo) {
-  botoesCultura.forEach(b => b.classList.toggle('ativo', b === botaoAtivo));
-}
-
-function botaoTodasCulturas() {
-  return Array.from(botoesCultura).find(b => b.getAttribute('data-filter') === 'todas');
 }
 
 // 4. Busca principal (com cancelamento de requisição anterior e paginação)
@@ -108,6 +98,8 @@ async function buscarProdutosNaApi(anexar = false) {
   if (estado.cultura !== 'todas') {
     params.append('cultura', estado.cultura);
     if (estado.culturaExata) params.append('culturaExata', 'true');
+  } else if (culturasDaConta.length > 0) {
+    params.append('culturas', culturasDaConta.join(','));
   }
   if (estado.classe !== 'todas') {
     params.append('classe', estado.classe);
@@ -170,22 +162,6 @@ function agendarBusca(atrasoMs = 300) {
 }
 
 // 5. Sincronização de filtros (única porta de entrada para alterar o estado)
-function aplicarCulturaDigitada() {
-  const valor = inputNovaCultura.value.trim();
-
-  if (!valor) {
-    estado.cultura = 'todas';
-    estado.culturaExata = false;
-    marcarBotaoCultura(botaoTodasCulturas());
-  } else {
-    const oficial = opcoesCulturas.get(valor.toLowerCase());
-    estado.cultura = oficial || valor;
-    estado.culturaExata = Boolean(oficial);
-    marcarBotaoCultura(null);
-  }
-  agendarBusca();
-}
-
 function aplicarClasseDigitada() {
   const valor = inputClasse.value.trim();
 
@@ -205,20 +181,11 @@ function aplicarClasseDigitada() {
 // 6. Eventos
 inputBusca.addEventListener('input', () => agendarBusca());
 
-// Botões estáticos de cultura (Todas, Soja, Milho, Tomate)
-botoesCultura.forEach(botao => {
-  botao.addEventListener('click', () => {
-    marcarBotaoCultura(botao);
-    inputNovaCultura.value = '';
-    estado.cultura = botao.getAttribute('data-filter') || 'todas';
-    estado.culturaExata = botao.dataset.exata === 'true';
-    agendarBusca(0);
-  });
+filtroCultura.addEventListener('change', () => {
+  estado.cultura = filtroCultura.value;
+  estado.culturaExata = filtroCultura.value !== 'todas';
+  agendarBusca(0);
 });
-
-// Caixa de cultura (digitar filtra ao vivo; escolher no dropdown filtra exato)
-inputNovaCultura.addEventListener('input', aplicarCulturaDigitada);
-inputNovaCultura.addEventListener('change', aplicarCulturaDigitada);
 
 // Botão "Todas" das classes
 btnTodasClasses.addEventListener('click', () => {
@@ -253,9 +220,38 @@ async function carregarOpcoes(rota, datalist, mapa) {
   }
 }
 
+function criarGrupoCulturas(titulo, nomes) {
+  const grupo = document.createElement('optgroup');
+  grupo.label = titulo;
+  nomes.forEach(nome => {
+    const opcao = document.createElement('option');
+    opcao.value = nome;
+    opcao.textContent = nome;
+    grupo.appendChild(opcao);
+  });
+  return grupo;
+}
+
+function carregarCulturas() {
+  const usadas = new Set();
+
+  Object.keys(GRUPOS_CULTURAS).forEach(titulo => {
+    const doGrupo = culturasDaConta.filter(nome => GRUPOS_CULTURAS[titulo].includes(nome));
+    doGrupo.forEach(nome => usadas.add(nome));
+    if (doGrupo.length > 0) {
+      filtroCultura.appendChild(criarGrupoCulturas(titulo, doGrupo));
+    }
+  });
+
+  const outras = culturasDaConta.filter(nome => !usadas.has(nome));
+  if (outras.length > 0) {
+    filtroCultura.appendChild(criarGrupoCulturas('Outras', outras));
+  }
+}
+
 // 8. Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-  carregarOpcoes('/culturas', datalistCulturas, opcoesCulturas);
+  carregarCulturas();
   carregarOpcoes('/classes', datalistClasses, opcoesClasses);
   buscarProdutosNaApi(false);
 });
