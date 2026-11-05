@@ -23,6 +23,11 @@ function filtroTexto(valor: string, exato: boolean) {
   return { $regex: exato ? `^${padrao}$` : padrao, $options: 'i' };
 }
 
+function filtroCulturas(nomes: string[]) {
+  const padroes = [...nomes, 'Todas as culturas'].map(escaparRegex);
+  return { $regex: `^(${padroes.join('|')})$`, $options: 'i' };
+}
+
 export async function listarClasses() {
   const banco = obterBanco();
   const classes = await banco.collection('produtos').distinct('classe');
@@ -52,8 +57,14 @@ export async function buscarProdutos(filtros: any) {
     ];
   }
 
-  if (cultura && cultura.toLowerCase() !== 'todas') {
-    query.cultura = filtroTexto(cultura, filtros.culturaExata === 'true');
+  const culturas = lerTexto(filtros.culturas).split(',').map((nome) => nome.trim()).filter(Boolean);
+
+  if (culturas.length > 0) {
+    query.cultura = filtroCulturas(culturas);
+  } else if (cultura && cultura.toLowerCase() !== 'todas') {
+    query.cultura = filtros.culturaExata === 'true'
+      ? filtroCulturas([cultura])
+      : filtroTexto(cultura, false);
   }
 
   if (classe && classe.toLowerCase() !== 'todas') {
