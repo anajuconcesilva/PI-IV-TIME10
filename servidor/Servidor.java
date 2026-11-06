@@ -11,7 +11,9 @@ import java.util.*;
 public class Servidor
 {
     public static final String PORTA_PADRAO   = "3001";
-    public static final String ARQUIVO_PADRAO = "agrofit.csv";
+
+    // "\u00C1" = letra "Á". Assim o caminho não depende da codificação do arquivo .java
+    public static final String ARQUIVO_PADRAO = "C:\\servidor\\PI-IV-TIME10\\produtos_minhacolheita.csv";
 
     /**
      * Carrega as regras, abre a porta e espera o comando para desligar.
@@ -43,6 +45,7 @@ public class Servidor
         catch (Exception erro)
         {
             System.err.println ("Arquivo de regras invalido!\n");
+            erro.printStackTrace();
             return;
         }
 
@@ -51,7 +54,7 @@ public class Servidor
         try
         {
             AceitadoraDeConexao aceitadoraDeConexao =
-            new AceitadoraDeConexao (porta, usuarios, base);
+                    new AceitadoraDeConexao (porta, usuarios, base);
 
             aceitadoraDeConexao.start ();
         }
@@ -80,7 +83,7 @@ public class Servidor
                 synchronized (usuarios)
                 {
                     ComunicadoDeDesligamento comunicadoDeDesligamento =
-                    new ComunicadoDeDesligamento ();
+                            new ComunicadoDeDesligamento ();
 
                     for (Parceiro usuario : usuarios)
                     {
