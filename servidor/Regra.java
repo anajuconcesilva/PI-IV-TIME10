@@ -1,11 +1,11 @@
-//marília santos
+//Marília Santos
+
 
 public class Regra {
     private String produto;
     private String cultura;
     private int diasDeCarencia;
 
-    // Construtor com validação exigida (sem acentos nas exceptions)
     public Regra(String produto, String cultura, int dias) throws Exception {
         if (produto == null || produto.trim().isEmpty()) {
             throw new Exception("Produto invalido ou vazio");
@@ -22,7 +22,6 @@ public class Regra {
         this.diasDeCarencia = dias;
     }
 
-    // Getters
     public String getProduto() {
         return this.produto;
     }
@@ -35,7 +34,6 @@ public class Regra {
         return this.diasDeCarencia;
     }
 
-    // Métodos obrigatórios
     @Override
     public String toString() {
         return "Produto: " + this.produto +
