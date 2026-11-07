@@ -16,23 +16,8 @@ const ICONES_TALHAO = {
   "relogio": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/>"
 };
 
-// Aplicações de demonstração
-// Mudar para receber estes registros da API de aplicações por talhão
-const APLICACOES_EXEMPLO = {
-  A1: [
-    {data:'2024-09-05', produto:'Imidacloprid 700 WG', dose:'2L/ha', carencia:21, status:'liberado'},
-    {data:'2024-08-28', produto:'Roundup Original', dose:'1,5 L/ha', carencia:21, modo:'Sistêmico', status:'liberado'},
-    {data:'2024-07-12', produto:'Azoxistrobina 250 SC', dose:'1 L/ha', carencia:14, status:'liberado'},
-    {data:'2024-04-20', produto:'Dithane NT', dose:'4 L/ha', carencia:10, status:'liberado'}
-  ],
-  B2: [{data:'2026-10-08', produto:'Imidacloprid 700 WG', dose:'1,5 L/ha', carencia:21, status:'emCarencia'}],
-  C3: [{data:'2026-10-12', produto:'Acephate 750 BR', dose:'3,4 L/ha', carencia:14, status:'emCarencia'}],
-  E5: [{data:'2024-08-15', produto:'Dithane NT', dose:'2,5 L/ha', carencia:10, status:'liberado'}]
-};
-
 // Mostra o talhão escolhido no link da listagem
-// necessário conectar com api depois para consultar registro correspondente
-function mostrarDetalhes(){
+async function mostrarDetalhes(){
     // lê o id da url
     const parametros = new URLSearchParams(window.location.search);
     // Identificador usado para escolher um único talhão
@@ -43,7 +28,11 @@ function mostrarDetalhes(){
         '<h1>Nenhum talhão foi informado</h1>';
     return;
     }
-    talhaoSelecionado = procurarTalhao(id);
+    try {
+        talhaoSelecionado = await buscarTalhaoAPI(id);
+    } catch (erro) {
+        talhaoSelecionado = null;
+    }
 
     // Confere se o talhão foi encontrado
     if (talhaoSelecionado === null) {
@@ -64,7 +53,7 @@ function mostrarDetalhes(){
     document.querySelector('#area-talhao').textContent = formatarNumero(talhaoSelecionado.area);
     document.querySelector('#id-talhao').textContent = talhaoSelecionado.id;
 
-    mostrarHistorico();
+    await mostrarHistorico();
     destacarStatus();
     configurarColheita();
     // Quando acontecer o evento click, chama a função registrarColheita; sem parênteses, ela não executa agora.
@@ -85,36 +74,37 @@ function destacarStatus(){
     }
 }
 
-// Lê as aplicações deste talhão ou prepara dados de demonstração
-//Ao conectar com a API, Trocar os exemplos e o localStorage pela consulta do histórico do talhão selecionado
-function carregarHistorico(){
-    // busca o histórico salvo do talhão no localStorage
-    const salvo = localStorage.getItem('minhaColheita.historicos');
-    let historicos;
+function adaptarAplicacao(aplicacao) {
+    const liberacao = formatarDataAPI(aplicacao.data_liberacao_colheita);
+    let status = 'liberado';
 
-    if (salvo === null) {
-        historicos = {};
-    } else {
-        historicos = JSON.parse(salvo);
+    if (aplicacao.status === 'realizada' && liberacao > obterDataHoje()) {
+        status = 'emCarencia';
     }
-    //Verifica se o conteúdo tem o formato esperado
-    if (!historicos || typeof historicos !== 'object' || Array.isArray(historicos)) throw new Error('Histórico inválido.');
 
-    if (historicos[talhaoSelecionado.id] !== undefined) {
-        if (!Array.isArray(historicos[talhaoSelecionado.id])) throw new Error('Histórico inválido.');
-            return historicos[talhaoSelecionado.id];
-    }
-    // executa quando não existe histórico salvo para o talhão
-    const exemplos = structuredClone(APLICACOES_EXEMPLO[talhaoSelecionado.id] || []);
-    historicos[talhaoSelecionado.id] = exemplos;
-    localStorage.setItem('minhaColheita.historicos', JSON.stringify(historicos));
-    return exemplos;
+    return {
+        data: formatarDataAPI(aplicacao.data_aplicacao),
+        produto: aplicacao.marca,
+        dose: (String(aplicacao.dosagem).replace('.', ',') + ' ' + (aplicacao.unidade ?? '')).trim(),
+        carencia: aplicacao.periodo_carencia,
+        status: status
+    };
+}
+
+async function carregarHistorico(){
+    const dados = await requisicaoAPI(
+        '/consultarAplicacoes/' + encodeURIComponent(talhaoSelecionado.id)
+    );
+
+    if (!dados || !Array.isArray(dados.aplicacoes)) throw new Error('Histórico inválido.');
+
+    return dados.aplicacoes.map(adaptarAplicacao);
 }
 
 // Carrega o histórico e mostra os registros que passam pelos filtros
-function mostrarHistorico(){
+async function mostrarHistorico(){
     try{
-        historicoAplicacoes = carregarHistorico();
+        historicoAplicacoes = await carregarHistorico();
         statusAplicacoes = obterStatusAplicacoes();
         mostrarTabelaHistorico();
     }catch(erro){
@@ -188,6 +178,7 @@ function configurarColheita(){
     painel.classList.toggle('colheita-registrada', registrada);
     botaoColheita.disabled = !liberado  || registrada;
     botaoColheita.hidden = registrada;
+    document.querySelector('#quantidade-colheita').hidden = registrada;
     botaoColheita.textContent = 'Registrar colheita';
     document.querySelector('#titulo-colheita').textContent =
         registrada ? 'Colheita registrada com sucesso!' : 'Registrar colheita';
@@ -256,15 +247,9 @@ function atualizarAvisoTalhao() {
     }
 }
 
-//descobre qual estado o talhão deve mostrar
 function obterStatusAplicacoes() {
-  const dados = obterDetalhesAplicacao();
-  const aplicacao = dados.aplicacao;
-  // se nao aconteceu a aplicação, coloca em aguardar
-  if (!aplicacao) return 'aguardando';
-  // verifica se existe uma previsão para colheita e se é menor ou igual a data de hoje
-  if (talhaoSelecionado.colheita && talhaoSelecionado.colheita.slice(0,10) >= aplicacao.data) return 'aguardando';
-  return dados.previsao && dados.previsao <= obterDataHoje() ? 'liberado' : 'emCarencia';
+  if (!NOMES_STATUS[talhaoSelecionado.status]) return 'aguardando';
+  return talhaoSelecionado.status;
 }
 
 
@@ -280,7 +265,7 @@ function obterDetalhesAplicacao() {
     }
     // Cria o objeto que será devolvido
     const dados = {aplicacao:ultima, periodo:null, modo:null, dose:null,
-    periodoAviso:null, restantes:null, previsao:null, demonstracao:true};
+    periodoAviso:null, restantes:null, previsao:null};
     //Se nenhuma aplicação válida foi encontrada, devolve esse objeto com os campos vazios
     if (ultima === null) return dados;
 
@@ -334,53 +319,65 @@ function mostrarProgressoCarencia(dados) {
     document.querySelector('#dias-totais').textContent = periodo;
     document.querySelector('#inicio-carencia').textContent = dados.aplicacao.data.split('-').reverse().join('/');
     document.querySelector('#previsao-liberacao').textContent = dados.previsao.split('-').reverse().join('/');
-    const nota = document.querySelector('#nota-carencia');
-    nota.hidden = !dados.demonstracao;
 }
 
 
-// depois trocar o salvamento local quando houver a conexão com a api
-function registrarColheita(){
+async function registrarColheita(){
     // se o talhão não estiver liberado
     if (statusAplicacoes !== 'liberado') {
         mostrarMensagem('Colheita não permitida: o talhão ainda não está liberado para colheita.');
         return;
     }
     if(talhaoSelecionado.colheita) return;
-    // Resposta da pessoa na janela de confirmação
 
-    //guardam os valores que estavam no talhão antes desta tentativa de registrar a colheita
-    const dataAnterior = talhaoSelecionado.colheita;
-    const statusAnterior = talhaoSelecionado.status;
+    const campoQuantidade = document.querySelector('#quantidade-colheita');
+    const quantidade = Number(campoQuantidade.value);
+
+    if (!(quantidade > 0)) {
+        mostrarMensagem('Informe a quantidade colhida.');
+        campoQuantidade.focus();
+        return;
+    }
+
+    botaoColheita.disabled = true;
+
+    try {
+        await requisicaoAPI('/colheitas', {
+            method: 'POST',
+            body: JSON.stringify({
+                talhaoId: talhaoSelecionado.id,
+                dataColheita: obterDataHoje(),
+                quantidade: quantidade
+            })
+        });
+    } catch (erro) {
+        botaoColheita.disabled = false;
+        mostrarMensagem(erro.message || 'Não foi possível registrar a colheita.');
+        return;
+    }
 
     talhaoSelecionado.colheita = new Date().toISOString();
     talhaoSelecionado.status = 'aguardando';
 
-    // Tenta salvar a lista e só entra neste bloco se o salvamento der certo.
-    if (salvarTalhoes(talhoes)) {
-        // Depois de salvar, mostra o estado de aguardando para o próximo ciclo.
-        talhaoSelecionado = procurarTalhao(talhaoSelecionado.id);
-        statusAplicacoes = obterStatusAplicacoes();
-        destacarStatus();
-        configurarColheita();
-        mostrarAlertaSucesso('Colheita registrada com sucesso!');
-    } else {
-        talhaoSelecionado.colheita = dataAnterior;
-        talhaoSelecionado.status = statusAnterior;
-    }
-
+    await mostrarHistorico();
+    destacarStatus();
+    configurarColheita();
+    mostrarAlertaSucesso('Colheita registrada com sucesso!');
 }
 
 // carregamento da página
 // Só inicia a tela se os dados da propriedade forem carregados
-if (propriedadeConta !== null) {
-    talhoes = carregarTalhoes();
-
-    if (talhoes !== null) {
-        mostrarDetalhes();
-    } else {
-        mostrarErroCarregamento('Não foi possível carregar os talhões');
+async function iniciarPagina() {
+    if (propriedadeConta === null) {
+        mostrarErroPropriedade();
+        return;
     }
-} else {
-    mostrarErroPropriedade();
+
+    try {
+        await mostrarDetalhes();
+    } catch (erro) {
+        console.error('Erro ao iniciar a página:', erro);
+    }
 }
+
+iniciarPagina();

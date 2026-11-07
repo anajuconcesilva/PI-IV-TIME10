@@ -1,0 +1,67 @@
+// Aluna: Eduarda Prado Deiró | RA: 25004440
+
+import { obterBanco } from '../mongodb';
+
+interface Cultura {
+  id: string;
+  cultura_id: number;
+  nome: string;
+  periodo_carencia: number;
+  quantidadeProdutos: number;
+}
+
+let culturasEmMemoria: Cultura[] | null = null;
+
+// A base do Agrofit não muda enquanto a API roda,
+// então a contagem é feita uma vez só.
+export async function listarCulturas() {
+  if (culturasEmMemoria) return culturasEmMemoria;
+
+  const banco = obterBanco();
+
+  const contagem = await banco
+    .collection('produtos')
+    .aggregate<{ _id: string; total: number }>([
+      {
+        $group: {
+          _id: { $trim: { input: '$cultura' } },
+          total: { $sum: 1 }
+        }
+      }
+    ])
+    .toArray();
+
+  const totalPorNome = new Map(
+    contagem.map((item) => [item._id, item.total])
+  );
+
+  const culturas = await banco
+    .collection('culturas')
+    .find()
+    .sort({ nome: 1 })
+    .toArray();
+
+  culturasEmMemoria = culturas.map((cultura) => ({
+    id: cultura._id.toString(),
+    cultura_id: Number(cultura.cultura_id),
+    nome: cultura.nome,
+    periodo_carencia: Number(cultura.periodo_carencia),
+    quantidadeProdutos: totalPorNome.get(cultura.nome) ?? 0
+  }));
+
+  return culturasEmMemoria;
+}
+
+const NAO_PLANTIO = /^(todas as culturas|tratamento de solo)$|armazenad/i;
+
+export async function todasExistem(nomes: string[]) {
+  const culturas = await listarCulturas();
+
+  const existentes = new Set(
+    culturas
+      .filter((cultura) => !NAO_PLANTIO.test(cultura.nome))
+      .map((cultura) => cultura.nome)
+  );
+
+  return nomes.every((nome) => existentes.has(nome));
+}

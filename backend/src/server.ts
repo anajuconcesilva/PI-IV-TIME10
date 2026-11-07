@@ -1,8 +1,23 @@
+
 import express from 'express';
 import cors from 'cors';
 import { env } from './config/env';
 import healthRoutes from './routes/healthRoutes';
+import cadastroRoutes from './routes/cadastroRoutes';
+import culturaRoutes from './routes/culturaRoutes';
+import authRoutes from './routes/authRoutes';
+import relatoriosRoutes from './routes/relatoriosRoutes';
+import talhaoRoutes from './routes/talhaoRoutes';
+import colheitaRoutes from './routes/colheitaRoutes';
+import historicoAplicacoesRoutes from './routes/historicoAplicacoesRoutes';
+import aplicacaoRoutes from './routes/aplicacaoRoutes';
 import { conectarBanco } from './mongodb';
+import { ErroApi } from './utils/erroApi';
+import { responderErro } from './utils/responderErro';
+import avisosRoutes from './routes/avisosRoutes';
+import produtoRoutes from './routes/produtoRoutes';
+import recuperacaoSenhaRoutes from './routes/recuperacaoSenhaRoutes';
+import contaRoutes from './routes/contaRoutes';
 
 const app = express();
 
@@ -10,25 +25,54 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Rotas da API
 app.use(healthRoutes);
+app.use(cadastroRoutes);
+app.use(culturaRoutes);
+app.use(authRoutes);
+app.use(relatoriosRoutes);
+app.use(colheitaRoutes);
+app.use(talhaoRoutes);
+app.use(historicoAplicacoesRoutes);
+app.use(aplicacaoRoutes);
+app.use(avisosRoutes);
+app.use(produtoRoutes);
+app.use(recuperacaoSenhaRoutes);
+app.use(contaRoutes);
 
+// Resposta para rotas inexistentes
 app.use((req, res) => {
   res.status(404).json({ erro: 'Rota não encontrada' });
 });
 
+// Tratamento centralizado de erros
+app.use(
+  (
+    erro: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    responderErro(
+      res,
+      erro instanceof SyntaxError
+        ? new ErroApi(400, 'JSON inválido')
+        : erro
+    );
+  }
+);
 
-async function iniciarAPI(){
-  try{
+async function iniciarAPI() {
+  try {
     await conectarBanco();
-    app.listen(env.port, () => {
-    console.log(`API rodando em http://localhost:${env.port}`);
-    });
 
-  }catch (error){
+    app.listen(env.port, () => {
+      console.log(`API rodando em http://localhost:${env.port}`);
+    });
+  } catch (error) {
     console.error('Falha ao iniciar a API: ', error);
     process.exitCode = 1;
   }
 }
 
 iniciarAPI();
-
