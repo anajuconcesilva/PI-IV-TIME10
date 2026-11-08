@@ -1,30 +1,25 @@
-//Aluna: Ana Júlia Conceição da Silva | RA: 25002592
+// Aluna: Ana Júlia Conceição da Silva | RA: 25002592
 
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.Semaphore;
 
-public class Parceiro extends Thread
+// Representa a conexao com um cliente ou servidor
+public class Parceiro
 {
     private Socket             conexao;
     private ObjectInputStream  receptor;
     private ObjectOutputStream transmissor;
 
-    private Comunicado         proximoComunicado = null;
-    private Semaphore          mutEx = new Semaphore (1, true);
-    private Semaphore          ent   = new Semaphore (0, true);
+    private Comunicado proximoComunicado = null;
 
-    //Constrói o parceiro de comunicação.
+    private final Semaphore mutExRecepcao    = new Semaphore (1, true);
+    private final Semaphore mutExTransmissao = new Semaphore (1, true);
 
-     @param conexao      //socket da conexão
-     @param receptor     //fluxo de entrada
-     @param transmissor  //fluxo de saída
-     @throws Exception   //se algum parâmetro for nulo
-
+    // Construtor que recebe a conexao e os fluxos de entrada e saida
     public Parceiro (Socket             conexao,
                      ObjectInputStream  receptor,
-                     ObjectOutputStream transmissor)
-                     throws Exception
+                     ObjectOutputStream transmissor) throws Exception
     {
         if (conexao == null)
             throw new Exception ("Conexao ausente");
@@ -38,82 +33,58 @@ public class Parceiro extends Thread
         this.conexao     = conexao;
         this.receptor    = receptor;
         this.transmissor = transmissor;
-
-        this.start ();
     }
 
-   //Envia uma mensagem pelo fluxo de saída.
-    @param x          //a mensagem a ser enviada
-    @throws Exception //se a mensagem for nula ou houver erro de I/O
-    public void receba (Comunicado x) throws Exception
+    // Envia um comunicado para o outro lado da conexao
+    public void receba (Comunicado c) throws Exception
     {
-        if (x == null)
-            throw new Exception ("Comunicado nulo");
+        if (c == null)
+            throw new Exception ("Comunicado ausente");
 
         try
         {
-            this.transmissor.writeObject (x);
+            this.mutExTransmissao.acquireUninterruptibly ();
+            this.transmissor.writeObject (c);
             this.transmissor.flush ();
         }
         catch (IOException erro)
         {
             throw new Exception ("Erro de transmissao");
         }
-    }
-
-    //Olha a próxima mensagem na fila sem a consumir.
-    @return
-    @throws Exception //se a thread for interrompida
-
-    public Comunicado espie () throws Exception
-    {
-        try
-        {
-            this.ent.acquire ();
-            this.mutEx.acquire ();
-
-            return this.proximoComunicado;
-        }
-        catch (Exception erro)
-        {
-            throw new Exception ("Erro ao espiar");
-        }
         finally
         {
-            // O ajuste nosso: liberar o semáforo também quando houver exceção
-            this.mutEx.release ();
-            this.ent.release ();
+            this.mutExTransmissao.release ();
         }
     }
 
-    // Entrega e consome a próxima mensagem da fila.
-     @return           //a mensagem consumida
-     @throws Exception //se a thread for interrompida
-
+    // Espera e devolve o comunicado recebido
     public Comunicado envie () throws Exception
     {
+        Comunicado ret = null;
+
         try
         {
-            this.ent.acquire ();
-            this.mutEx.acquire ();
+            this.mutExRecepcao.acquireUninterruptibly ();
 
-            Comunicado ret = this.proximoComunicado;
+            if (this.proximoComunicado == null)
+                this.proximoComunicado = (Comunicado)this.receptor.readObject ();
+
+            ret = this.proximoComunicado;
             this.proximoComunicado = null;
-            return ret;
         }
         catch (Exception erro)
         {
-            throw new Exception ("Erro ao consumir a mensagem");
+            throw new Exception ("Erro de recepcao");
         }
         finally
         {
-            this.mutEx.release ();
+            this.mutExRecepcao.release ();
         }
+
+        return ret;
     }
 
-    //Fecha a conexão e os fluxos de I/O.
-   @throws Exception //se ocorrer erro ao fechar a conexão
-
+    // Encerra as streams e a conexao
     public void adeus () throws Exception
     {
         try
@@ -124,52 +95,43 @@ public class Parceiro extends Thread
         }
         catch (Exception erro)
         {
-            throw new Exception ("Erro ao desconectar");
+            throw new Exception ("Erro ao encerrar a conexao");
         }
     }
 
-    //Fica à escuta de novas mensagens no fluxo de entrada
-
-    public void run ()
-    {
-        try
-        {
-            for (;;)
-            {
-                Comunicado comunicado = (Comunicado) this.receptor.readObject ();
-
-                this.mutEx.acquire ();
-                this.proximoComunicado = comunicado;
-                this.mutEx.release ();
-
-                this.ent.release ();
-            }
-        }
-        catch (Exception erro)
-        {
-            // Thread termina caso de quebra de conexão
-        }
-    }
-
+    // Mostra o endereco do parceiro
     public String toString ()
     {
-        return "Parceiro da conexao " + this.conexao.getRemoteSocketAddress();
+        return "Parceiro conectado em: " + this.conexao.getRemoteSocketAddress ();
     }
 
+    // Compara dois parceiros pela conexao
     public boolean equals (Object obj)
     {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
 
-        Parceiro parceiro = (Parceiro) obj;
-        return this.conexao.equals(parceiro.conexao);
+        if (obj == null)
+            return false;
+
+        if (this.getClass () != obj.getClass ())
+            return false;
+
+        Parceiro outro = (Parceiro)obj;
+
+        return this.conexao.equals (outro.conexao);
     }
 
+    // Gera o hashCode a partir da conexao
     public int hashCode ()
     {
-        int ret = super.hashCode();
-        ret = 13 * ret + this.conexao.hashCode();
+        int ret = 1;
+
+        ret = 13 * ret + this.conexao.hashCode ();
+
+        if (ret < 0)
+            ret = -ret;
+
         return ret;
     }
 }
