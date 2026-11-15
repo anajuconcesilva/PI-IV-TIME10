@@ -5,6 +5,7 @@ import { converterData } from "../utils/converterData";
 import { ObjectId } from 'mongodb';
 import { atualizarStatusTalhao } from "./talhaoService";
 import { criarAvisoCarencia } from './avisosService';
+import { consultarCarencia } from './servidorCarenciaService';
 
 interface DadosAplicacao{
     propriedadeId:string;
@@ -101,7 +102,7 @@ export async function criarAplicacao(propriedadeId: string,
         propriedadeId,
         dados.talhaoId
     );
-    await buscarProduto(dados.produtoId);
+    const produto = await buscarProduto(dados.produtoId);
     
     const statusTalhao = await atualizarStatusTalhao(propriedadeId, dados.talhaoId);
 
@@ -125,24 +126,37 @@ export async function criarAplicacao(propriedadeId: string,
         throw new ErroApi(404, 'Cultura do talhão não encontrada');
     }
 
-    const periodoCarencia = cultura.periodo_carencia;
-
-    if(!Number.isInteger(periodoCarencia) || periodoCarencia <0){
-        throw new ErroApi(500, 'Cultura com período de carência inválido');
-    }
-
     if(typeof dados.dataAplicacao !== 'string'){
-        throw new ErroApi(400, 'Informe a data de aplicacao');
+        throw new ErroApi(400, 'Informe a data de aplicação');
     }
 
     const dataAplicacao = converterData(dados.dataAplicacao);
 
-    const dataLiberacao= new Date(dataAplicacao.getTime());
-
-    dataLiberacao.setUTCDate(
-        dataLiberacao.getUTCDate() + periodoCarencia
+    const resultadoCarencia = await consultarCarencia(
+        produto.marca,
+        cultura.nome, 
+        dados.dataAplicacao
     );
 
+    if(!resultadoCarencia.autorizado){
+        throw new ErroApi(
+            400, 
+            resultadoCarencia.mensagem || 'Aplicação não autorizada'  
+        );    
+    }
+
+    if(resultadoCarencia.dataLiberacao === null ){
+        throw new ErroApi(
+            502,
+            'Servidor de carência não informou a data de liberação'
+        );
+    }
+
+    const periodoCarencia = resultadoCarencia.dias;
+    const dataLiberacao = converterData(
+        resultadoCarencia.dataLiberacao
+    );
+    
     const aplicacao ={
         propriedade_id: new ObjectId(propriedadeId),
         talhao_id: new ObjectId(dados.talhaoId),

@@ -28,11 +28,12 @@ public class Ponte
         if (args.length>2)
         {
             System.err.println ("Uso: java Ponte[HOST[PORTA]]");
-            return;
+            System.exit (1);
         }
 
         String host = Ponte.HOST_PADRAO;
         int porta = Ponte.PORTA_PADRAO;
+        int codigoSaida=0;
 
         try
         {
@@ -78,8 +79,10 @@ public class Ponte
                 }
                 catch (Exception erro)
                 {
-                    System.err.println ("Indique o servidor e a porta corretos!\n");
-                    return;
+                    throw new IOException (
+                        "Indique o servidor e a porta corretos!",
+                        erro
+                    );
                 }
             
                 ObjectInputStream receptor = null;
@@ -89,8 +92,10 @@ public class Ponte
                     receptor = new ObjectInputStream (conexao.getInputStream ());
                 }catch (Exception erro)
                 {
-                    System.err.println ("Indique o servidor e a porta corretos!\n");
-                    return;
+                    throw new IOException (
+                        "Indique o servidor e a porta corretos!",
+                        erro
+                    );
                 }
 
                 Parceiro servidor = null;
@@ -101,8 +106,10 @@ public class Ponte
 
                 }catch (Exception erro)
                 {
-                    System.err.println ("Indique o servidor e a porta corretos!");
-                    return;
+                    throw new IOException (
+                        "Indique o servidor e a porta corretos!",
+                        erro
+                    );
                 }
 
                 boolean servidorDesligando = false;
@@ -199,6 +206,7 @@ public class Ponte
                                 (
                                     gson, "Servidor em desligamento"
                                 );
+                                codigoSaida=1;
                                 break;
 
                             }
@@ -214,7 +222,7 @@ public class Ponte
                             Ponte.enviarErro (
                                 gson, "Espera pela resposta interrompida"
                             );
-
+                            codigoSaida=1;
                             break;
                         }
                         catch (Exception erro)
@@ -223,6 +231,7 @@ public class Ponte
                                 gson,
                                 "Falha de comunicacao com o servidor"
                             );
+                            codigoSaida=1;
                             System.err.println (erro.getMessage ());
                             break;
                         }
@@ -252,6 +261,12 @@ public class Ponte
         catch (Exception erro)
         {
             System.err.println ("Falha ao iniciar ou manter a ponte: " + erro.getMessage ());
+            codigoSaida=1;
+        }
+
+        if (codigoSaida != 0)
+        {
+            System.exit (codigoSaida);
         }
 
     }
