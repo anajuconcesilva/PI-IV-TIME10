@@ -113,22 +113,21 @@ public class SupervisoraDeConexao extends Thread
                     this.usuario.receba (resposta);
                 }
                 else if (comunicado instanceof PedidoParaSair)
-                {
-                    synchronized (this.usuarios)
-                    {
-                        this.usuarios.remove (this.usuario);
-                    }
-                    this.usuario.adeus ();
                     return;
-                }
             }
         }
         catch (Exception erro)
+        {} // o finally tira o cliente da lista e fecha a conexao
+        finally
         {
+            synchronized (this.usuarios)
+            {
+                this.usuarios.remove (this.usuario);
+            }
+
             try
             {
-                transmissor.close ();
-                receptor   .close ();
+                this.usuario.adeus ();
             }
             catch (Exception falha)
             {} // so tentando fechar antes de acabar a thread
