@@ -1,11 +1,22 @@
 // Aluna: Ana Júlia Conceição da Silva | RA: 25002592
 
-// Representa uma mensagem de erro enviada pelo servidor ao cliente
+/**
+ * Representa uma mensagem de erro enviada pelo servidor ao cliente.
+ *
+ * @author Ana Júlia Conceição da Silva
+ * @since 2026
+ */
 public class RespostaDeErro extends Comunicado
 {
+    private static final long serialVersionUID = 1L;
+
     private String mensagem;
 
-    // Construtor com a mensagem de erro
+    /**
+     * Cria um comunicado de erro com a mensagem informada.
+     *
+     * @param mensagem descricao do erro ocorrido
+     */
     public RespostaDeErro (String mensagem)
     {
         if (mensagem == null || mensagem.trim ().isEmpty ())
@@ -14,27 +25,34 @@ public class RespostaDeErro extends Comunicado
             this.mensagem = mensagem.trim ();
     }
 
-    // Construtor de copia
-    public RespostaDeErro (RespostaDeErro modelo) throws Exception
-    {
-        if (modelo == null)
-            throw new Exception ("Modelo ausente");
-
-        this.mensagem = modelo.mensagem;
-    }
-
+    /**
+     * Devolve o texto da mensagem de erro.
+     *
+     * @return mensagem de erro
+     */
     public String getMensagem ()
     {
         return this.mensagem;
     }
 
-    // Representacao textual do erro
+    /**
+     * Representacao textual do erro.
+     *
+     * @return texto descrevendo o erro
+     */
+    @Override
     public String toString ()
     {
         return "Erro: " + this.mensagem;
     }
 
-    // Compara dois erros pelo conteudo da mensagem
+    /**
+     * Compara dois erros pelo conteudo da mensagem.
+     *
+     * @param obj objeto a comparar
+     * @return true se as mensagens forem iguais
+     */
+    @Override
     public boolean equals (Object obj)
     {
         if (this == obj)
@@ -51,7 +69,12 @@ public class RespostaDeErro extends Comunicado
         return this.mensagem.equals (outro.mensagem);
     }
 
-    // Gera o codigo hash a partir da mensagem
+    /**
+     * Gera o codigo hash a partir da mensagem.
+     *
+     * @return o codigo hash
+     */
+    @Override
     public int hashCode ()
     {
         int ret = 1;
@@ -60,21 +83,6 @@ public class RespostaDeErro extends Comunicado
 
         if (ret < 0)
             ret = -ret;
-
-        return ret;
-    }
-
-    // Clona o comunicado de erro
-    public Object clone ()
-    {
-        RespostaDeErro ret = null;
-
-        try
-        {
-            ret = new RespostaDeErro (this);
-        }
-        catch (Exception erro)
-        {}
 
         return ret;
     }
