@@ -2,63 +2,93 @@
 
 import java.time.LocalDate;
 
-// Representa a resposta do calculo de carencia enviada ao cliente
+/**
+ * Representa a resposta do calculo de carencia enviada ao cliente.
+ *
+ * @author Ana Júlia Conceição da Silva
+ * @since 2026
+ */
 public class RespostaDeCarencia extends Comunicado
 {
+    private static final long serialVersionUID = 1L;
+
     private boolean   autorizado;
     private int       diasDeCarencia;
     private LocalDate dataDeLiberacao;
     private String    mensagem;
 
-    // Construtor com parametros
+    /**
+     * Cria uma resposta de consulta de carencia validando os parametros.
+     *
+     * @param autorizado      indica se a regra foi encontrada e autorizada
+     * @param diasDeCarencia  quantidade de dias do periodo de carencia
+     * @param dataDeLiberacao data calculada para liberacao da colheita
+     * @param mensagem        mensagem informativa ou de status
+     * @throws Exception      se diasDeCarencia for negativo ou se autorizado for true com dataDeLiberacao nula
+     */
     public RespostaDeCarencia (boolean   autorizado,
                                int       diasDeCarencia,
                                LocalDate dataDeLiberacao,
-                               String    mensagem)
+                               String    mensagem) throws Exception
     {
+        if (diasDeCarencia < 0)
+            throw new Exception ("Dias de carencia invalidos");
+
+        if (autorizado && dataDeLiberacao == null)
+            throw new Exception ("Data de liberacao ausente");
+
         this.autorizado      = autorizado;
         this.diasDeCarencia  = diasDeCarencia;
         this.dataDeLiberacao = dataDeLiberacao;
         this.mensagem        = (mensagem == null) ? "" : mensagem.trim ();
     }
 
-    // Construtor de copia
-    public RespostaDeCarencia (RespostaDeCarencia modelo) throws Exception
-    {
-        if (modelo == null)
-            throw new Exception ("Modelo ausente");
-
-        this.autorizado      = modelo.autorizado;
-        this.diasDeCarencia  = modelo.diasDeCarencia;
-        this.dataDeLiberacao = modelo.dataDeLiberacao;
-        this.mensagem        = modelo.mensagem;
-    }
-
-    // Informa se o pedido foi autorizado
+    /**
+     * Informa se o pedido foi autorizado.
+     *
+     * @return true se autorizado, false caso contrario
+     */
     public boolean isAutorizado ()
     {
         return this.autorizado;
     }
 
-    // Devolve os dias de carencia necessarios
+    /**
+     * Devolve os dias de carencia necessarios.
+     *
+     * @return quantidade de dias de carencia
+     */
     public int getDiasDeCarencia ()
     {
         return this.diasDeCarencia;
     }
 
-    // Devolve a data calculada para a liberacao da colheita
+    /**
+     * Devolve a data calculada para a liberacao da colheita.
+     *
+     * @return data de liberacao ou null se nao autorizado
+     */
     public LocalDate getDataDeLiberacao ()
     {
         return this.dataDeLiberacao;
     }
 
-    // Devolve a mensagem explicativa ou de status
+    /**
+     * Devolve a mensagem explicativa ou de status.
+     *
+     * @return texto da mensagem
+     */
     public String getMensagem ()
     {
         return this.mensagem;
     }
 
-    // Representacao textual da resposta
+    /**
+     * Representacao textual da resposta.
+     *
+     * @return texto descrevendo o resultado da consulta
+     */
+    @Override
     public String toString ()
     {
         if (this.autorizado)
@@ -67,7 +97,13 @@ public class RespostaDeCarencia extends Comunicado
         return "Nao autorizado: " + this.mensagem;
     }
 
-    // Compara duas respostas
+    /**
+     * Compara duas respostas de carencia.
+     *
+     * @param obj objeto a comparar
+     * @return true se todos os atributos forem iguais
+     */
+    @Override
     public boolean equals (Object obj)
     {
         if (this == obj)
@@ -101,7 +137,12 @@ public class RespostaDeCarencia extends Comunicado
         return true;
     }
 
-    // Gera o codigo hash
+    /**
+     * Gera o codigo hash da resposta.
+     *
+     * @return o codigo hash
+     */
+    @Override
     public int hashCode ()
     {
         int ret = 1;
@@ -116,21 +157,6 @@ public class RespostaDeCarencia extends Comunicado
 
         if (ret < 0)
             ret = -ret;
-
-        return ret;
-    }
-
-    // Clona a resposta
-    public Object clone ()
-    {
-        RespostaDeCarencia ret = null;
-
-        try
-        {
-            ret = new RespostaDeCarencia (this);
-        }
-        catch (Exception erro)
-        {}
 
         return ret;
     }

@@ -2,14 +2,28 @@
 
 import java.time.LocalDate;
 
-// Representa o pedido de consulta enviado pelo cliente
+/**
+ * Representa o pedido de consulta de carencia enviado pelo cliente.
+ *
+ * @author Ana Júlia Conceição da Silva
+ * @since 2026
+ */
 public class PedidoDeCarencia extends Comunicado
 {
+    private static final long serialVersionUID = 1L;
+
     private String    produto;
     private String    cultura;
     private LocalDate dataDaAplicacao;
 
-    // Construtor com parametros
+    /**
+     * Cria um novo pedido de consulta de carencia.
+     *
+     * @param produto         nome do defensivo agricola
+     * @param cultura         cultura agricola onde foi aplicado
+     * @param dataDaAplicacao data em que o produto foi aplicado
+     * @throws Exception      se algum parametro for nulo ou vazio
+     */
     public PedidoDeCarencia (String produto, String cultura, LocalDate dataDaAplicacao) throws Exception
     {
         if (produto == null || produto.trim ().isEmpty ())
@@ -26,42 +40,54 @@ public class PedidoDeCarencia extends Comunicado
         this.dataDaAplicacao = dataDaAplicacao;
     }
 
-    // Construtor de copia
-    public PedidoDeCarencia (PedidoDeCarencia modelo) throws Exception
-    {
-        if (modelo == null)
-            throw new Exception ("Modelo ausente");
-
-        this.produto         = modelo.produto;
-        this.cultura         = modelo.cultura;
-        this.dataDaAplicacao = modelo.dataDaAplicacao;
-    }
-
-    // Devolve o nome do produto
+    /**
+     * Devolve o nome do produto.
+     *
+     * @return nome do produto
+     */
     public String getProduto ()
     {
         return this.produto;
     }
 
-    // Devolve o nome da cultura
+    /**
+     * Devolve o nome da cultura.
+     *
+     * @return nome da cultura
+     */
     public String getCultura ()
     {
         return this.cultura;
     }
 
-    // Devolve a data da aplicacao
+    /**
+     * Devolve a data da aplicacao.
+     *
+     * @return data da aplicacao
+     */
     public LocalDate getDataDaAplicacao ()
     {
         return this.dataDaAplicacao;
     }
 
-    // Representacao textual do pedido
+    /**
+     * Representacao textual do pedido.
+     *
+     * @return texto descrevendo o pedido
+     */
+    @Override
     public String toString ()
     {
         return "Pedido: " + this.produto + " em " + this.cultura + " aplicado em " + this.dataDaAplicacao;
     }
 
-    // Compara dois pedidos
+    /**
+     * Compara dois pedidos de carencia.
+     *
+     * @param obj objeto a comparar
+     * @return true se os dados forem iguais
+     */
+    @Override
     public boolean equals (Object obj)
     {
         if (this == obj)
@@ -87,7 +113,12 @@ public class PedidoDeCarencia extends Comunicado
         return true;
     }
 
-    // Gera o codigo hash
+    /**
+     * Gera o codigo hash do pedido.
+     *
+     * @return o codigo hash
+     */
+    @Override
     public int hashCode ()
     {
         int ret = 1;
@@ -98,21 +129,6 @@ public class PedidoDeCarencia extends Comunicado
 
         if (ret < 0)
             ret = -ret;
-
-        return ret;
-    }
-
-    // Clona o pedido
-    public Object clone ()
-    {
-        PedidoDeCarencia ret = null;
-
-        try
-        {
-            ret = new PedidoDeCarencia (this);
-        }
-        catch (Exception erro)
-        {}
 
         return ret;
     }

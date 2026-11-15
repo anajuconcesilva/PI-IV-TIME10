@@ -4,6 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Representa um parceiro de comunicação via socket.
+ *
+ * @author Ana Júlia Conceição da Silva
+ * @since 2026
+ */
 public class Parceiro extends Thread
 {
     private Socket             conexao;
@@ -11,8 +17,10 @@ public class Parceiro extends Thread
     private ObjectOutputStream transmissor;
 
     private Comunicado         proximoComunicado = null;
-    private Semaphore          mutEx = new Semaphore (1, true);
-    private Semaphore          ent   = new Semaphore (0, true);
+    private boolean            desconectado      = false;
+    private Semaphore          mutEx            = new Semaphore (1, true);
+    private Semaphore          ent              = new Semaphore (0, true);
+    private Semaphore          mutExTransmissao = new Semaphore (1, true);
 
     /**
      * Constrói o parceiro de comunicação.
@@ -54,67 +62,110 @@ public class Parceiro extends Thread
         if (x == null)
             throw new Exception ("Comunicado nulo");
 
+        boolean adquiriuTransmissao = false;
+
         try
         {
+            this.mutExTransmissao.acquire ();
+            adquiriuTransmissao = true;
+
             this.transmissor.writeObject (x);
             this.transmissor.flush ();
+        }
+        catch (InterruptedException erro)
+        {
+            Thread.currentThread ().interrupt ();
+            throw new Exception ("Envio interrompido");
         }
         catch (IOException erro)
         {
             throw new Exception ("Erro de transmissao");
+        }
+        finally
+        {
+            if (adquiriuTransmissao)
+                this.mutExTransmissao.release ();
         }
     }
 
     /**
      * Olha a próxima mensagem na fila sem a consumir.
      * 
-     * @return            o próximo comunicado
+     * @return            o próximo comunicado ou null se a conexão caiu
      * @throws Exception  se a thread for interrompida
      */
     public Comunicado espie () throws Exception
     {
+        boolean adquiriuEnt   = false;
+        boolean adquiriuMutEx = false;
+
         try
         {
             this.ent.acquire ();
+            adquiriuEnt = true;
+
             this.mutEx.acquire ();
+            adquiriuMutEx = true;
+
+            if (this.proximoComunicado == null && this.desconectado)
+                return null;
 
             return this.proximoComunicado;
         }
-        catch (Exception erro)
+        catch (InterruptedException erro)
         {
+            Thread.currentThread ().interrupt ();
             throw new Exception ("Erro ao espiar");
         }
         finally
         {
-            this.mutEx.release ();
-            this.ent.release ();
+            if (adquiriuMutEx)
+                this.mutEx.release ();
+
+            if (adquiriuEnt)
+                this.ent.release ();
         }
     }
 
     /**
      * Entrega e consome a próxima mensagem da fila.
      * 
-     * @return            a mensagem consumida
+     * @return            a mensagem consumida ou null se a conexão caiu
      * @throws Exception  se a thread for interrompida
      */
     public Comunicado envie () throws Exception
     {
+        boolean adquiriuEnt   = false;
+        boolean adquiriuMutEx = false;
+
         try
         {
             this.ent.acquire ();
+            adquiriuEnt = true;
+
             this.mutEx.acquire ();
+            adquiriuMutEx = true;
+
+            if (this.proximoComunicado == null && this.desconectado)
+                return null;
 
             Comunicado ret = this.proximoComunicado;
             this.proximoComunicado = null;
+            adquiriuEnt = false;
             return ret;
         }
-        catch (Exception erro)
+        catch (InterruptedException erro)
         {
+            Thread.currentThread ().interrupt ();
             throw new Exception ("Erro ao consumir a mensagem");
         }
         finally
         {
-            this.mutEx.release ();
+            if (adquiriuMutEx)
+                this.mutEx.release ();
+
+            if (adquiriuEnt)
+                this.ent.release ();
         }
     }
 
@@ -125,6 +176,17 @@ public class Parceiro extends Thread
      */
     public void adeus () throws Exception
     {
+        this.mutEx.acquireUninterruptibly ();
+        try
+        {
+            this.desconectado = true;
+            this.ent.release ();
+        }
+        finally
+        {
+            this.mutEx.release ();
+        }
+
         try
         {
             this.transmissor.close ();
@@ -137,7 +199,10 @@ public class Parceiro extends Thread
         }
     }
 
-    // Fica à escuta de novas mensagens no fluxo de entrada
+    /**
+     * Fica à escuta de novas mensagens no fluxo de entrada e acorda
+     * as threads em espera caso a conexão caia.
+     */
     public void run ()
     {
         try
@@ -145,6 +210,9 @@ public class Parceiro extends Thread
             for (;;)
             {
                 Comunicado comunicado = (Comunicado) this.receptor.readObject ();
+
+                if (comunicado == null)
+                    throw new IOException ("Fim do fluxo");
 
                 this.mutEx.acquire ();
                 this.proximoComunicado = comunicado;
@@ -155,29 +223,49 @@ public class Parceiro extends Thread
         }
         catch (Exception erro)
         {
-            // Thread termina em caso de quebra de conexão
+            this.mutEx.acquireUninterruptibly ();
+            this.desconectado = true;
+            this.mutEx.release ();
+
+            this.ent.release ();
         }
     }
 
+    /**
+     * Retorna a representação textual da conexão do parceiro.
+     * 
+     * @return texto identificando o endereço remoto do parceiro
+     */
     public String toString ()
     {
-        return "Parceiro da conexao " + this.conexao.getRemoteSocketAddress();
+        return "Parceiro da conexao " + this.conexao.getRemoteSocketAddress ();
     }
 
+    /**
+     * Compara este parceiro com outro objeto pela conexão.
+     * 
+     * @param obj objeto a ser comparado
+     * @return    true se ambos possuírem a mesma conexão
+     */
     public boolean equals (Object obj)
     {
         if (this == obj) return true;
         if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
+        if (this.getClass () != obj.getClass ()) return false;
 
         Parceiro parceiro = (Parceiro) obj;
-        return this.conexao.equals(parceiro.conexao);
+        return this.conexao.equals (parceiro.conexao);
     }
 
+    /**
+     * Calcula o código de hash do parceiro.
+     * 
+     * @return código de hash
+     */
     public int hashCode ()
     {
-        int ret = super.hashCode();
-        ret = 13 * ret + this.conexao.hashCode();
+        int ret = super.hashCode ();
+        ret = 13 * ret + this.conexao.hashCode ();
         return ret;
     }
 }
