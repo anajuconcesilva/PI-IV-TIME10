@@ -11,14 +11,19 @@ export interface ResultadoCarencia {
     mensagem: string;
 }
 
+// Localiza a raiz do projeto a partir da pasta deste service
+const PASTA_PROJETO = resolve(__dirname, '../../..');
+
+const PASTA_CLIENTE = resolve(PASTA_PROJETO, 'cliente');
 // Monta o caminho da pasta servidor
-const PASTA_SERVIDOR = resolve('../servidor');
+const PASTA_SERVIDOR = resolve(PASTA_PROJETO, 'servidor');
 
 // Define onde o java deve procurar as classes e bibliotecas
 const CLASSPATH =[
+    PASTA_CLIENTE,
     PASTA_SERVIDOR,
-    // Confirmar onde ficará o Gson e ajustar este caminho.
-    resolve(PASTA_SERVIDOR,'lib', '*')
+   // Inclui as bibliotecas .jar da pasta cliente/lib
+    resolve(PASTA_CLIENTE,'lib', '*')
 ].join(delimiter);
 
 // Consulta o servidor Java pela Ponte e retorna a autorização,
@@ -44,7 +49,7 @@ export function consultarCarencia(
             ['-cp', CLASSPATH, 'Ponte', 'localhost', '3001'],
             // configurações da execução
             {
-                cwd: PASTA_SERVIDOR,
+                cwd: PASTA_CLIENTE,
                 encoding: 'utf8',
                 timeout:15000,
                 windowsHide:true
