@@ -11,7 +11,7 @@ import java.util.*;
 public class Servidor
 {
     public static final String PORTA_PADRAO   = "3001";
-    public static final String ARQUIVO_PADRAO = "agrofit.csv";
+    public static final String ARQUIVO_PADRAO = "produtos_minhacolheita.csv";
 
     /**
      * Carrega as regras, abre a porta e espera o comando para desligar.
@@ -74,6 +74,9 @@ public class Servidor
             }
             catch (Exception erro)
             {}
+
+            if (comando == null)
+                return; // sem teclado, o servidor segue ativo
 
             if (comando.toLowerCase ().equals ("desativar"))
             {
