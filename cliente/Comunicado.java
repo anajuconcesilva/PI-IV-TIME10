@@ -12,4 +12,5 @@ import java.io.*;
  */
 public abstract class Comunicado implements Serializable, Cloneable
 {
+    private static final long serialVersionUID = 1L;
 }
