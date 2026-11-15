@@ -104,7 +104,8 @@ public class BaseDeRegras
 
     /**
      * Busca a regra de carência correspondente ao produto e cultura informados.
-     * Caso não exista regra específica para a cultura, busca pela regra genérica de "TODAS AS CULTURAS".
+     * Caso não exista regra específica para a cultura, busca pela regra genérica de "TODAS AS CULTURAS",
+     * desconsiderando registros de preenchimento técnico com carência igual a 1.
      *
      * @param produto nome ou código do produto
      * @param cultura nome da cultura
@@ -121,7 +122,12 @@ public class BaseDeRegras
 
         if (regra == null)
         {
-            regra = this.regras.get (this.criarChave (produto, "TODAS AS CULTURAS"));
+            Regra regraGenerica = this.regras.get (this.criarChave (produto, "TODAS AS CULTURAS"));
+
+            if (regraGenerica != null && regraGenerica.getDiasDeCarencia () != 1)
+            {
+                regra = regraGenerica;
+            }
         }
 
         return regra;
