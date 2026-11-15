@@ -139,6 +139,9 @@ public class Cliente
                     do
                     {
                         comunicado = servidor.espie ();
+
+                        if (comunicado == null)
+                            throw new Exception ("Conexao com o servidor perdida");
                     }
                     while (!(comunicado instanceof RespostaDeCarencia) &&
                            !(comunicado instanceof RespostaDeErro));
