@@ -28,4 +28,27 @@ public class ConsultaCarenciaIntegrationTest
                 () -> assertEquals("", resposta.getMensagem())
         );
     }
+
+    // Beatriz Naomi Ferreira Sasaki - 25016735
+    @Test
+    @DisplayName("CTI02 - Deve negar consulta de 2,4-D + Picloram em Soja (produto sem registro para a cultura)")
+    void deveNegarConsultaParaCulturaNaoAutorizadaNoFluxoCompleto() throws Exception
+    {
+        // O produto existe no CSV, mas so para Arroz (90 dias) e Cana-de-acucar (1 dia),
+        // e nao tem regra de "Todas as culturas". Para Soja, o uso nao e autorizado
+        BaseDeRegras baseDeRegras = new BaseDeRegras(Servidor.ARQUIVO_PADRAO);
+        PedidoDeCarencia pedido = new PedidoDeCarencia("2,4-D (240) + Picloram (64) SL", "Soja", LocalDate.of(2026, 11, 18));
+
+        assertNotNull(baseDeRegras.buscarRegra("2,4-D (240) + Picloram (64) SL", "Arroz"));
+        
+        RespostaDeCarencia resposta = baseDeRegras.consulte(pedido);
+
+        assertAll("Verificacao da resposta integrada da negação",
+            () -> assertNotNull(resposta),
+            () -> assertFalse(resposta.isAutorizado()),
+            () -> assertEquals(0, resposta.getDiasDeCarencia()),
+            () -> assertNull(resposta.getDataDeLiberacao()),
+            () -> assertEquals("Regra nao encontrada para o produto e cultura informados", resposta.getMensagem())
+        );
+    }
 }
