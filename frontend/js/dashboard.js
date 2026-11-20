@@ -90,15 +90,6 @@ function mostrarErro(elemento, mensagem) {
 function mostrarSaudacao() {
     const propriedade = lerPropriedadeConta();
     const agora = new Date();
-    const hora = agora.getHours();
-
-    let saudacao = 'Boa noite';
-
-    if (hora >= 5 && hora < 12) {
-        saudacao = 'Bom dia';
-    } else if (hora >= 12 && hora < 18) {
-        saudacao = 'Boa tarde';
-    }
 
     let data = agora.toLocaleDateString('pt-BR', {
         weekday: 'long',
@@ -113,9 +104,7 @@ function mostrarSaudacao() {
     const elementoData = document.getElementById('data-hoje');
 
     if (elementoSaudacao) {
-        elementoSaudacao.textContent = propriedade
-            ? `${saudacao}, ${propriedade.nome}`
-            : saudacao;
+        elementoSaudacao.textContent = propriedade ? propriedade.nome : '';
     }
 
     if (elementoData) {
