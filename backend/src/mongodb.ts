@@ -1,3 +1,4 @@
+// Aluna: Beatriz Naomi Ferreira Sasaki | RA: 25016735
 import { env } from './config/env';
 import { MongoClient } from 'mongodb';
 

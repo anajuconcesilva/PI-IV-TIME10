@@ -1,3 +1,5 @@
+// Aluna: Marília Sara Pereira dos Santos | RA: 25014905
+// Aluna: Beatriz Naomi Ferreira Sasaki | RA: 25016735
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

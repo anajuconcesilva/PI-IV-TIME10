@@ -1,3 +1,4 @@
+// Aluna: Eduarda Prado Deiró | RA: 25004440
 import dotenv from 'dotenv';
 
 dotenv.config({ quiet: true });
