@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { obterBanco } from '../mongodb';
 import { ErroApi } from '../utils/erroApi';
 import { todasExistem } from './culturaService';
-import { validarMunicipio, validarSenha } from '../validators/validacoes';
+import { validarCNPJ, validarMunicipio, validarSenha } from '../validators/validacoes';
 import { DadosPropriedade, formatarPropriedade, montarPropriedade, validarPropriedade } from './propriedadeService';
 
 export interface DadosCadastro {
@@ -44,6 +44,9 @@ function dadosDaPropriedade(dados: DadosCadastro): DadosPropriedade {
 function validar(dados: DadosCadastro) {
   if (somenteNumeros(dados.cnpj).length !== 14) {
     throw new ErroApi(400, 'O CNPJ deve ter 14 números');
+  }
+  if (!validarCNPJ(texto(dados.cnpj))) {
+    throw new ErroApi(400, 'CNPJ inválido');
   }
 
   if (somenteNumeros(dados.celular).length !== 11) {
