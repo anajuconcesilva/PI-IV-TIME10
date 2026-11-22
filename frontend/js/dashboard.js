@@ -142,11 +142,6 @@ function mostrarResumo() {
             detalhe: `${encerrando} liberações nesta semana`
         },
         {
-            status: 'bloqueado',
-            nome: 'Bloqueados',
-            detalhe: 'Exige regularização'
-        },
-        {
             status: 'aguardando',
             nome: 'Aguardando',
             detalhe: 'Sem aplicação ativa'

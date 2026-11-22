@@ -216,10 +216,10 @@
   background-color: #CFD93A;
 }
 
-/* Os quatro números: liberados, em carência, bloqueados, aguardando */
+/* Os três números: liberados, em carência, aguardando */
 .resumo {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
