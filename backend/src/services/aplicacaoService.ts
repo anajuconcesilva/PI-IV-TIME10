@@ -132,6 +132,10 @@ export async function criarAplicacao(propriedadeId: string,
 
     const dataAplicacao = converterData(dados.dataAplicacao);
 
+    if(dados.dataAplicacao > new Date().toLocaleDateString('en-CA')){
+        throw new ErroApi(400, 'A data da aplicação não pode ser futura');
+    }
+
     const resultadoCarencia = await consultarCarencia(
         produto.marca,
         cultura.nome, 
