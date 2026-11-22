@@ -5,6 +5,7 @@ import { randomInt } from 'crypto';
 import { obterBanco } from '../mongodb';
 import { ErroApi } from '../utils/erroApi';
 import { enviarEmail } from './emailService';
+import { validarSenha } from '../validators/validacoes';
 
 const VALIDADE_MINUTOS = 20;
 const MAX_TENTATIVAS = 5;
@@ -58,9 +59,8 @@ export async function redefinirSenha(email: unknown, codigo: unknown, novaSenha:
   if (typeof codigo !== 'string' || !/^\d{6}$/.test(codigo.trim())) {
     throw new ErroApi(400, 'Informe o código de 6 números');
   }
-  // mesma regra do cadastro; troque pelo validador de senha do projeto, se houver
-  if (typeof novaSenha !== 'string' || novaSenha.length < 6) {
-    throw new ErroApi(400, 'A senha precisa ter pelo menos 6 caracteres');
+  if (typeof novaSenha !== 'string' || !validarSenha(novaSenha)) {
+    throw new ErroApi(400, 'A senha precisa ter pelo menos 6 caracteres, com letra maiúscula, minúscula e número');
   }
 
   const banco = obterBanco();
