@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../css/comumTalhao.css">
     <link rel="stylesheet" href="../css/cadastroTalhao.css">
     <!-- Link para Javascript-->
+    <script src="../js/api.js" defer></script>
     <script src="../js/comumTalhao.js" defer></script>
     <script src="../js/cadastroTalhao.js" defer></script>
 </head>
@@ -61,10 +62,10 @@
 
       <div class="menu-rodape">
         <div class="menu-usuario">
-          <span class="menu-iniciais" id="usuario-iniciais">JC</span>
+          <span class="menu-iniciais" id="usuario-iniciais"></span>
           <div>
-            <strong id="usuario-nome">João Carlos</strong>
-            <span id="usuario-propriedade" class="propriedade">Fazenda São Luís</span>
+            <strong id="usuario-nome"></strong>
+            <span id="usuario-propriedade" class="propriedade"></span>
           </div>
         </div>
 
@@ -98,13 +99,15 @@
                     <label class="campo">
                         Cultura
                         <span class="obrigatorio">*</span>
-                        <input name ="cultura" required placeholder="Ex: Milho, Soja, Algodão">
+                        <select name="cultura" required>
+                            <option value="">Selecione a cultura</option>
+                        </select>
                     </label>
                     <!--Área do talhão-->
                     <label class="campo">
                         Área (hectares)
                         <span class="obrigatorio">*</span>
-                        <input name="area" type="number" min="0.0" step="1" required placeholder="Ex: 10, 50, 100">
+                        <input name="area" type="number" min="0.1" step="0.1" required placeholder="Ex: 10, 50, 100">
                         <span id="area-texto" class="area-texto">Área total do talhão em hectares.</span>
                     </label>
                 
@@ -122,6 +125,11 @@
                             <input name="dataInicio" type="date" required placeholder=" Ex:MM/DD/AAAA">
                         </label>
                     </div>
+                    <label class="campo">
+                        Previsão de colheita
+                        <span class="obrigatorio">*</span>
+                        <input name="previsaoColheita" type="date" required>
+                    </label>
                     <!--Observações-->
                    <label class="campo">
                         Observações (opcional)
@@ -141,7 +149,7 @@
             </section>
             <!-- Resumo sobre área da propriedade -->
             <aside class="resumo">
-                    <h1 id="nome-propriedade">Fazenda São Luís</h1>
+                    <h1 id="nome-propriedade"></h1>
                     <section class="painel">
                     <h2 class="titulo-painel">Área utilizada</h2>
                     <div class="medida-area"  aria-label="Proporção da área utilizada">
@@ -186,5 +194,6 @@
         <button class="botao salvar" id="fechar-alerta-sucesso" type="button" autofocus>Continuar</button>
       </div>
     </dialog>
+  <script src="../js/conta.js"></script>
 </body>
 </html>

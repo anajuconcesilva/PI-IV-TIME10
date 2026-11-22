@@ -1,0 +1,91 @@
+/* Aluna: Eduarda Prado Deiró | RA: 25004440 */
+/* Estilos exclusivos da página Minha conta */
+
+.conta-secao {
+  margin: 18px 0 10px;
+  padding-bottom: 6px;
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cor-marinho);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.conta-secao:first-child {
+  margin-top: 0;
+}
+
+.conta-culturas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.conta-culturas:empty {
+  display: none;
+}
+
+.conta-cultura {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cor-marinho);
+  background-color: #EEF1E4;
+  border: 1px solid #DDE3C9;
+  border-radius: 999px;
+}
+
+.conta-cultura button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--cor-marinho);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.conta-cultura button:hover {
+  background-color: rgba(0, 33, 62, 0.12);
+}
+
+.conta-cultura-em-uso {
+  background-color: #E4EEF5;
+  border-color: #CFE0EC;
+}
+
+.conta-busca {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.conta-busca .botao {
+  height: 35px;
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+.conta-dica {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--cor-texto-suave);
+}
+
+.conta-dica:empty {
+  display: none;
+}
+
+.aplicacao-formulario .mensagem-erro {
+  margin: 0 0 10px;
+}

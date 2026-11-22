@@ -6,15 +6,25 @@ const bolinhas = document.querySelectorAll(".passo-bolinha");
 const linhas = document.querySelectorAll(".passo-linha");
 const botoesVoltar = document.querySelectorAll(".botao-voltar");
 
-const campoDocumento = document.getElementById("documento");
+const campoCnpj = document.getElementById("cnpj");
 const campoCelular = document.getElementById("celular");
+const campoTipoRegistro = document.getElementById("tipo-registro");
+const campoRegistro = document.getElementById("registro");
+const campoMunicipio = document.getElementById("municipio");
+const campoUf = document.getElementById("uf");
+const listaMunicipios = document.getElementById("lista-municipios");
 const campoSenha = document.getElementById("senha");
 const campoConfirmar = document.getElementById("confirmar-senha");
 
 const listaCulturas = document.getElementById("lista-culturas");
-const campoOutraCultura = document.getElementById("outra-cultura");
+const campoBuscaCultura = document.getElementById("busca-cultura");
+const sugestoesCulturas = document.getElementById("sugestoes-culturas");
 const botaoAdicionar = document.getElementById("botao-adicionar");
 const erroCulturas = document.getElementById("erro-culturas");
+const erroServidor = document.getElementById("erro-servidor");
+
+let culturasDisponiveis = [];
+let municipiosDaUf = [];
 
 // Começa no passo 1 (posição 0)
 let etapaAtual = 0;
@@ -65,20 +75,15 @@ function aplicarMascara(numeros, molde) {
   return resultado;
 }
 
-// CPF tem 11 números e CNPJ tem 14
-campoDocumento.addEventListener("input", function () {
-  const numeros = campoDocumento.value.replace(/\D/g, "").slice(0, 14);
+// CNPJ tem 14 números
+campoCnpj.addEventListener("input", function () {
+  const numeros = campoCnpj.value.replace(/\D/g, "").slice(0, 14);
+  campoCnpj.value = aplicarMascara(numeros, "00.000.000/0000-00");
 
-  if (numeros.length <= 11) {
-    campoDocumento.value = aplicarMascara(numeros, "000.000.000-00");
+  if (numeros.length === 14) {
+    campoCnpj.setCustomValidity("");
   } else {
-    campoDocumento.value = aplicarMascara(numeros, "00.000.000/0000-00");
-  }
-
-  if (numeros.length === 11 || numeros.length === 14) {
-    campoDocumento.setCustomValidity("");
-  } else {
-    campoDocumento.setCustomValidity("Digite um CPF (11 números) ou um CNPJ (14 números).");
+    campoCnpj.setCustomValidity("Digite os 14 números do CNPJ.");
   }
 });
 
@@ -94,6 +99,95 @@ campoCelular.addEventListener("input", function () {
   }
 });
 
+const FORMATOS_REGISTRO = {
+  CAR: {
+    regex: /^[A-Z]{2}-\d{7}-([A-F0-9]{32}|[A-F0-9]{4}(\.[A-F0-9]{4}){7})$/,
+    exemplo: "SP-3550308-1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D",
+    mensagem: "Digite o CAR no formato UF-0000000-código, como em SP-3550308-1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D.",
+  },
+  DAP: {
+    regex: /^(?=.*[A-Z])(?=.*\d)[A-Z0-9.-]{8,30}$/,
+    exemplo: "SDT12345678901234",
+    mensagem: "Digite o número da DAP, com letras e números (de 8 a 30 caracteres).",
+  },
+  CAF: {
+    regex: /^(?=.*[A-Z])(?=.*\d)[A-Z0-9.-]{8,30}$/,
+    exemplo: "CAF12345678901234",
+    mensagem: "Digite o número do CAF, com letras e números (de 8 a 30 caracteres).",
+  },
+};
+
+function conferirRegistro() {
+  const formato = FORMATOS_REGISTRO[campoTipoRegistro.value];
+  const texto = campoRegistro.value.toUpperCase().replace(/[^A-Z0-9.-]/g, "").slice(0, 50);
+  campoRegistro.value = texto;
+  campoRegistro.placeholder = formato.exemplo;
+
+  if (formato.regex.test(texto)) {
+    campoRegistro.setCustomValidity("");
+  } else {
+    campoRegistro.setCustomValidity(formato.mensagem);
+  }
+}
+
+campoRegistro.addEventListener("input", conferirRegistro);
+campoTipoRegistro.addEventListener("change", conferirRegistro);
+conferirRegistro();
+
+function conferirRegrasSenha() {
+  const senha = campoSenha.value;
+
+  if (senha.length < 6 || !/[A-Z]/.test(senha) || !/[a-z]/.test(senha) || !/[0-9]/.test(senha)) {
+    campoSenha.setCustomValidity("A senha precisa ter 6 caracteres ou mais, com letra maiúscula, minúscula e número.");
+  } else {
+    campoSenha.setCustomValidity("");
+  }
+}
+
+function conferirMunicipio() {
+  const nome = campoMunicipio.value.trim().toLocaleLowerCase("pt-BR");
+  let encontrado = municipiosDaUf.length === 0;
+
+  for (let i = 0; i < municipiosDaUf.length; i++) {
+    if (municipiosDaUf[i].toLocaleLowerCase("pt-BR") === nome) {
+      encontrado = true;
+    }
+  }
+
+  if (encontrado) {
+    campoMunicipio.setCustomValidity("");
+  } else {
+    campoMunicipio.setCustomValidity("Escolha um município de " + campoUf.value + " na lista.");
+  }
+}
+
+async function carregarMunicipios() {
+  municipiosDaUf = [];
+  listaMunicipios.innerHTML = "";
+
+  if (campoUf.value !== "") {
+    try {
+      const resposta = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados/" + campoUf.value + "/municipios");
+      const municipios = await resposta.json();
+
+      for (let i = 0; i < municipios.length; i++) {
+        municipiosDaUf.push(municipios[i].nome);
+
+        const opcao = document.createElement("option");
+        opcao.value = municipios[i].nome;
+        listaMunicipios.appendChild(opcao);
+      }
+    } catch (erro) {
+      municipiosDaUf = [];
+    }
+  }
+
+  conferirMunicipio();
+}
+
+campoUf.addEventListener("change", carregarMunicipios);
+campoMunicipio.addEventListener("input", conferirMunicipio);
+
 function conferirSenhas() {
   if (campoSenha.value === campoConfirmar.value) {
     campoConfirmar.setCustomValidity("");
@@ -102,6 +196,7 @@ function conferirSenhas() {
   }
 }
 
+campoSenha.addEventListener("input", conferirRegrasSenha);
 campoSenha.addEventListener("input", conferirSenhas);
 campoConfirmar.addEventListener("input", conferirSenhas);
 
@@ -111,27 +206,86 @@ for (let i = 0; i < botoesVoltar.length; i++) {
   });
 }
 
-// Cria uma cultura nova na lista, já marcada
-botaoAdicionar.addEventListener("click", function () {
-  const nome = campoOutraCultura.value.trim();
-  if (nome === "") {
+function mostrarErroCulturas(mensagem) {
+  erroCulturas.textContent = mensagem;
+  erroCulturas.hidden = false;
+}
+
+function textoProdutos(quantidade) {
+  if (quantidade === 1) {
+    return "1 produto autorizado";
+  }
+  return quantidade.toLocaleString("pt-BR") + " produtos autorizados";
+}
+
+function culturaDePlantio(cultura) {
+  return !/^(todas as culturas|tratamento de solo)$|armazenad/i.test(cultura.nome);
+}
+
+async function carregarCulturas() {
+  try {
+    const resposta = await fetch(API_URL + "/culturas");
+    const todas = await resposta.json();
+    culturasDisponiveis = todas.filter(culturaDePlantio);
+  } catch (erro) {
+    mostrarErroCulturas("Não foi possível carregar as culturas. Confira se a API está rodando.");
+    return;
+  }
+
+  for (let i = 0; i < culturasDisponiveis.length; i++) {
+    const opcao = document.createElement("option");
+    opcao.value = culturasDisponiveis[i].nome;
+    opcao.label = textoProdutos(culturasDisponiveis[i].quantidadeProdutos);
+    sugestoesCulturas.appendChild(opcao);
+  }
+}
+
+function adicionarCultura() {
+  const digitado = campoBuscaCultura.value.trim().toLowerCase();
+  if (digitado === "") {
+    return;
+  }
+
+  let cultura = null;
+  for (let i = 0; i < culturasDisponiveis.length; i++) {
+    if (culturasDisponiveis[i].nome.toLowerCase() === digitado) {
+      cultura = culturasDisponiveis[i];
+    }
+  }
+
+  if (cultura === null) {
+    mostrarErroCulturas("Escolha uma cultura da lista.");
+    return;
+  }
+
+  campoBuscaCultura.value = "";
+  erroCulturas.hidden = true;
+
+  if (listaCulturas.querySelector('input[value="' + cultura.nome + '"]')) {
     return;
   }
 
   const caixa = document.createElement("input");
   caixa.type = "checkbox";
   caixa.name = "culturas";
-  caixa.value = nome;
+  caixa.value = cultura.nome;
   caixa.checked = true;
 
   const item = document.createElement("label");
   item.className = "cultura";
   item.appendChild(caixa);
-  item.appendChild(document.createTextNode(" " + nome));
+  item.appendChild(document.createTextNode(" " + cultura.nome + " · " + textoProdutos(cultura.quantidadeProdutos)));
 
   listaCulturas.appendChild(item);
-  campoOutraCultura.value = "";
-  erroCulturas.hidden = true;
+}
+
+botaoAdicionar.addEventListener("click", adicionarCultura);
+
+campoBuscaCultura.addEventListener("keydown", function (evento) {
+  if (evento.key === "Enter") {
+    evento.preventDefault();
+    adicionarCultura();
+  }
 });
 
 listaCulturas.addEventListener("change", function () {
@@ -155,10 +309,58 @@ formCadastro.addEventListener("submit", function (evento) {
   }
 
   if (!temCulturaMarcada()) {
-    erroCulturas.hidden = false;
+    mostrarErroCulturas("Marque pelo menos uma cultura.");
     return;
   }
 
-  // Ainda não salva a conta no servidor: só abre o dashboard
-  window.location.href = "dashboard.html";
+  enviarCadastro();
 });
+
+function mostrarErroServidor(mensagem) {
+  erroServidor.textContent = mensagem;
+  erroServidor.hidden = false;
+}
+
+async function enviarCadastro() {
+  erroServidor.hidden = true;
+
+  const culturas = [];
+  const marcadas = listaCulturas.querySelectorAll("input:checked");
+  for (let i = 0; i < marcadas.length; i++) {
+    culturas.push(marcadas[i].value);
+  }
+
+  const dados = {
+    cnpj: campoCnpj.value,
+    celular: campoCelular.value,
+    email: document.getElementById("email").value,
+    senha: campoSenha.value,
+    propriedade: document.getElementById("propriedade").value,
+    municipio: document.getElementById("municipio").value,
+    uf: document.getElementById("uf").value,
+    area: Number(document.getElementById("area").value),
+    tipoRegistro: campoTipoRegistro.value,
+    registro: document.getElementById("registro").value,
+    culturas: culturas,
+  };
+
+  try {
+    const resposta = await fetch(API_URL + "/cadastro", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados),
+    });
+    const corpo = await resposta.json();
+
+    if (!resposta.ok) {
+      mostrarErroServidor(corpo.erro);
+      return;
+    }
+
+    window.location.href = "login.html";
+  } catch (erro) {
+    mostrarErroServidor("Não foi possível falar com o servidor. Confira se a API está rodando.");
+  }
+}
+
+carregarCulturas();

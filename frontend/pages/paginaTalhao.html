@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../css/comumTalhao.css">
     <link rel="stylesheet" href="../css/paginaTalhao.css">
     <!--Link para o JavaScript-->
+    <script src="../js/api.js" defer></script>
     <script src="../js/comumTalhao.js" defer></script>
     <script src="../js/paginaTalhao.js" defer></script>
 </head>
@@ -61,10 +62,10 @@
 
       <div class="menu-rodape">
         <div class="menu-usuario">
-          <span class="menu-iniciais" id="usuario-iniciais">JC</span>
+          <span class="menu-iniciais" id="usuario-iniciais"></span>
           <div>
-            <strong id="usuario-nome">João Carlos</strong>
-            <span id="usuario-propriedade" class="propriedade">Fazenda São Luís</span>
+            <strong id="usuario-nome"></strong>
+            <span id="usuario-propriedade" class="propriedade"></span>
           </div>
         </div>
 
@@ -186,6 +187,8 @@
                         Confirme a colheita para atualizar o histórico de conformidade.
                     </p>
 
+                    <input id="quantidade-colheita" type="number" min="0" step="any" placeholder="Quantidade colhida (kg)">
+
                     <button class="botao salvar" id="registrar-colheita" type="button">
                         Registrar colheita
                     </button>
@@ -230,5 +233,6 @@
         </div>
 
     </dialog>
+  <script src="../js/conta.js"></script>
 </body>
 </html>

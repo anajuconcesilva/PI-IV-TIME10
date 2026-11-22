@@ -122,6 +122,7 @@
   align-items: center;
   gap: 12px;
   padding: 0 8px 8px;
+  cursor: pointer;
 }
 
 .menu-iniciais {
@@ -145,6 +146,10 @@
 .menu-usuario span {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.60);
+}
+
+.menu-usuario .menu-iniciais {
+  color: var(--cor-branco);
 }
 
 .menu-sair {

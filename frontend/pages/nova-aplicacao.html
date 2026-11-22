@@ -101,11 +101,11 @@
       <div class="menu-rodape">
 
         <div class="menu-usuario">
-          <div class="menu-iniciais">JC</div>
+          <div class="menu-iniciais"></div>
 
           <div>
-            <strong>João Carlos</strong>
-            <span>Fazenda São Luís</span>
+            <strong></strong>
+            <span></span>
           </div>
         </div>
 
@@ -124,14 +124,6 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="conteudo aplicacao-conteudo">
 
-      <a href="../dashboard.html" class="aplicacao-voltar">
-        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M19 12H5"/>
-          <path d="m12 19-7-7 7-7"/>
-        </svg>
-        Voltar
-      </a>
-
       <!-- CABEÇALHO -->
       <header class="aplicacao-cabecalho">
         <h1>Registrar aplicação</h1>
@@ -145,17 +137,18 @@
       <!-- FORMULÁRIO -->
       <form id="form-aplicacao" class="aplicacao-formulario">
 
+        <!-- TALHÃO -->
         <div class="aplicacao-campo">
           <label for="talhao">
             Talhão <span class="obrigatorio">*</span>
           </label>
 
           <select id="talhao" name="talhao" required>
-            <option value="">Selecione o talhão</option>
-            <option value="A1">Talhão A1</option>
+            <option value="">Carregando talhões...</option>
           </select>
         </div>
 
+        <!-- PRODUTO -->
         <div class="aplicacao-campo">
           <label for="produto">
             Produto aplicado <span class="obrigatorio">*</span>
@@ -165,11 +158,16 @@
             type="text"
             id="produto"
             name="produto"
+            list="lista-produtos-aplicacao"
             placeholder="Buscar pelo nome do produto ou ingrediente ativo..."
+            autocomplete="off"
             required
           >
+
+          <datalist id="lista-produtos-aplicacao"></datalist>
         </div>
 
+        <!-- DOSE E UNIDADE -->
         <div class="aplicacao-linha">
 
           <div class="aplicacao-campo">
@@ -201,6 +199,7 @@
 
         </div>
 
+        <!-- DATA -->
         <div class="aplicacao-campo">
           <label for="data-aplicacao">
             Data de aplicação <span class="obrigatorio">*</span>
@@ -214,6 +213,7 @@
           >
         </div>
 
+        <!-- RESPONSÁVEL -->
         <div class="aplicacao-campo">
           <label for="responsavel">
             Responsável técnico (opcional)
@@ -227,6 +227,7 @@
           >
         </div>
 
+        <!-- OBSERVAÇÕES -->
         <div class="aplicacao-campo aplicacao-campo-observacoes">
           <label for="observacoes">
             Observações (opcional)
@@ -260,5 +261,17 @@
       </form>
     </main>
   </div>
+
+  <dialog class="alerta-modal" id="alerta-sucesso" aria-labelledby="titulo-alerta-sucesso">
+    <svg class="alerta-icone" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    <h2 id="titulo-alerta-sucesso">Aplicação registrada com sucesso!</h2>
+    <button class="botao botao-primario" id="fechar-alerta-sucesso" type="button" autofocus>Continuar</button>
+  </dialog>
+
+  <!-- SCRIPTS -->
+  <script src="../js/api.js"></script>
+  <script src="../js/conta.js"></script>
+  <script src="../js/nova-aplicacao.js"></script>
+
 </body>
 </html>
