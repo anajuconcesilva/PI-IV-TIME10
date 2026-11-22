@@ -89,9 +89,10 @@ Servidor Java (sockets, porta 3001)  ──►  CSV de regras de carência
 
 ### Pré-requisitos
 - [Node.js](https://nodejs.org/) 18 ou superior
-- [JDK](https://adoptium.net/) 11 ou superior (necessário para rodar os testes; o comando `java` precisa estar no PATH)
+- [JDK](https://adoptium.net/) 11 ou superior para compilar e rodar os testes (o comando `java` precisa estar no PATH)
 - [MongoDB](https://www.mongodb.com/) (local ou Atlas)
 - [Git](https://git-scm.com/)
+- Internet durante o uso: o cadastro valida o município na API do IBGE (sem ela, devolve erro 503) e, se o banco for o MongoDB Atlas, ele também precisa de conexão
 
 ### Passo a passo
 
@@ -130,12 +131,14 @@ A API sobe em `http://localhost:3000`.
 Em outro terminal, a partir da raiz do projeto:
 ```bash
 cd cliente
-javac -encoding UTF-8 -cp "lib/*" *.java
+javac --release 8 -encoding UTF-8 -cp "lib/*" *.java
 
 cd ../servidor
-javac -encoding UTF-8 *.java
+javac --release 8 -encoding UTF-8 *.java
 java Servidor
 ```
+
+Compile sempre com `--release 8`. Sem isso, se o `javac` for mais novo que o `java` do PATH (por exemplo, `javac` 17 e `java` 8), o servidor e a Ponte não iniciam e toda aplicação devolve erro 502.
 
 O servidor precisa ser iniciado de dentro da pasta `servidor/`, pois lê o arquivo `produtos_minhacolheita.csv` dessa pasta. Ele escuta na porta `3001`. Para outra porta ou outro CSV: `java Servidor [PORTA [CAMINHO_DO_CSV]]`.
 
@@ -151,7 +154,7 @@ javac -encoding UTF-8 -d ../teste-out -cp lib/junit-platform-console-standalone-
 java -jar lib/junit-platform-console-standalone-1.10.2.jar execute -cp ../teste-out -c RegraTest -c BaseDeRegrasTest -c ConsultaCarenciaIntegrationTest
 ```
 
-Os testes exigem Java 11 ou superior. Para limpar, apague a pasta `teste-out`.
+Os testes exigem Java 11 ou superior: confira com `java -version` antes (se mostrar 1.8, use o `java` do JDK 11 ou superior). Para limpar, apague a pasta `teste-out`.
 
 ---
 
