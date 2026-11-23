@@ -14,7 +14,6 @@ const opcoesClasses = new Map();
 
 const POR_PAGINA = 20;
 let paginaAtual = 1;
-let exibidos = 0;
 let temporizador = null;
 let controladorAtual = null;
 
@@ -42,15 +41,11 @@ const btnTodasClasses = document.getElementById('btn-todas-classes');
 const inputClasse = document.getElementById('input-classe');
 const datalistClasses = document.getElementById('bd-classes');
 
-// Botão "Carregar mais" (criado por JS, logo abaixo da lista)
-const areaMais = document.createElement('div');
-areaMais.style.cssText = 'text-align: center; margin: 1.25rem 0;';
-const btnMais = document.createElement('button');
-btnMais.className = 'pill';
-btnMais.textContent = 'Carregar mais';
-btnMais.style.display = 'none';
-areaMais.appendChild(btnMais);
-listaProdutos.insertAdjacentElement('afterend', areaMais);
+// Navegação por páginas numeradas (logo abaixo da lista)
+const navegacao = document.createElement('nav');
+navegacao.className = 'paginacao';
+navegacao.setAttribute('aria-label', 'Páginas de produtos');
+listaProdutos.insertAdjacentElement('afterend', navegacao);
 
 // 3. Utilitários
 function escaparHtml(valor) {
@@ -75,21 +70,79 @@ function montarCards(produtos) {
           <div class="tags-cultura">${tagsHTML}</div>
         </div>
         <div class="produto-carencia">
-          <span>${escaparHtml(produto.carenciaDias || 0)}</span>
-          <small>dias carência</small>
+          ${!Number.isInteger(produto.carenciaDias)
+            ? '<span>—</span><small>carência indisponível</small>'
+            : produto.carenciaDias === 0
+              ? '<span>0</span><small>dias · sem intervalo de segurança</small>'
+              : `<span>${produto.carenciaDias}</span><small>${produto.carenciaDias === 1 ? 'dia' : 'dias'} carência</small>`}
         </div>
       </div>
     `;
   }).join('');
 }
 
-// anexar = false: nova busca (volta à página 1) | anexar = true: "Carregar mais"
-async function buscarProdutosNaApi(anexar = false) {
+function numerosDaPagina(atual, totalPaginas) {
+  const janela = 10;
+  const inicio = Math.max(1, Math.min(atual - 4, totalPaginas - janela + 1));
+  const fim = Math.min(totalPaginas, inicio + janela - 1);
+  const saida = [];
+
+  for (let n = inicio; n <= fim; n++) saida.push(n);
+
+  return saida;
+}
+
+function mostrarNavegacao(total) {
+  const totalPaginas = Math.ceil(total / POR_PAGINA);
+
+  if (totalPaginas <= 1) {
+    navegacao.innerHTML = '';
+    return;
+  }
+
+  const botao = (rotulo, pagina, { ativo = false, desabilitado = false, rotuloAcessivel = '' } = {}) => `
+    <button type="button" class="pill${ativo ? ' ativo' : ''}" data-pagina="${pagina}"
+      ${desabilitado ? 'disabled' : ''} ${ativo ? 'aria-current="page"' : ''}
+      ${rotuloAcessivel ? `aria-label="${rotuloAcessivel}"` : ''}>${rotulo}</button>`;
+
+  const numeros = numerosDaPagina(paginaAtual, totalPaginas)
+    .map(n => botao(n, n, { ativo: n === paginaAtual, rotuloAcessivel: `Página ${n}` }))
+    .join('');
+
+  navegacao.innerHTML = `
+    ${botao('« Primeira', 1, { desabilitado: paginaAtual === 1 })}
+    ${botao('‹ Anterior', paginaAtual - 1, { desabilitado: paginaAtual === 1 })}
+    ${numeros}
+    ${botao('Próxima ›', paginaAtual + 1, { desabilitado: paginaAtual === totalPaginas })}
+    ${botao('Última »', totalPaginas, { desabilitado: paginaAtual === totalPaginas })}
+    <label class="paginacao-ir">
+      Ir para
+      <input type="number" min="1" max="${totalPaginas}" inputmode="numeric"
+        placeholder="${paginaAtual}" aria-label="Número da página">
+      de ${totalPaginas}
+    </label>`;
+}
+
+navegacao.addEventListener('click', evento => {
+  const botao = evento.target.closest('button[data-pagina]');
+  if (!botao || botao.disabled) return;
+
+  buscarProdutosNaApi(Number(botao.dataset.pagina), true);
+});
+
+navegacao.addEventListener('keydown', evento => {
+  if (evento.key !== 'Enter' || !evento.target.matches('.paginacao-ir input')) return;
+
+  const campo = evento.target;
+  const pagina = Math.min(Math.max(parseInt(campo.value, 10) || 1, 1), Number(campo.max));
+  buscarProdutosNaApi(pagina, true);
+});
+
+// pagina: página pedida (1 = nova busca) | rolar: volta ao topo da lista ao trocar de página
+async function buscarProdutosNaApi(pagina = 1, rolar = false) {
   if (controladorAtual) controladorAtual.abort();
   controladorAtual = new AbortController();
   const { signal } = controladorAtual;
-
-  const pagina = anexar === true ? paginaAtual + 1 : 1;
 
   const params = new URLSearchParams();
   const termo = inputBusca.value.trim();
@@ -108,8 +161,7 @@ async function buscarProdutosNaApi(anexar = false) {
   params.append('pagina', pagina);
   params.append('limite', POR_PAGINA);
 
-  btnMais.disabled = true;
-  btnMais.textContent = 'Carregando...';
+  listaProdutos.style.opacity = '0.5';
 
   try {
     const resposta = await fetch(`${API}/produtos?${params.toString()}`, { signal });
@@ -117,48 +169,42 @@ async function buscarProdutosNaApi(anexar = false) {
     const dados = await resposta.json();
     const itens = Array.isArray(dados.itens) ? dados.itens : [];
     const total = Number(dados.total) || 0;
+    const totalPaginas = Math.ceil(total / POR_PAGINA);
 
-    if (anexar === true) {
-      listaProdutos.insertAdjacentHTML('beforeend', montarCards(itens));
-      exibidos += itens.length;
-    } else if (itens.length === 0) {
+    if (total > 0 && pagina > totalPaginas) {
+      return buscarProdutosNaApi(totalPaginas, rolar);
+    }
+
+    if (itens.length === 0) {
       listaProdutos.innerHTML =
         '<div style="text-align: center; padding: 3rem 1rem; color: #666;">Nenhum produto encontrado.</div>';
       contador.innerText = '0 produtos encontrados';
-      exibidos = 0;
-      btnMais.style.display = 'none';
+      navegacao.innerHTML = '';
       paginaAtual = 1;
       return;
-    } else {
-      listaProdutos.innerHTML = montarCards(itens);
-      exibidos = itens.length;
     }
 
+    listaProdutos.innerHTML = montarCards(itens);
     paginaAtual = pagina;
-    contador.innerText = `Mostrando ${exibidos} de ${total} produto(s)`;
-    btnMais.style.display = exibidos < total ? 'inline-block' : 'none';
+
+    const primeiro = (pagina - 1) * POR_PAGINA + 1;
+    contador.innerText = `Mostrando ${primeiro}–${primeiro + itens.length - 1} de ${total} produto(s)`;
+    mostrarNavegacao(total);
+
+    if (rolar) listaProdutos.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (erro) {
     if (erro.name === 'AbortError') return; // substituída por uma busca mais nova: ignora
-    if (anexar === true) {
-      contador.innerText = 'Erro ao carregar mais produtos. Tente novamente.';
-    } else {
-      listaProdutos.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar produtos.</p>';
-      contador.innerText = 'Erro na consulta';
-      btnMais.style.display = 'none';
-    }
+    listaProdutos.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar produtos.</p>';
+    contador.innerText = 'Erro na consulta';
+    navegacao.innerHTML = '';
   } finally {
-    if (!signal.aborted) {
-      btnMais.disabled = false;
-      btnMais.textContent = 'Carregar mais';
-    }
+    if (!signal.aborted) listaProdutos.style.opacity = '';
   }
 }
 
-btnMais.addEventListener('click', () => buscarProdutosNaApi(true));
-
 function agendarBusca(atrasoMs = 300) {
   clearTimeout(temporizador);
-  temporizador = setTimeout(() => buscarProdutosNaApi(false), atrasoMs);
+  temporizador = setTimeout(() => buscarProdutosNaApi(), atrasoMs);
 }
 
 // 5. Sincronização de filtros (única porta de entrada para alterar o estado)
@@ -253,5 +299,5 @@ function carregarCulturas() {
 document.addEventListener('DOMContentLoaded', () => {
   carregarCulturas();
   carregarOpcoes('/classes', datalistClasses, opcoesClasses);
-  buscarProdutosNaApi(false);
+  buscarProdutosNaApi();
 });
