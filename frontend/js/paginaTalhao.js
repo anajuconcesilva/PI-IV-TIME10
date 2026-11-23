@@ -87,7 +87,8 @@ function adaptarAplicacao(aplicacao) {
         produto: aplicacao.marca,
         dose: (String(aplicacao.dosagem).replace('.', ',') + ' ' + (aplicacao.unidade ?? '')).trim(),
         carencia: aplicacao.periodo_carencia,
-        status: status
+        status: status,
+        situacao: aplicacao.status 
     };
 }
 
@@ -260,8 +261,17 @@ function obterDetalhesAplicacao() {
     // Percorre todas as aplicações do histórico, uma por vez
     for (const aplicacao of historicoAplicacoes) {
         if (!aplicacao || !lerDataAplicacao(aplicacao.data)) continue;
+        if (aplicacao.situacao !== 'realizada') continue;
         // Escolhe a aplicação se nenhuma foi escolhida ou a data dela é mais recenta que a atual escolhida
         if (ultima === null || aplicacao.data > ultima.data) ultima = aplicacao;
+    }
+
+    // Se não houver nenhuma ativa, usa a mais recente
+    if (ultima === null) {
+        for (const aplicacao of historicoAplicacoes) {
+            if (!aplicacao || !lerDataAplicacao(aplicacao.data)) continue;
+            if (ultima === null || aplicacao.data > ultima.data) ultima = aplicacao;
+        }
     }
     // Cria o objeto que será devolvido
     const dados = {aplicacao:ultima, periodo:null, modo:null, dose:null,
