@@ -1,5 +1,6 @@
 // Aluna: Marília Sara Pereira dos Santos
 import { obterBanco } from '../mongodb';
+import { consultarCarenciaEmLote } from './servidorCarenciaService';
 
 function escaparRegex(texto: string): string {
   return texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -85,14 +86,18 @@ export async function buscarProdutos(filtros: any) {
     .limit(limite)
     .toArray();
 
-  const itens = produtos.map((prod) => ({
+  const dias = await consultarCarenciaEmLote(
+    produtos.map((prod) => ({ produto: String(prod.marca ?? ''), cultura: String(prod.cultura ?? '') }))
+  );
+
+  const itens = produtos.map((prod, indice) => ({
     id: prod._id.toString(),
     nome: prod.marca ? String(prod.marca).trim() : 'Sem nome',
     ingredienteAtivo: prod.principio_ativo,
     registro: prod.num_registro,
     classe: prod.classe,
     culturas: prod.cultura ? [prod.cultura] : [],
-    carenciaDias: 0
+    carenciaDias: dias[indice]
   }));
 
   return { itens, total, pagina, limite };
