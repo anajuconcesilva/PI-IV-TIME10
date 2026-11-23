@@ -21,6 +21,8 @@ const produtosEncontrados = new Map();
 
 let temporizadorBusca = null;
 
+let ultimaBusca = 0;
+
 // Recupera o token salvo durante o login
 function obterToken() {
     return localStorage.getItem("token");
@@ -143,6 +145,7 @@ function prepararListaProdutos() {
 // 3. Buscar produtos na API
 async function buscarProdutos(termo) {
     const lista = document.getElementById("lista-produtos-aplicacao");
+    const idBusca = ++ultimaBusca;
 
     if (!termo.trim()) {
         lista.innerHTML = "";
@@ -160,6 +163,8 @@ async function buscarProdutos(termo) {
         const resposta = await fetch(`${API}/produtos?${parametros.toString()}`);
 
         const dados = await resposta.json();
+
+        if (idBusca !== ultimaBusca) return;
 
         if (!resposta.ok) {
             throw new Error(dados.erro || "Não foi possível buscar os produtos.");
@@ -208,14 +213,17 @@ inputProduto.addEventListener("input", () => {
 });
 
 // 5. Validar se o produto digitado foi selecionado da lista
-inputProduto.addEventListener("change", () => {
-    const produto = produtosEncontrados.get(inputProduto.value.trim());
+inputProduto.addEventListener("change", async () => {
+    const produto = inputProduto.value.trim();
 
-    if (!produto) {
-        inputProduto.setCustomValidity("Selecione um produto encontrado na lista.");
-    } else {
-        inputProduto.setCustomValidity("");
-    }
+    if (!produtosEncontrados.has(produto)) {
+           await buscarProdutos(produto);
+    } 
+    
+    inputProduto.setCustomValidity(
+        produtosEncontrados.has(produto) ? "" : "Selecione um produto encontrado na lista."
+    );
+
 });
 
 // 6. Registrar aplicação
