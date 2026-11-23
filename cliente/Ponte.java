@@ -124,7 +124,7 @@ public class Ponte
 
                         try
                         {
-                            String[] campos = linha.split (";", -1);
+                            String[] campos = linha.split ("\t", -1);
 
                             if (campos.length!=3)
                             {
@@ -147,7 +147,7 @@ public class Ponte
                         }
                         catch (Exception erro)
                         {
-                            Ponte.enviarErro (gson, "Pedido invalido: use produto; cultura; aaaa-mm-dd");
+                            Ponte.enviarErro (gson, "Pedido invalido: use produto<TAB>cultura<TAB>aaaa-mm-dd");
                             continue;
                         }
 

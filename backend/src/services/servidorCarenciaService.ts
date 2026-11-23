@@ -37,7 +37,7 @@ export function consultarCarencia(
     if ([produto, cultura, dataAplicacao].some(
         (valor)=> 
             typeof valor !== 'string' ||
-        !valor.trim() || /[;\r\n]/.test(valor)
+        !valor.trim() || /[\t\r\n]/.test(valor)
     )){
         throw new ErroApi(400, 'Dados da consulta inválidos');
     }
@@ -103,6 +103,6 @@ export function consultarCarencia(
             reject(new ErroApi(502, 'Nao foi possivel enviar a consulta a Ponte '));
         });
 
-        ponte.stdin!.end(`${produto.trim()};${cultura.trim()};${dataAplicacao.trim()}\n`, 'utf8')
+        ponte.stdin!.end(`${produto.trim()}\t${cultura.trim()}\t${dataAplicacao.trim()}\n`, 'utf8')
     })
 }
