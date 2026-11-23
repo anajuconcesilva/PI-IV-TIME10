@@ -113,6 +113,7 @@ async function carregarTalhoes() {
 
             // Guarda o status para evitar selecionar talhões indisponíveis
             opcao.dataset.status = talhao.status || "";
+            opcao.dataset.cultura = talhao.cultura_nome || "";
 
             selectTalhao.appendChild(opcao);
         });
@@ -160,6 +161,13 @@ async function buscarProdutos(termo) {
             limite: "100"
         });
 
+        const cultura = selectTalhao.selectedOptions[0]?.dataset.cultura;
+
+        if (cultura) {
+            parametros.set("cultura", cultura);
+            parametros.set("culturaExata", "true");
+        }
+
         const resposta = await fetch(`${API}/produtos?${parametros.toString()}`);
 
         const dados = await resposta.json();
@@ -176,7 +184,7 @@ async function buscarProdutos(termo) {
         produtosEncontrados.clear();
 
         produtos.forEach(produto => {
-            if (!produto.id || !produto.nome) {
+            if (!produto.id || !produto.nome || produtosEncontrados.has(produto.nome)) {
                 return;
             }
 
@@ -210,6 +218,12 @@ inputProduto.addEventListener("input", () => {
     temporizadorBusca = setTimeout(() => {
         buscarProdutos(termo);
     }, 300);
+});
+
+selectTalhao.addEventListener("change", () => {
+    inputProduto.value = "";
+    inputProduto.setCustomValidity("");
+    buscarProdutos("");
 });
 
 // 5. Validar se o produto digitado foi selecionado da lista
