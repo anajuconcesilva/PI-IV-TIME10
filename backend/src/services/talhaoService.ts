@@ -338,6 +338,15 @@ export async function atualizarTalhao(
 
     const banco = obterBanco();
 
+    const aplicacaoAnterior = await banco.collection('aplicacoes').findOne({
+        talhao_id: new ObjectId(talhaoId),
+        data_aplicacao: { $lt: dadosAtualizados.inicio_cultivo }
+    });
+
+    if (aplicacaoAnterior) {
+        throw new ErroApi(409, 'O início do cultivo não pode ser depois de uma aplicação já registrada neste talhão');
+    }
+
     const propriedades = banco.collection('propriedades');
 
     const resultado = await propriedades.updateOne(
