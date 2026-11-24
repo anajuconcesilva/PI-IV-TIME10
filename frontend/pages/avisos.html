@@ -1,0 +1,208 @@
+<!-- Aluna: Ana Júlia Conceição da Silva | RA: 25002592 -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Central de Avisos | Minha Colheita</title>
+
+  <link rel="icon" href="../img/logo.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/painel.css">
+  <link rel="stylesheet" href="../css/avisos.css">
+</head>
+
+<body>
+  <div class="painel">
+
+    <!-- MENU LATERAL -->
+    <nav class="menu-lateral">
+
+      <div class="marca">
+        <img class="marca-logo" src="../img/logo.png" alt="Logo Minha Colheita">
+
+        <div>
+          <span class="marca-nome">Minha Colheita</span>
+          <span class="marca-subtitulo">CONTROLE AGRÍCOLA</span>
+        </div>
+      </div>
+
+      <p class="menu-titulo">MENU</p>
+
+      <div class="menu-links">
+
+        <a href="../dashboard.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M9 21v-8h6v8"/>
+          </svg>
+          Dashboard
+        </a>
+
+        <a href="listagemTalhao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/>
+            <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/>
+            <path d="M5 21h14"/>
+          </svg>
+          Talhões
+        </a>
+
+        <a href="nova-aplicacao.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 3h.01"/>
+            <path d="M7 5h.01"/>
+            <path d="M11 7h.01"/>
+            <path d="M3 7h.01"/>
+            <path d="M7 9h.01"/>
+            <path d="M3 11h.01"/>
+            <rect width="4" height="4" x="15" y="5"/>
+            <path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-1-1-1V11l2-2"/>
+            <path d="m13 14 8-2"/>
+            <path d="m13 19 8-2"/>
+          </svg>
+          Nova aplicação
+        </a>
+
+        <a href="../consulta.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.34-4.34"/>
+          </svg>
+          Consulta de produtos
+        </a>
+
+        <a href="avisos.html" class="menu-link ativo" aria-current="page">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+            <path d="M10 21h4"/>
+          </svg>
+          Avisos
+          <span class="menu-aviso-contador" id="contador-menu" hidden>0</span>
+        </a>
+
+        <a href="../relatorios.html" class="menu-link">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8l6 6v12a2 2 0 0 1-2 2z"/>
+            <path d="M14 2v6h6"/>
+            <path d="M8 13h8"/>
+            <path d="M8 17h8"/>
+          </svg>
+          Relatórios
+        </a>
+
+      </div>
+
+      <!-- RODAPÉ DO MENU -->
+      <div class="menu-rodape">
+
+        <div class="menu-usuario">
+          <div class="menu-iniciais"></div>
+
+          <div>
+            <strong></strong>
+            <span></span>
+          </div>
+        </div>
+
+        <a href="../login.html" class="menu-link menu-sair">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m16 17 5-5-5-5"/>
+            <path d="M21 12H9"/>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          </svg>
+          Sair da conta
+        </a>
+
+      </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="conteudo avisos-conteudo">
+
+      <!-- CABEÇALHO -->
+      <header class="avisos-cabecalho">
+
+        <div class="avisos-titulo-grupo">
+          <h1>Central de avisos</h1>
+
+          <span class="avisos-nao-lidos" id="contador-nao-lidos" hidden>
+            0 não lidos
+          </span>
+        </div>
+
+        <p>Acompanhe alertas e notificações dos seus talhões</p>
+
+        <button
+          type="button"
+          class="avisos-marcar-todos"
+          id="marcar-todos"
+          disabled
+        >
+          Marcar todos como lidos
+        </button>
+
+      </header>
+
+      <!-- FILTROS -->
+      <nav class="avisos-filtros" aria-label="Filtrar avisos">
+
+        <button
+          type="button"
+          class="aviso-filtro ativo"
+          data-filtro="todos"
+          aria-pressed="true"
+        >
+          Todos (<span id="quantidade-todos">0</span>)
+        </button>
+
+        <button
+          type="button"
+          class="aviso-filtro"
+          data-filtro="nao-lidos"
+          aria-pressed="false"
+        >
+          Não lidos (<span id="quantidade-nao-lidos">0</span>)
+        </button>
+
+        <button
+          type="button"
+          class="aviso-filtro"
+          data-filtro="urgentes"
+          aria-pressed="false"
+        >
+          Urgentes
+        </button>
+
+      </nav>
+
+      <!-- LISTA DE AVISOS -->
+      <section
+        class="avisos-lista"
+        id="lista-avisos"
+        aria-label="Lista de avisos"
+        aria-live="polite"
+      >
+        <!-- Os avisos serão carregados dinamicamente pelo JavaScript -->
+      </section>
+
+      <!-- MENSAGEM QUANDO NÃO EXISTIREM AVISOS -->
+      <div class="avisos-vazio" id="avisos-vazio" hidden>
+        <h2>Nenhum aviso encontrado</h2>
+        <p>Não há avisos para o filtro selecionado.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/api.js"></script>
+  <script src="../js/avisos.js"></script>
+  <script src="../js/conta.js"></script>
+
+</body>
+</html>
